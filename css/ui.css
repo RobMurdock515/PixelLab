@@ -14,11 +14,12 @@
 .button-container {
     display: flex;
     align-items: center;
-    margin-right: 80px; /* Add some spacing between buttons */
+    margin-right: 100px; /* Add some spacing between buttons */
     position: relative; /* Make the button container relative */
 }
 
-.file-button, .colors-button {
+
+.file-button, .select-button, .colors-button, .settings-button, .undo-button, .redo-button {
     background: none;
     border: none;
     display: flex;
@@ -29,21 +30,23 @@
     margin: 0;
 }
 
-.file-button img, .file-button span, .colors-button img, .colors-button span {
+.file-button img, .file-button span, .select-button img, .select-button span, .colors-button img, 
+.colors-button span, .settings-button img, .settings-button span, .undo-button img, .undo-button span,
+.redo-button img, .redo-button span {
     pointer-events: none; /* Ensure the click goes to the button, not the inner elements */
 }
 
-.file-icon, .colors-icon {
+.file-icon, .select-icon, .colors-icon, .settings-icon, .undo-icon, .redo-icon {
     height: 30px; /* Adjust the size of the icon as needed */
     margin-right: 10px; /* Space between the icon and the text */
 }
 
-.file-text, .colors-text {
+.file-text, .select-text, .colors-text, .settings-text, .undo-text, .redo-text {
     color: white;
     font-size: 20px;
     font-family: 'Roboto', sans-serif;
 }
 
-.file-button:hover, .colors-button:hover {
+.file-button:hover, .select-button:hover, .colors-button:hover, .settings-button:hover, .undo-button:hover, .redo-button:hover {
     opacity: 0.7; /* Optional: Add a hover effect */
 }

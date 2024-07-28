@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
-    var buttons = document.querySelectorAll('.file-button, .colors-button');
+    var buttons = document.querySelectorAll('.file-button, .colors-button, .select-button, .settings-button');
     var closeTimeout;
+    var openDropdown = null;
 
     buttons.forEach(function(button) {
         var dropdownContent = button.nextElementSibling;
@@ -8,30 +9,35 @@ document.addEventListener('DOMContentLoaded', function() {
         button.addEventListener('click', function() {
             if (dropdownContent.style.display === 'block') {
                 dropdownContent.style.display = 'none';
+                openDropdown = null;
             } else {
+                if (openDropdown) {
+                    openDropdown.style.display = 'none';
+                }
                 dropdownContent.style.display = 'block';
+                openDropdown = dropdownContent;
             }
         });
 
         // Close the dropdown if the user clicks outside of it
         window.onclick = function(event) {
-            if (!event.target.matches('.file-button, .colors-button') && !event.target.closest('.dropdown-content')) {
-                var dropdowns = document.getElementsByClassName("dropdown-content");
-                for (var i = 0; i < dropdowns.length; i++) {
-                    var openDropdown = dropdowns[i];
-                    if (openDropdown.style.display === 'block') {
-                        openDropdown.style.display = 'none';
-                    }
+            if (!event.target.matches('.file-button, .colors-button, .select-button, .settings-button') && !event.target.closest('.dropdown-content')) {
+                if (openDropdown) {
+                    openDropdown.style.display = 'none';
+                    openDropdown = null;
                 }
             }
         };
 
         // Set a timeout to close the dropdown if the user hovers outside
         document.addEventListener('mousemove', function(event) {
-            if (!event.target.matches('.file-button, .colors-button') && !event.target.closest('.dropdown-content')) {
+            if (!event.target.matches('.file-button, .colors-button, .select-button, .settings-button') && !event.target.closest('.dropdown-content')) {
                 clearTimeout(closeTimeout);
                 closeTimeout = setTimeout(function() {
-                    dropdownContent.style.display = 'none';
+                    if (openDropdown) {
+                        openDropdown.style.display = 'none';
+                        openDropdown = null;
+                    }
                 }, 300); // Delay in milliseconds
             } else {
                 clearTimeout(closeTimeout);
@@ -50,6 +56,7 @@ document.addEventListener('DOMContentLoaded', function() {
         dropdownContent.addEventListener('mouseleave', function() {
             closeTimeout = setTimeout(function() {
                 dropdownContent.style.display = 'none';
+                openDropdown = null;
             }, 300); // Delay in milliseconds
         });
     });
