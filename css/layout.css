@@ -54,7 +54,7 @@ body {
     position: fixed;
     top: 55px; /* Position it right below the .Menubar */
     left: 145px; /* Position it next to the .Toolbar */
-    z-index: 1000; /* Ensure it's on the same level as .Menubar */
+    z-index: 999; /* Ensure it's on the same level as .Menubar */
     display: flex;
 }
 

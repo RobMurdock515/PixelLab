@@ -6,17 +6,35 @@
     <title>PixelLab</title>
     <link rel="stylesheet" href="css/layout.css">
     <link rel="stylesheet" href="css/ui.css">
-    <link rel="stylesheet" href="css/component.css">
+    <link rel="stylesheet" href="css/components.css">
     <link rel="stylesheet" href="css/responsive.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="Menubar">
-        <img src="img/Icons/tools-icon.png" alt="Tools Icon" class="tools-icon">
-        <span class="tools-text">Tools</span>
+        <div class="button-container">
+            <img src="img/Icons/tools-icon.png" alt="Tools Icon" class="tools-icon">
+            <span class="tools-text">Tools</span>
+        </div>
+        <div class="button-container">
+            <button class="file-button">
+                <img src="img/Icons/new-icon.png" alt="File Icon" class="file-icon">
+                <span class="file-text">File</span>
+            </button>
+            <div class="dropdown-content">
+                <div class="dropdown-item">New</div>
+                <div class="dropdown-item">Clear</div>
+                <div class="dropdown-item">Resize Canvas</div>
+                <div class="dropdown-item">Open</div>
+                <div class="dropdown-item">Save</div>
+                <div class="dropdown-item">Download</div>
+            </div>
+        </div>
+        
     </div>
     <div class="Toolbar"></div>
     <div class="ToolSettingsbar"></div>
     <div class="CanvasBackground"></div>
+    <script src="js/buttons.js"></script> 
 </body>
 </html>

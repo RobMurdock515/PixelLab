@@ -1,20 +1,27 @@
-/* component.css */
+/* components.css */
 
-/* styling for buttons/ui */
+/* Dropdown container - hidden by default */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 150px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 2001;
+    top: 120%;
+    left: 0;
+}
 
-/* component.css */
+/* Items inside the dropdown */
+.dropdown-item {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    cursor: pointer;
+}
 
-/* Custom button with dropdown for a specific component */
-/*
-.custom-component-button {
-    /* Custom styles specific to this button */
-
-/*
-.custom-component-button:hover .custom-dropdown-menu {
-    /* Custom styles specific to the dropdown in this component */
-
-
-/* Additional component-specific dropdown styles */
-/*
-.custom-dropdown-menu {
-    /* Custom dropdown menu styles */
+/* Change color of dropdown items on hover */
+.dropdown-item:hover {
+    background-color: #f1f1f1;
+}
