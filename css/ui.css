@@ -1,7 +1,16 @@
 /* ui.css */
 
+/* Menubar - button properties */
+.button-container {
+    display: flex;
+    align-items: center;
+    margin-right: 60px; /* Adds spacing between buttons */
+    position: relative; /* Make the button container relative */
+}
+
+/* Static Tools Icon */
 .tools-icon {
-    height: 40px; /* Adjust the size of the icon */
+    height: 40px; /* size of the icon */
     margin-right: 15px; /* Space between the icon and the text */
 }
 
@@ -11,13 +20,7 @@
     font-family: 'Roboto', sans-serif;
 }
 
-.button-container {
-    display: flex;
-    align-items: center;
-    margin-right: 80px; /* Add some spacing between buttons */
-    position: relative; /* Make the button container relative */
-}
-
+/* Dropdown button properties */
 .file-button, .select-button, .colors-button, .settings-button, .undo-button, .redo-button {
     background: none;
     border: none;
@@ -25,18 +28,18 @@
     align-items: center;
     color: white;
     cursor: pointer;
-    padding: 10px; /* Add padding for larger button size */
-    margin: 5px; /* Add margin for spacing between buttons */
+    padding: 10px; /* padding for larger button size */
+    margin: 5px; /* margin for spacing between buttons */
 }
 
 .file-button img, .file-button span, .select-button img, .select-button span, .colors-button img, 
 .colors-button span, .settings-button img, .settings-button span, .undo-button img, .undo-button span,
 .redo-button img, .redo-button span {
-    pointer-events: none; /* Ensure the click goes to the button, not the inner elements */
+    pointer-events: none; /* Ensures the click goes to the button, not the inner elements */
 }
 
 .file-icon, .select-icon, .colors-icon, .settings-icon, .undo-icon, .redo-icon {
-    height: 40px; /* Adjust the size of the icon */
+    height: 40px; /* size of the icon */
     margin-right: 15px; /* Space between the icon and the text */
 }
 
@@ -46,13 +49,49 @@
     font-family: 'Roboto', sans-serif;
 }
 
-.file-button:hover, .select-button:hover, .colors-button:hover, .settings-button:hover, .undo-button:hover, .redo-button:hover, .toolbar-button:hover {
-    opacity: 0.7; /* Optional: Add a hover effect */
+.file-button:hover, .select-button:hover, .colors-button:hover, .settings-button:hover, .undo-button:hover, 
+.redo-button:hover, .toolbar-button:hover {
+    opacity: 0.7; /* hover effect */
 }
 
+/* Toolbar button properties */
 .toolbar-button img {
-    width: 32px; /* Adjust the size of the icons */
-    height: 32px; /* Adjust the size of the icons */
-    margin: 10px; /* Add margin for spacing between toolbar icons */
-    cursor: pointer;
+    width: 32px; /* width of icons */
+    height: 32px; /* height of icons */
+    margin: 18px; /* spacing between toolbar icons */
+}
+
+.toolbar-button {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    position: relative; /* Position relative for the tooltip */
+    cursor: pointer; /* Add hand pointer */
+}
+
+
+
+
+
+
+
+
+
+/* Tooltip styling */
+.tooltip {
+    visibility: hidden;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 3px;
+    position: absolute;
+    z-index: 1;
+    top: 80%;
+    left: 55%;
+    margin-left: -40px;
+    width: 75px;
+    opacity: 0; /* Start tooltip invisible */
+    transition: opacity 0.3s;
 }
