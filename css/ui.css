@@ -1,8 +1,8 @@
 /* ui.css */
 
 .tools-icon {
-    height: 30px; /* Adjust the size of the icon as needed */
-    margin-right: 10px; /* Space between the icon and the text */
+    height: 40px; /* Adjust the size of the icon */
+    margin-right: 15px; /* Space between the icon and the text */
 }
 
 .tools-text {
@@ -14,10 +14,9 @@
 .button-container {
     display: flex;
     align-items: center;
-    margin-right: 100px; /* Add some spacing between buttons */
+    margin-right: 80px; /* Add some spacing between buttons */
     position: relative; /* Make the button container relative */
 }
-
 
 .file-button, .select-button, .colors-button, .settings-button, .undo-button, .redo-button {
     background: none;
@@ -26,8 +25,8 @@
     align-items: center;
     color: white;
     cursor: pointer;
-    padding: 0; 
-    margin: 0;
+    padding: 10px; /* Add padding for larger button size */
+    margin: 5px; /* Add margin for spacing between buttons */
 }
 
 .file-button img, .file-button span, .select-button img, .select-button span, .colors-button img, 
@@ -37,8 +36,8 @@
 }
 
 .file-icon, .select-icon, .colors-icon, .settings-icon, .undo-icon, .redo-icon {
-    height: 30px; /* Adjust the size of the icon as needed */
-    margin-right: 10px; /* Space between the icon and the text */
+    height: 40px; /* Adjust the size of the icon */
+    margin-right: 15px; /* Space between the icon and the text */
 }
 
 .file-text, .select-text, .colors-text, .settings-text, .undo-text, .redo-text {
@@ -47,6 +46,13 @@
     font-family: 'Roboto', sans-serif;
 }
 
-.file-button:hover, .select-button:hover, .colors-button:hover, .settings-button:hover, .undo-button:hover, .redo-button:hover {
+.file-button:hover, .select-button:hover, .colors-button:hover, .settings-button:hover, .undo-button:hover, .redo-button:hover, .toolbar-button:hover {
     opacity: 0.7; /* Optional: Add a hover effect */
+}
+
+.toolbar-button img {
+    width: 32px; /* Adjust the size of the icons */
+    height: 32px; /* Adjust the size of the icons */
+    margin: 10px; /* Add margin for spacing between toolbar icons */
+    cursor: pointer;
 }
