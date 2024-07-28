@@ -18,7 +18,7 @@
     position: relative; /* Make the button container relative */
 }
 
-.file-button {
+.file-button, .colors-button {
     background: none;
     border: none;
     display: flex;
@@ -29,21 +29,21 @@
     margin: 0;
 }
 
-.file-button img, .file-button span {
+.file-button img, .file-button span, .colors-button img, .colors-button span {
     pointer-events: none; /* Ensure the click goes to the button, not the inner elements */
 }
 
-.file-icon {
+.file-icon, .colors-icon {
     height: 30px; /* Adjust the size of the icon as needed */
     margin-right: 10px; /* Space between the icon and the text */
 }
 
-.file-text {
+.file-text, .colors-text {
     color: white;
     font-size: 20px;
     font-family: 'Roboto', sans-serif;
 }
 
-.file-button:hover {
-    opacity: 0.8; /* Optional: Add a hover effect */
+.file-button:hover, .colors-button:hover {
+    opacity: 0.7; /* Optional: Add a hover effect */
 }
