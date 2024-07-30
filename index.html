@@ -19,8 +19,8 @@
             <span class="tools-text">Tools</span>
         </div>
 
-        <!-- File Button -->
         <div class="button-container">
+            <!-- File Button -->
             <button class="file-button">
                 <img src="img/Icons/new-icon.png" alt="File Icon" class="file-icon">
                 <span class="file-text">File</span>
@@ -213,12 +213,51 @@
             <img src="img/Icons/spray-icon.png" alt="Spray Tool">
             <span class="tooltip">Spray Tool</span>
         </button>
+        
+        <!-- Select Color Button -->
+        <button class="color-button">
+            <img src="img/Icons/color-icon.png" alt="Color Tool">
+            <span class="tooltip-color">Select Color</span>
+        </button>
+        <!-- Grid - Color Palette -->
+        <div class="color-palette">
+            <div class="color-cell" data-color-index="0"></div>
+            <div class="color-cell" data-color-index="1"></div>
+            <div class="color-cell" data-color-index="2"></div>
+            <div class="color-cell" data-color-index="3"></div>
+            <div class="color-cell" data-color-index="4"></div>
+            <div class="color-cell" data-color-index="5"></div>
+            <div class="color-cell" data-color-index="6"></div>
+            <div class="color-cell" data-color-index="7"></div>
+            <div class="color-cell" data-color-index="8"></div>
+            <div class="color-cell" data-color-index="9"></div>
+            <div class="color-cell" data-color-index="10"></div>
+            <div class="color-cell" data-color-index="11"></div>
+            <div class="color-cell" data-color-index="12"></div>
+            <div class="color-cell" data-color-index="13"></div>
+            <div class="color-cell" data-color-index="14"></div>
+            <div class="color-cell" data-color-index="15"></div>
+            <div class="color-cell" data-color-index="16"></div>
+            <div class="color-cell" data-color-index="17"></div>
+            <div class="color-cell" data-color-index="18"></div>
+            <div class="color-cell" data-color-index="19"></div>
+            <div class="color-cell" data-color-index="20"></div>
+            <div class="color-cell" data-color-index="21"></div>
+            <div class="color-cell" data-color-index="22"></div>
+            <div class="color-cell" data-color-index="23"></div>
+            <div class="color-cell" data-color-index="24"></div>
+        </div>
     </div>
     
-    
     <div class="ToolSettingsbar"></div>
-    <div class="CanvasBackground"></div>
+    <div class="canvas-container">
+        <!-- Pixel Canvas Grid -->
+        <canvas id="pixelCanvas" class="canvasBackground"></canvas>
+    </div>
+    <!-- Scripts -->
     <script src="js/dropdown.js"></script>
     <script src="js/tooltip.js"></script> 
+    <script src="js/canvas.js"></script>
+    <script src="js/palette1.js"></script>
 </body>
 </html>

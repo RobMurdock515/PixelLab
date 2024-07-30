@@ -45,3 +45,24 @@
     -webkit-backdrop-filter: blur(16px) saturate(180%);
     border: 1px solid rgba(255, 255, 255, 0.125);
 }
+
+/* CanvasBackground - Canvas Properties */
+.canvas-container {
+    position: absolute; /* Use absolute positioning */
+    top: 95px; /* Position it below the ToolSettingsbar */
+    left: 145px; /* Align it next to the Toolbar */
+    width: calc(100% - 145px); /* Adjust as needed */
+    height: calc(100vh - 95px); /* Adjust as needed */
+    display: flex; /* Flexbox to center the canvas */
+    align-items: center; /* Center vertically */
+    justify-content: center; /* Center horizontally */
+}
+
+canvas {
+    display: block;
+    background-color: #000; /* Default background color */
+    image-rendering: pixelated; /* Makes pixel art look crisp */
+    max-width: 100%; /* Ensure it doesn't overflow */
+    max-height: 100%; /* Ensure it doesn't overflow */
+    border: 1px solid rgba(255, 255, 255, 0.125); /* Optional border */
+}
