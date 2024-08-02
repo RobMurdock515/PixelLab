@@ -11,9 +11,45 @@
     min-width: 150px;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 2001;
-    top: 88%; /* Move closer to the button */
+    top: 88%; 
     left: 0;
 }
+
+.dropdown-content-scroll {
+    background: rgba(0, 0, 0, 0.60);
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.125);
+    display: none;
+    position: absolute;
+    min-width: 150px;
+    max-height: 250px; /* Adjust based on your needs */
+    overflow-y: auto; /* Adds vertical scrollbar if needed */
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 2001;
+    top: 88%; 
+    left: 0;
+}
+
+/* Basic scrollbar customization for WebKit browsers */
+.dropdown-content-scroll::-webkit-scrollbar {
+    width: 12px; /* Width of the scrollbar */
+}
+
+.dropdown-content-scroll::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.60); /* Background of the track */
+}
+
+.dropdown-content-scroll::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.281); /* Color of the scrollbar thumb */
+    border-radius: 6px; /* Rounded corners of the scrollbar thumb */
+}
+
+/* hover effect for the scrollbar thumb */
+.dropdown-content-scroll::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.116);
+}
+
 
 /* Items inside the dropdown */
 .dropdown-item {
@@ -65,4 +101,41 @@ canvas {
     max-width: 100%; /* Ensure it doesn't overflow */
     max-height: 100%; /* Ensure it doesn't overflow */
     border: 1px solid rgba(255, 255, 255, 0.125); /* Optional border */
+}
+
+/* ------------------------- */
+/* Tooltip properties */
+/* ------------------------- */
+.tooltip-down {
+    visibility: hidden;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 3px;
+    position: absolute;
+    z-index: 1;
+    top: 80%;
+    left: 55%;
+    margin-left: -40px;
+    width: 75px;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.tooltip-right {
+    visibility: hidden;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 3px;
+    position: absolute;
+    z-index: 1;
+    bottom: 1%;
+    left: 85%;
+    margin-left: 10px;
+    width: 75px;
+    opacity: 0; /* Start tooltip invisible */
+    transition: opacity 0.3s;
 }

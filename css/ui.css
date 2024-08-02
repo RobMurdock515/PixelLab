@@ -52,8 +52,32 @@
 }
 
 .file-button:hover, .select-button:hover, .colors-button:hover, .settings-button:hover, .undo-button:hover, 
-.redo-button:hover, .toolbar-button:hover, .color-button:hover, .color-cell:hover {
+.redo-button:hover, .toolbar-button:hover, .rgb-button:hover, .color-cell:hover {
     opacity: 0.7; /* hover effect */
+}
+
+/* ---------------------------------- */
+/* Menubar/Colors/Dropdown properties */
+/* --------------------------------- */
+
+.dropdown-palette {
+    display: flex;
+    justify-content: space-between; /* Optional, if you want to add space between text and image */
+    align-items: center;
+    gap: 10px; /* Adjust spacing between text and image */
+}
+
+.palette-text {
+    order: 1;
+    color: white;
+    font-size: 14px;
+    font-family: 'Roboto', sans-serif;
+}
+
+.palette-icon {
+    order: 2; 
+    width: 240px;
+    height: 24px;
 }
 
 /* ------------------------- */
@@ -75,18 +99,18 @@
 }
 
 /* Styles for select-color-button */
-.color-button {
+.rgb-button {
     background: none;
     border: none;
     padding: 0;
     margin: 0;
     position: absolute;
-    bottom: 150px;
-    left: 15px;
+    bottom: 250px;
+    left: 22px;
     cursor: pointer;
 }
 
-.color-button img {
+.rgb-button img {
     width: 32px; /* width of icons */
     height: 32px; /* height of icons */
 }
@@ -109,37 +133,6 @@
     border: 1px solid #000; /* Optional: border */
 }
 
-/* Tooltip styling */
-.tooltip {
-    visibility: hidden;
-    background-color: black;
-    color: #fff;
-    text-align: center;
-    border-radius: 6px;
-    padding: 3px;
-    position: absolute;
-    z-index: 1;
-    top: 80%;
-    left: 55%;
-    margin-left: -40px;
-    width: 75px;
-    opacity: 0; /* Start tooltip invisible */
-    transition: opacity 0.3s;
-}
-
-.tooltip-color {
-    visibility: hidden;
-    background-color: black;
-    color: #fff;
-    text-align: center;
-    border-radius: 6px;
-    padding: 3px;
-    position: absolute;
-    z-index: 1;
-    bottom: 1%;
-    left: 85%;
-    margin-left: 10px;
-    width: 75px;
-    opacity: 0; /* Start tooltip invisible */
-    transition: opacity 0.3s;
-}
+/* ------------------------- */
+/* ToolSettings bar properties */
+/* ------------------------- */

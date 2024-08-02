@@ -1,7 +1,7 @@
 /* Javascript Tooltip Delay */
 
 document.addEventListener('DOMContentLoaded', function() {
-    const toolbarButtons = document.querySelectorAll('.toolbar-button, .color-button');
+    const toolbarButtons = document.querySelectorAll('.toolbar-button, .rgb-button');
     const timeouts = new Map(); // Map to store timeouts for each button
 
     toolbarButtons.forEach(button => {
@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
             clearTimeout(timeouts.get(button));
 
             const timeoutId = setTimeout(() => {
-                const tooltip = button.querySelector('.tooltip, .tooltip-color');
+                const tooltip = button.querySelector('.tooltip-down, .tooltip-right');
                 if (tooltip) {
                     tooltip.style.visibility = 'visible';
                     tooltip.style.opacity = '1';
@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Clear the timeout for this button
             clearTimeout(timeouts.get(button));
 
-            const tooltip = button.querySelector('.tooltip, .tooltip-color');
+            const tooltip = button.querySelector('.tooltip-down, .tooltip-right');
             if (tooltip) {
                 tooltip.style.visibility = 'hidden';
                 tooltip.style.opacity = '0';
