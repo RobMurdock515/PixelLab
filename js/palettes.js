@@ -1,7 +1,7 @@
 // Palettes for creating pixel art
 
 const palettes = {
-    // Default Palette: 
+    // Default Palette: A broad range of colors with both muted and vibrant tones.
     defaultPalette: [
         '#000000', '#12173d', '#293268', '#464b8c', '#6b74b2',
         '#909edd', '#c1d9f2', '#ffffff', '#a293c4', '#7b6aa5',
@@ -32,7 +32,7 @@ const palettes = {
         "#787878"
     ],
 
-    // Astral Palette: 
+    // Astral Palette: Soft and cosmic with a mix of muted and bright colors
     astralPalette: [
         "#000000", "#6f6776", "#9a9a97", "#c5ccb8", "#8b5580", "#c38890", "#a593a5", "#666092", "#9a4f50", "#c28d75",
         "#7ca1c0", "#416aa3", "#8d6268", "#be955c", "#68aca9", "#387080", "#6e6962", "#93a167", "#6eaa78", "#557064",
@@ -68,12 +68,12 @@ const palettes = {
         "#788a87", "#a9b2a2"
     ],
 
-    // Dusk Palette: 
+    // Dusk Palette: Soft, muted colors with an evening feel
     duskPalette: [
         "#0d2b45", "#203c56", "#544e68", "#8d697a", "#d08159", "#ffaa5e", "#ffd4a3", "#ffecd6"
     ],
 
-    // Ember Palette: 
+    // Ember Palette: A range of warm colors with bright and soft accents
     emberPalette: [
         "#be4a2f", "#d77643", "#ead4aa", "#e4a672", "#b86f50", "#733e39", "#3e2731", "#a22633", "#e43b44", "#f77622",
         "#feae34", "#fee761", "#63c74d", "#3e8948", "#265c42", "#193c3e", "#124e89", "#0099db", "#2ce8f5", "#ffffff",
@@ -81,7 +81,7 @@ const palettes = {
         "#e8b796", "#c28569"
     ],
 
-    // Fusion Palette: 
+    // Fusion Palette: Diverse and vibrant, with a mix of bright and muted tones
     fusionPalette: [
         "#ff0040", "#131313", "#1b1b1b", "#272727", "#3d3d3d", "#5d5d5d", "#858585", "#b4b4b4", "#ffffff", "#c7cfdd",
         "#92a1b9", "#657392", "#424c6e", "#2a2f4e", "#1a1932", "#0e071b", "#1c121c", "#391f21", "#5d2c28", "#8a4836",
@@ -114,7 +114,7 @@ const palettes = {
         "#f4b03c", "#ffffff"
     ],
 
-    // Mist Palette: 
+    // Mist Palette: Soft and muted with a variety of pastel and earthy tones 
     mistPalette: [
         "#10121c", "#2c1e31", "#6b2643", "#ac2847", "#ec273f", "#94493a", "#de5d3a", "#e98537", "#f3a833", "#4d3533",
         "#6e4c30", "#a26d3f", "#ce9248", "#dab163", "#e8d282", "#f7f3b7", "#1e4044", "#006554", "#26854c", "#5ab552",
@@ -123,13 +123,13 @@ const palettes = {
         "#f6e8e0", "#ffffff"
     ],
 
-    // Monochrome Palette: A color scheme featuring varying shades of black and gray, with subtle accents.
+    // Monochrome Palette: A color scheme featuring varying shades of black and gray, with subtle accents
     monochromePalette: [
         "#08141e", "#0f2a3f", "#20394f", "#f6d6bd", "#c3a38a", "#997577",
         "#816271", "#4e495f"
     ],
 
-    // Murky Palette: A color scheme featuring deep, earthy tones with a subdued and mysterious feel.
+    // Murky Palette: A color scheme featuring deep, earthy tones with a subdued and mysterious feel
     murkyPalette: [
         "#a6884a", "#906c30", "#825337", "#83473d", "#66352e", "#562923",
         "#612638", "#46332c", "#323230", "#3e4055", "#382d35", "#323b42",
@@ -140,7 +140,7 @@ const palettes = {
         "#5f7b53", "#3b6d62", "#32534a"
     ],
 
-    // Mystic Palette: 
+    // Mystic Palette: Rich and varied hues inspired by mystical themes
     mysticPalette: [
         "#172038", "#253a5e", "#3c5e8b", "#4f8fba", "#73bed3", "#a4dddb", "#19332d", "#25562e", "#468232", "#75a743",
         "#a8ca58", "#d0da91", "#4d2b32", "#7a4841", "#ad7757", "#c09473", "#d7b594", "#e7d5b3", "#341c27", "#602c2c",
@@ -159,7 +159,7 @@ const palettes = {
         "#14233a"
     ],
 
-    // Nocturnal Palette: 
+    // Nocturnal Palette: Dark and vibrant with a range of colors suitable for night-time themes
     nocturnalPalette: [
         "#060608", "#141013", "#3b1725", "#73172d", "#b4202a", "#df3e23", "#fa6a0a", "#f9a31b", "#ffd541", "#fffc40",
         "#d6f264", "#9cdb43", "#59c135", "#14a02e", "#1a7a3e", "#24523b", "#122020", "#143464", "#285cc4", "#249fde",
@@ -280,10 +280,24 @@ const palettes = {
 // Function to apply a selected palette
 function applyPalette(paletteName) {
     const selectedPalette = palettes[paletteName];
-    const colorCells = document.querySelectorAll('.color-cell');
-    colorCells.forEach((cell, index) => {
-        cell.style.backgroundColor = selectedPalette[index] || '#000000'; // Fallback to black if index is out of range
+    const colorPalette = document.querySelector('.color-palette');
+
+    // Clear existing cells
+    colorPalette.innerHTML = '';
+
+    // Add color cells
+    selectedPalette.forEach((color, index) => {
+        const colorCell = document.createElement('div');
+        colorCell.className = 'color-cell';
+        colorCell.style.backgroundColor = color;
+        colorCell.dataset.colorIndex = index;
+        colorPalette.appendChild(colorCell);
     });
+
+    // Adjust the number of rows in the grid to fit all cells
+    const totalCells = selectedPalette.length;
+    const rowsNeeded = Math.ceil(totalCells / 5);
+    colorPalette.style.gridTemplateRows = `repeat(${rowsNeeded}, 22px)`;
 }
 
 // Event listener for dropdown selection

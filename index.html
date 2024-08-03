@@ -11,22 +11,22 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    
+
+    <!------------------------------------------------------------>
+    <!-- Menubar (File, Colors, Select, Settings, Undo, & Redo) -->
+    <!------------------------------------------------------------>
     <div class="Menubar">
-        <!-- Tools icon -->
-        <div class="button-container">
+        <div class="button-container"> <!-- Tools icon -->
             <img src="img/Icons/tools-icon.png" alt="Tools Icon" class="tools-icon">
             <span class="tools-text">Tools</span>
         </div>
 
         <div class="button-container">
-            <!-- File Button -->
-            <button class="file-button">
+            <button class="file-button"> <!-- File Button -->
                 <img src="img/Icons/new-icon.png" alt="File Icon" class="file-icon">
                 <span class="file-text">File</span>
             </button>
-            <!-- File Button - Dropdown -->
-            <div class="dropdown-content">
+            <div class="dropdown-content"> <!-- File Button - Dropdown Menu -->
                 <div class="dropdown-item">
                     <img src="img/Icons/new-icon.png" alt="New Icon" class="dropdown-icon">
                     New
@@ -56,14 +56,12 @@
             </div>
         </div>
 
-        <!-- Colors Button -->
         <div class="button-container">
-            <button class="colors-button">
+            <button class="colors-button"> <!-- Colors Button -->
                 <img src="img/Icons/colors-icon.png" alt="Colors Icon" class="colors-icon">
                 <span class="colors-text">Colors</span>
             </button>
-            <!-- Colors Button - Dropdown -->
-            <div class="dropdown-content-scroll">
+            <div class="dropdown-content-scroll"> <!-- Colors Button - Dropdown Menu -->
                 <div class="dropdown-item" data-palette="defaultPalette">
                     <div class="dropdown-palette">
                         <span class="palette-text">Default Palette</span>
@@ -256,17 +254,15 @@
                         <img src="img/Palettes/vivid.png" alt="Palette Icon" class="palette-icon">
                     </div>
                 </div>
+            </div>
         </div>
 
-
-        <!-- Select Button -->
         <div class="button-container">
-            <button class="select-button">
+            <button class="select-button"> <!-- Select Button -->
                 <img src="img/Icons/select-icon.png" alt="Select Icon" class="select-icon">
                 <span class="select-text">Select</span>
             </button>
-            <!-- Select Button - Dropdown -->
-            <div class="dropdown-content">
+            <div class="dropdown-content">  <!-- Select Button - Dropdown Menu -->
                 <div class="dropdown-item">
                     <img src="img/Icons/font-icon.png" alt="Font Icon" class="dropdown-icon">
                     Font
@@ -302,14 +298,12 @@
             </div>
         </div>
 
-        <!-- Settings Button -->
         <div class="button-container">
-            <button class="settings-button">
-                <img src="img/Icons/settings-icon.png" alt="Settings Icon" class="dropdown-icon">
+            <button class="settings-button"> <!-- Settings Button -->
+                <img src="img/Icons/settings-icon.png" alt="Settings Icon" class="settings-icon">
                 <span class="settings-text">Settings</span>
             </button>
-            <!-- Settings Button - Dropdown -->
-            <div class="dropdown-content">
+            <div class="dropdown-content"> <!-- Settings Button - Dropdown Menu -->
                 <div class="dropdown-item">
                     <img src="img/Icons/fullscreen-icon.png" alt="Fullscreen Icon" class="dropdown-icon">
                     Fullscreen
@@ -327,26 +321,26 @@
             </div>
         </div>
 
-        <!-- Undo Button -->
         <div class="button-container">
-            <button class="undo-button">
-                <img src="img/Icons/undo-icon.png" alt="Undo Icon" class="dropdown-icon">
+            <button class="undo-button"> <!-- Undo Button -->
+                <img src="img/Icons/undo-icon.png" alt="Undo Icon" class="undo-icon">
                 <span class="undo-text">Undo</span>
             </button>
         </div>
 
-        <!-- Redo Button -->
         <div class="button-container">
-            <button class="settings-button">
-                <img src="img/Icons/redo-icon.png" alt="Redo Icon" class="dropdown-icon">
+            <button class="settings-button"> <!-- Redo Button -->
+                <img src="img/Icons/redo-icon.png" alt="Redo Icon" class="redo-icon">
                 <span class="redo-text">Redo</span>
             </button>
         </div>
     </div>
 
+    <!------------------------------------------------------------>
+    <!--   Toolbar (Tool Selector, RGB Picker, & Color-Cells)   -->
+    <!------------------------------------------------------------>
     <div class="Toolbar">
-        <!-- Toolbar Buttons -->
-        <button class="toolbar-button">
+        <button class="toolbar-button"> <!-- Toolbar Buttons -->
             <img src="img/Icons/pencil-icon.png" alt="Pencil Tool">
             <span class="tooltip-down">Pencil Tool</span>
         </button>
@@ -383,67 +377,77 @@
             <span class="tooltip-down">Spray Tool</span>
         </button>
         
-        <!-- Select Color Button -->
-        <button class="rgb-button">
+        <button class="rgb-button"> <!-- Select Color Button -->
             <img src="img/Icons/color-icon.png" alt="RGB Tool">
             <span class="tooltip-right">RGB Color Picker</span>
         </button>
-        <!-- Grid - Color Palette -->
-        <div class="color-palette">
-            <div class="color-cell" data-color-index="0"></div>
-            <div class="color-cell" data-color-index="1"></div>
-            <div class="color-cell" data-color-index="2"></div>
-            <div class="color-cell" data-color-index="3"></div>
-            <div class="color-cell" data-color-index="4"></div>
-            <div class="color-cell" data-color-index="5"></div>
-            <div class="color-cell" data-color-index="6"></div>
-            <div class="color-cell" data-color-index="7"></div>
-            <div class="color-cell" data-color-index="8"></div>
-            <div class="color-cell" data-color-index="9"></div>
-            <div class="color-cell" data-color-index="10"></div>
-            <div class="color-cell" data-color-index="11"></div>
-            <div class="color-cell" data-color-index="12"></div>
-            <div class="color-cell" data-color-index="13"></div>
-            <div class="color-cell" data-color-index="14"></div>
-            <div class="color-cell" data-color-index="15"></div>
-            <div class="color-cell" data-color-index="16"></div>
-            <div class="color-cell" data-color-index="17"></div>
-            <div class="color-cell" data-color-index="18"></div>
-            <div class="color-cell" data-color-index="19"></div>
-            <div class="color-cell" data-color-index="20"></div>
-            <div class="color-cell" data-color-index="21"></div>
-            <div class="color-cell" data-color-index="22"></div>
-            <div class="color-cell" data-color-index="23"></div>
-            <div class="color-cell" data-color-index="24"></div>
-            <div class="color-cell" data-color-index="25"></div>
-            <div class="color-cell" data-color-index="26"></div>
-            <div class="color-cell" data-color-index="27"></div>
-            <div class="color-cell" data-color-index="28"></div>
-            <div class="color-cell" data-color-index="29"></div>
-            <div class="color-cell" data-color-index="30"></div>
-            <div class="color-cell" data-color-index="31"></div>
-            <div class="color-cell" data-color-index="32"></div>
-            <div class="color-cell" data-color-index="33"></div>
-            <div class="color-cell" data-color-index="34"></div>
-            <div class="color-cell" data-color-index="35"></div>
-            <div class="color-cell" data-color-index="36"></div>
-            <div class="color-cell" data-color-index="37"></div>
-            <div class="color-cell" data-color-index="38"></div>
-            <div class="color-cell" data-color-index="39"></div>
-            <div class="color-cell" data-color-index="40"></div>
-            <div class="color-cell" data-color-index="41"></div>
-            <div class="color-cell" data-color-index="42"></div>
-            <div class="color-cell" data-color-index="43"></div>
-            <div class="color-cell" data-color-index="44"></div>
+        
+        <div class="color-palette-container"> <!-- Color Palette (cells) -->
+            <div class="color-palette">
+                <div class="color-cell" data-color-index="0"></div>
+                <div class="color-cell" data-color-index="1"></div>
+                <div class="color-cell" data-color-index="2"></div>
+                <div class="color-cell" data-color-index="3"></div>
+                <div class="color-cell" data-color-index="4"></div>
+                <div class="color-cell" data-color-index="5"></div>
+                <div class="color-cell" data-color-index="6"></div>
+                <div class="color-cell" data-color-index="7"></div>
+                <div class="color-cell" data-color-index="8"></div>
+                <div class="color-cell" data-color-index="9"></div>
+                <div class="color-cell" data-color-index="10"></div>
+                <div class="color-cell" data-color-index="11"></div>
+                <div class="color-cell" data-color-index="12"></div>
+                <div class="color-cell" data-color-index="13"></div>
+                <div class="color-cell" data-color-index="14"></div>
+                <div class="color-cell" data-color-index="15"></div>
+                <div class="color-cell" data-color-index="16"></div>
+                <div class="color-cell" data-color-index="17"></div>
+                <div class="color-cell" data-color-index="18"></div>
+                <div class="color-cell" data-color-index="19"></div>
+                <div class="color-cell" data-color-index="20"></div>
+                <div class="color-cell" data-color-index="21"></div>
+                <div class="color-cell" data-color-index="22"></div>
+                <div class="color-cell" data-color-index="23"></div>
+                <div class="color-cell" data-color-index="24"></div>
+                <div class="color-cell" data-color-index="25"></div>
+                <div class="color-cell" data-color-index="26"></div>
+                <div class="color-cell" data-color-index="27"></div>
+                <div class="color-cell" data-color-index="28"></div>
+                <div class="color-cell" data-color-index="29"></div>
+                <div class="color-cell" data-color-index="30"></div>
+                <div class="color-cell" data-color-index="31"></div>
+                <div class="color-cell" data-color-index="32"></div>
+                <div class="color-cell" data-color-index="33"></div>
+                <div class="color-cell" data-color-index="34"></div>
+                <div class="color-cell" data-color-index="35"></div>
+                <div class="color-cell" data-color-index="36"></div>
+                <div class="color-cell" data-color-index="37"></div>
+                <div class="color-cell" data-color-index="38"></div>
+                <div class="color-cell" data-color-index="39"></div>
+                <div class="color-cell" data-color-index="40"></div>
+                <div class="color-cell" data-color-index="41"></div>
+                <div class="color-cell" data-color-index="42"></div>
+                <div class="color-cell" data-color-index="43"></div>
+                <div class="color-cell" data-color-index="44"></div>
+            </div>
         </div>
     </div>
     
+    <!------------------------------------------------------------>
+    <!--ToolSettings Bar (Selected Tool, Pixel Size, & Strength)-->
+    <!------------------------------------------------------------>
     <div class="ToolSettingsbar"></div>
+
+    <!------------------------------------------------------------>
+    <!------------------  Canvas (Pixel Grid)  ------------------->
+    <!------------------------------------------------------------>
     <div class="canvas-container">
         <!-- Pixel Canvas Grid -->
-        <canvas id="pixelCanvas" class="canvasBackground"></canvas>
     </div>
-    <!-- Scripts -->
+
+    <!------------------------------------------------------------>
+    <!------------------------- Scripts  ------------------------->
+    <!------------------------------------------------------------>
     <script src="js/dropdown.js"></script>
     <script src="js/tooltip.js"></script> 
     <script src="js/canvas.js"></script>

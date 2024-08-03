@@ -1,7 +1,10 @@
 /* components.css */
 
-/* Dropdown container - hidden by default */
-.dropdown-content {
+/* ------------------------- */
+/*    Dropdown properties    */
+/* ------------------------- */
+
+.dropdown-content { 
     background: rgba(0, 0, 0, 0.60);
     backdrop-filter: blur(16px) saturate(180%);
     -webkit-backdrop-filter: blur(16px) saturate(180%);
@@ -15,6 +18,7 @@
     left: 0;
 }
 
+/* Dropdown w/ scrollbar */
 .dropdown-content-scroll {
     background: rgba(0, 0, 0, 0.60);
     backdrop-filter: blur(16px) saturate(180%);
@@ -23,21 +27,22 @@
     display: none;
     position: absolute;
     min-width: 150px;
-    max-height: 250px; /* Adjust based on your needs */
-    overflow-y: auto; /* Adds vertical scrollbar if needed */
+    max-height: 250px; 
+    overflow-y: auto;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 2001;
     top: 88%; 
     left: 0;
 }
 
-/* Basic scrollbar customization for WebKit browsers */
+/* Dropdown scrollbar properties */
+/* WebKit Browsers (Chrome, Safari, Edge) */
 .dropdown-content-scroll::-webkit-scrollbar {
-    width: 12px; /* Width of the scrollbar */
+    width: 8px; /* Width of the scrollbar */
 }
 
 .dropdown-content-scroll::-webkit-scrollbar-track {
-    background: rgba(0, 0, 0, 0.60); /* Background of the track */
+    background: transparent; /* Background of the track */
 }
 
 .dropdown-content-scroll::-webkit-scrollbar-thumb {
@@ -45,29 +50,35 @@
     border-radius: 6px; /* Rounded corners of the scrollbar thumb */
 }
 
-/* hover effect for the scrollbar thumb */
 .dropdown-content-scroll::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.116);
+    background: rgba(255, 255, 255, 0.255); /* Hover effect for the scrollbar thumb */
 }
 
+/* Apply only if scrollbar customization is needed for Firefox */
+@supports (-moz-appearance: none) {
+    .dropdown-content-scroll {
+        scrollbar-width: thin; /* Thin scrollbar */
+        scrollbar-color: rgba(255, 255, 255, 0.255) transparent; /* Thumb color and track color */
+    }
+}
 
 /* Items inside the dropdown */
 .dropdown-item {
     color: white;
     padding: 12px 16px;
     text-decoration: none;
-    display: flex; /* Use flex to align icon and text */
+    display: flex; 
     align-items: center;
     cursor: pointer;
 }
 
 /* Style for the icons inside dropdown items */
 .dropdown-icon {
-    height: 20px; /* Adjust the size as needed */
-    margin-right: 10px; /* Space between the icon and the text */
+    height: 20px; 
+    margin-right: 10px;
 }
 
-/* Divider */
+/* Divider properties */
 .dropdown-divider {
     height: 1px;
     background-color: white;
@@ -82,29 +93,8 @@
     border: 1px solid rgba(255, 255, 255, 0.125);
 }
 
-/* CanvasBackground - Canvas Properties */
-.canvas-container {
-    position: absolute; /* Use absolute positioning */
-    top: 95px; /* Position it below the ToolSettingsbar */
-    left: 145px; /* Align it next to the Toolbar */
-    width: calc(100% - 145px); /* Adjust as needed */
-    height: calc(100vh - 95px); /* Adjust as needed */
-    display: flex; /* Flexbox to center the canvas */
-    align-items: center; /* Center vertically */
-    justify-content: center; /* Center horizontally */
-}
-
-canvas {
-    display: block;
-    background-color: #000; /* Default background color */
-    image-rendering: pixelated; /* Makes pixel art look crisp */
-    max-width: 100%; /* Ensure it doesn't overflow */
-    max-height: 100%; /* Ensure it doesn't overflow */
-    border: 1px solid rgba(255, 255, 255, 0.125); /* Optional border */
-}
-
 /* ------------------------- */
-/* Tooltip properties */
+/*     Tooltip properties    */
 /* ------------------------- */
 .tooltip-down {
     visibility: hidden;
@@ -136,6 +126,6 @@ canvas {
     left: 85%;
     margin-left: 10px;
     width: 75px;
-    opacity: 0; /* Start tooltip invisible */
+    opacity: 0; 
     transition: opacity 0.3s;
 }
