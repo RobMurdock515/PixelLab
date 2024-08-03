@@ -62,23 +62,28 @@
 
 .dropdown-palette {
     display: flex;
-    justify-content: space-between; /* Optional, if you want to add space between text and image */
+    justify-content: space-between; /* Space between text and image */
     align-items: center;
-    gap: 10px; /* Adjust spacing between text and image */
+    gap: 10px; /* Spacing between text and image */
+    width: 100%; /* Ensure the full width is used */
 }
 
 .palette-text {
-    order: 1;
+    flex: 1; /* Allows the text to take up available space */
     color: white;
     font-size: 14px;
     font-family: 'Roboto', sans-serif;
+    text-align: left; /* Align text to the left */
 }
 
 .palette-icon {
-    order: 2; 
+    flex-shrink: 0; /* Prevents the image from shrinking */
     width: 240px;
     height: 24px;
+    object-fit: contain; /* Ensures the image fits within its container */
+    /* Adjust width and height as needed */
 }
+
 
 /* ------------------------- */
 /* Toolbar button properties */
