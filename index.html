@@ -376,13 +376,44 @@
             <span class="tooltip-down">Spray Tool</span>
         </button>
         
-        <button class="rgb-button"> <!-- RGB Color Picker Button -->
+        <button class="rgb-button">
             <img src="img/Icons/color-icon.png" alt="RGB Tool">
             <span class="tooltip-right">RGB Color Picker</span>
         </button>
+    
         <div class="dropup-rgb">
-            <p>RGB Color Picker Content</p>
+            <div class="color-picker-container">
+                <div class="color-display" id="colorDisplay"></div>
+                <div class="color-codes">
+                    <div class="color-code">
+                        HEX: <span id="hexValue">#000000</span>
+                    </div>
+                    <div class="color-code">
+                        RGB: <span id="rgbValue">0, 0, 0</span>
+                    </div>
+                    <div class="color-code">
+                        HSL: <span id="hslValue">0, 0%, 0%</span>
+                    </div>
+                </div>
+                <div class="color-selector">
+                    <div class="color-box">
+                        <div class="color-saturation">
+                            <div class="color-circle"></div>
+                        </div>
+                    </div>
+                    <div class="color-spectrum">
+                        <div class="spectrum-thumb"></div>
+                    </div>
+                </div>
+                <div class="color-inputs">
+                    <input type="text" id="hexInput" placeholder="HEX" maxlength="7">
+                    <input type="number" id="rInput" placeholder="R" max="255">
+                    <input type="number" id="gInput" placeholder="G" max="255">
+                    <input type="number" id="bInput" placeholder="B" max="255">
+                </div>
+            </div>
         </div>
+
         
         <div class="color-indicator"></div> <!-- Shows Current Select Color -->
 
@@ -454,7 +485,7 @@
     <!------------------------------------------------------------>
     <script src="js/uiMenus.js"></script>
     <script src="js/tooltip.js"></script> 
-    <script src="js/canvas.js"></script>
     <script src="js/palettes.js"></script>
+    <script src="js/rgbPicker.js"></script>
 </body>
 </html>
