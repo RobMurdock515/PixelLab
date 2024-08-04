@@ -4,10 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PixelLab</title>
-    <link rel="stylesheet" href="css/layout.css">
-    <link rel="stylesheet" href="css/ui.css">
-    <link rel="stylesheet" href="css/components.css">
-    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="../PixelLab/ui.css">
+
+
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -26,7 +25,7 @@
                 <img src="img/Icons/new-icon.png" alt="File Icon" class="file-icon">
                 <span class="file-text">File</span>
             </button>
-            <div class="dropdown-content"> <!-- File Button - Dropdown Menu -->
+            <div class="dropdown-file"> <!-- File Button - Dropdown Menu -->
                 <div class="dropdown-item">
                     <img src="img/Icons/new-icon.png" alt="New Icon" class="dropdown-icon">
                     New
@@ -57,198 +56,198 @@
         </div>
 
         <div class="button-container">
-            <button class="colors-button"> <!-- Colors Button -->
-                <img src="img/Icons/colors-icon.png" alt="Colors Icon" class="colors-icon">
-                <span class="colors-text">Colors</span>
+            <button class="palettes-button"> <!-- Palettes Button -->
+                <img src="img/Icons/palettes-icon.png" alt="Palettes Icon" class="palettes-icon">
+                <span class="palettes-text">Palettes</span>
             </button>
-            <div class="dropdown-content-scroll"> <!-- Colors Button - Dropdown Menu -->
-                <div class="dropdown-item" data-palette="defaultPalette">
+            <div class="dropdown-palettes-scroll"> <!-- Colors Button - Dropdown Menu -->
+                <div class="dropdown-palettes" data-palette="defaultPalette">
                     <div class="dropdown-palette">
                         <span class="palette-text">Default Palette</span>
                         <img src="img/Palettes/defaultPalette.png" alt="Palette Icon" class="palette-icon">
                     </div>
                 </div>
-                <div class="dropdown-item" data-palette="bitPalette">
+                <div class="dropdown-palettes" data-palette="bitPalette">
                     <div class="dropdown-palette">
                         <span class="palette-text">8-Bit</span>
                         <img src="img/Palettes/8-bit.png" alt="Palette Icon" class="palette-icon">
                     </div>
                 </div>
-                <div class="dropdown-item" data-palette="astralPalette">
+                <div class="dropdown-palettes" data-palette="astralPalette">
                     <div class="dropdown-palette">
                         <span class="palette-text">Astral</span>
                         <img src="img/Palettes/astral.png" alt="Palette Icon" class="palette-icon">
                     </div>
                 </div>
-                <div class="dropdown-item" data-palette="bitterPalette">
+                <div class="dropdown-palettes" data-palette="bitterPalette">
                     <div class="dropdown-palette">
                         <span class="palette-text">Bitter</span>
                         <img src="img/Palettes/bitter.png" alt="Palette Icon" class="palette-icon">
                     </div>
                 </div>
-                <div class="dropdown-item" data-palette="contrastPalette">
+                <div class="dropdown-palettes" data-palette="contrastPalette">
                     <div class="dropdown-palette">
                         <span class="palette-text">Contrast</span>
                         <img src="img/Palettes/contrast.png" alt="Palette Icon" class="palette-icon">
                     </div>
                 </div>
-                <div class="dropdown-item" data-palette="crimsonPalette">
+                <div class="dropdown-palettes" data-palette="crimsonPalette">
                     <div class="dropdown-palette">
                         <span class="palette-text">Crimson</span>
                         <img src="img/Palettes/crimson.png" alt="Palette Icon" class="palette-icon">
                     </div>
                 </div>
-                <div class="dropdown-item" data-palette="dreamPalette">
+                <div class="dropdown-palettes" data-palette="dreamPalette">
                     <div class="dropdown-palette">
                         <span class="palette-text">Dream</span>
                         <img src="img/Palettes/dream.png" alt="Palette Icon" class="palette-icon">
                     </div>
                 </div>
-                <div class="dropdown-item" data-palette="dungeonPalette">
+                <div class="dropdown-palettes" data-palette="dungeonPalette">
                     <div class="dropdown-palette">
                         <span class="palette-text">Dungeon</span>
                         <img src="img/Palettes/dungeon.png" alt="Palette Icon" class="palette-icon">
                     </div>
                 </div>
-                <div class="dropdown-item" data-palette="duskPalette">
+                <div class="dropdown-palettes" data-palette="duskPalette">
                     <div class="dropdown-palette">
                         <span class="palette-text">Dusk</span>
                         <img src="img/Palettes/dusk.png" alt="Palette Icon" class="palette-icon">
                     </div>
                 </div>
-                <div class="dropdown-item" data-palette="emberPalette">
+                <div class="dropdown-palettes" data-palette="emberPalette">
                     <div class="dropdown-palette">
                         <span class="palette-text">Ember</span>
                         <img src="img/Palettes/ember.png" alt="Palette Icon" class="palette-icon">
                     </div>
                 </div>
-                <div class="dropdown-item" data-palette="fusionPalette">
+                <div class="dropdown-palettes" data-palette="fusionPalette">
                     <div class="dropdown-palette">
                         <span class="palette-text">Fusion</span>
                         <img src="img/Palettes/fusion.png" alt="Palette Icon" class="palette-icon">
                     </div>
                 </div>
-                <div class="dropdown-item" data-palette="gameboyPalette">
+                <div class="dropdown-palettes" data-palette="gameboyPalette">
                     <div class="dropdown-palette">
                         <span class="palette-text">Gameboy</span>
                         <img src="img/Palettes/gameboy.png" alt="Palette Icon" class="palette-icon">
                     </div>
                 </div>
-                <div class="dropdown-item" data-palette="indiePalette">
+                <div class="dropdown-palettes" data-palette="indiePalette">
                     <div class="dropdown-palette">
                         <span class="palette-text">Indie</span>
                         <img src="img/Palettes/indie.png" alt="Palette Icon" class="palette-icon">
                     </div>
                 </div>
-                <div class="dropdown-item" data-palette="indie2Palette">
+                <div class="dropdown-palettes" data-palette="indie2Palette">
                     <div class="dropdown-palette">
                         <span class="palette-text">Indie2</span>
                         <img src="img/Palettes/indie2.png" alt="Palette Icon" class="palette-icon">
                     </div>
                 </div>
-                <div class="dropdown-item" data-palette="mistPalette">
+                <div class="dropdown-palettes" data-palette="mistPalette">
                     <div class="dropdown-palette">
                         <span class="palette-text">Mist</span>
                         <img src="img/Palettes/mist.png" alt="Palette Icon" class="palette-icon">
                     </div>
                 </div>
-                <div class="dropdown-item" data-palette="monochromePalette">
+                <div class="dropdown-palettes" data-palette="monochromePalette">
                     <div class="dropdown-palette">
                         <span class="palette-text">Monochrome</span>
                         <img src="img/Palettes/monochrome.png" alt="Palette Icon" class="palette-icon">
                     </div>
                 </div>
-                <div class="dropdown-item" data-palette="murkyPalette">
+                <div class="dropdown-palettes" data-palette="murkyPalette">
                     <div class="dropdown-palette">
                         <span class="palette-text">Murky</span>
                         <img src="img/Palettes/murky.png" alt="Palette Icon" class="palette-icon">
                     </div>
                 </div>
-                <div class="dropdown-item" data-palette="mysticPalette">
+                <div class="dropdown-palettes" data-palette="mysticPalette">
                     <div class="dropdown-palette">
                         <span class="palette-text">Mystic</span>
                         <img src="img/Palettes/mystic.png" alt="Palette Icon" class="palette-icon">
                     </div>
                 </div>
-                <div class="dropdown-item" data-palette="naturePalette">
+                <div class="dropdown-palettes" data-palette="naturePalette">
                     <div class="dropdown-palette">
                         <span class="palette-text">Nature</span>
                         <img src="img/Palettes/nature.png" alt="Palette Icon" class="palette-icon">
                     </div>
                 </div>
-                <div class="dropdown-item" data-palette="nocturnalPalette">
+                <div class="dropdown-palettes" data-palette="nocturnalPalette">
                     <div class="dropdown-palette">
                         <span class="palette-text">Nocturnal</span>
                         <img src="img/Palettes/nocturnal.png" alt="Palette Icon" class="palette-icon">
                     </div>
                 </div>
-                <div class="dropdown-item" data-palette="oilPalette">
+                <div class="dropdown-palettes" data-palette="oilPalette">
                     <div class="dropdown-palette">
                         <span class="palette-text">Oil</span>
                         <img src="img/Palettes/oil.png" alt="Palette Icon" class="palette-icon">
                     </div>
                 </div>
-                <div class="dropdown-item" data-palette="paperbackPalette">
+                <div class="dropdown-palettes" data-palette="paperbackPalette">
                     <div class="dropdown-palette">
                         <span class="palette-text">Paperback</span>
                         <img src="img/Palettes/paperback.png" alt="Palette Icon" class="palette-icon">
                     </div>
                 </div>
-                <div class="dropdown-item" data-palette="sirenPalette">
+                <div class="dropdown-palettes" data-palette="sirenPalette">
                     <div class="dropdown-palette">
                         <span class="palette-text">Siren</span>
                         <img src="img/Palettes/siren.png" alt="Palette Icon" class="palette-icon">
                     </div>
                 </div>
-                <div class="dropdown-item" data-palette="sodaPalette">
+                <div class="dropdown-palettes" data-palette="sodaPalette">
                     <div class="dropdown-palette">
                         <span class="palette-text">Soda</span>
                         <img src="img/Palettes/soda.png" alt="Palette Icon" class="palette-icon">
                     </div>
                 </div>
-                <div class="dropdown-item" data-palette="spectrumPalette">
+                <div class="dropdown-palettes" data-palette="spectrumPalette">
                     <div class="dropdown-palette">
                         <span class="palette-text">Spectrum</span>
                         <img src="img/Palettes/spectrum.png" alt="Palette Icon" class="palette-icon">
                     </div>
                 </div>
-                <div class="dropdown-item" data-palette="starlitPalette">
+                <div class="dropdown-palettes" data-palette="starlitPalette">
                     <div class="dropdown-palette">
                         <span class="palette-text">Starlit</span>
                         <img src="img/Palettes/starlit.png" alt="Palette Icon" class="palette-icon">
                     </div>
                 </div>
-                <div class="dropdown-item" data-palette="steamPalette">
+                <div class="dropdown-palettes" data-palette="steamPalette">
                     <div class="dropdown-palette">
                         <span class="palette-text">Steam</span>
                         <img src="img/Palettes/steam.png" alt="Palette Icon" class="palette-icon">
                     </div>
                 </div>
-                <div class="dropdown-item" data-palette="stellarPopPalette">
+                <div class="dropdown-palettes" data-palette="stellarPopPalette">
                     <div class="dropdown-palette">
                         <span class="palette-text">Stellar Pop</span>
                         <img src="img/Palettes/stellar-pop.png" alt="Palette Icon" class="palette-icon">
                     </div>
                 </div>
-                <div class="dropdown-item" data-palette="timbertonesPalette">
+                <div class="dropdown-palettes" data-palette="timbertonesPalette">
                     <div class="dropdown-palette">
                         <span class="palette-text">Timber Tones</span>
                         <img src="img/Palettes/timber-tones.png" alt="Palette Icon" class="palette-icon">
                     </div>
                 </div>
-                <div class="dropdown-item" data-palette="tritanopicPalette">
+                <div class="dropdown-palettes" data-palette="tritanopicPalette">
                     <div class="dropdown-palette">
                         <span class="palette-text">Tritanopic</span>
                         <img src="img/Palettes/tritanopic.png" alt="Palette Icon" class="palette-icon">
                     </div>
                 </div>
-                <div class="dropdown-item" data-palette="twilightPalette">
+                <div class="dropdown-palettes" data-palette="twilightPalette">
                     <div class="dropdown-palette">
                         <span class="palette-text">Twilight</span>
                         <img src="img/Palettes/twilight.png" alt="Palette Icon" class="palette-icon">
                     </div>
                 </div>
-                <div class="dropdown-item" data-palette="vividPalette">
+                <div class="dropdown-palettes" data-palette="vividPalette">
                     <div class="dropdown-palette">
                         <span class="palette-text">Vivid</span>
                         <img src="img/Palettes/vivid.png" alt="Palette Icon" class="palette-icon">
@@ -262,7 +261,7 @@
                 <img src="img/Icons/select-icon.png" alt="Select Icon" class="select-icon">
                 <span class="select-text">Select</span>
             </button>
-            <div class="dropdown-content">  <!-- Select Button - Dropdown Menu -->
+            <div class="dropdown-select">  <!-- Select Button - Dropdown Menu -->
                 <div class="dropdown-item">
                     <img src="img/Icons/font-icon.png" alt="Font Icon" class="dropdown-icon">
                     Font
@@ -303,7 +302,7 @@
                 <img src="img/Icons/settings-icon.png" alt="Settings Icon" class="settings-icon">
                 <span class="settings-text">Settings</span>
             </button>
-            <div class="dropdown-content"> <!-- Settings Button - Dropdown Menu -->
+            <div class="dropdown-settings"> <!-- Settings Button - Dropdown Menu -->
                 <div class="dropdown-item">
                     <img src="img/Icons/fullscreen-icon.png" alt="Fullscreen Icon" class="dropdown-icon">
                     Fullscreen
@@ -377,11 +376,16 @@
             <span class="tooltip-down">Spray Tool</span>
         </button>
         
-        <button class="rgb-button"> <!-- Select Color Button -->
+        <button class="rgb-button"> <!-- RGB Color Picker Button -->
             <img src="img/Icons/color-icon.png" alt="RGB Tool">
             <span class="tooltip-right">RGB Color Picker</span>
         </button>
+        <div class="dropup-rgb">
+            <p>RGB Color Picker Content</p>
+        </div>
         
+        <div class="color-indicator"></div> <!-- Shows Current Select Color -->
+
         <div class="color-palette-container"> <!-- Color Palette (cells) -->
             <div class="color-palette">
                 <div class="color-cell" data-color-index="0"></div>
@@ -448,7 +452,7 @@
     <!------------------------------------------------------------>
     <!------------------------- Scripts  ------------------------->
     <!------------------------------------------------------------>
-    <script src="js/dropdown.js"></script>
+    <script src="js/uiMenus.js"></script>
     <script src="js/tooltip.js"></script> 
     <script src="js/canvas.js"></script>
     <script src="js/palettes.js"></script>

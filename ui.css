@@ -1,0 +1,411 @@
+/* ui.css */
+/* =========================================================================================================================================== */
+/*                                                            PixelLab Layout                                                                  */
+/* =========================================================================================================================================== */
+
+* {
+    box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-image: url('./img/Backgrounds/default-background.jpg'); 
+    background-size: cover; 
+    background-position: center;
+    background-repeat: no-repeat;
+    overflow: hidden; /* Prevent scrolling */
+}
+
+/* ------------------------- */
+/*     Menubar properties    */
+/* ------------------------- */
+.Menubar {
+    background-color: transparent;
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.125);
+    width: 100%;
+    height: 55px;
+    position: fixed;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    padding-left: 20px; /* Add some padding to align content nicely */
+}
+
+.Toolbar {
+    background-color: transparent;
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.125);
+    width: 145px;
+    height: calc(100vh - 55px); /* Adjusted height to match .Menubar */
+    position: fixed;
+    top: 55px; /* Starts just below the .Menubar */
+    left: 0; /* Align to the left of the viewport */
+    z-index: 999; /* Ensure it's below the .Menubar but above other content */
+}
+
+.ToolSettingsbar {
+    background-color: transparent;
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.125);
+    width: calc(100% - 145px); /* Make it take the rest of the space next to .Toolbar */
+    height: 40px; 
+    position: fixed;
+    top: 55px; /* Position it right below the .Menubar */
+    left: 145px; /* Position it next to the .Toolbar */
+    z-index: 999; /* Ensure it's on the same level as .Menubar */
+    display: flex;
+}
+
+/* =========================================================================================================================================== */
+/*                                                          MenuBar Button Properties                                                          */
+/* =========================================================================================================================================== */
+
+.button-container {
+    display: flex;
+    align-items: center;
+    margin-right: 60px; /* Adds spacing between buttons */
+    position: relative;
+}
+
+/* Static Tools Icon */
+.tools-icon {
+    height: 40px; 
+    margin-right: 15px; 
+}
+
+.tools-text {
+    color: white;
+    font-size: 20px;
+    font-family: 'Roboto', sans-serif;
+}
+
+/* Dropdown button properties */
+.file-button, .select-button, .palettes-button, .settings-button, .undo-button, .redo-button {
+    background: none;
+    border: none;
+    display: flex;
+    align-items: center;
+    color: white;
+    cursor: pointer;
+    padding: 10px; 
+    margin: 5px; 
+}
+
+.file-button img, .file-button span, .select-button img, .select-button span, .palettes-button img, 
+.palettes-button span, .settings-button img, .settings-button span, .undo-button img, .undo-button span,
+.redo-button img, .redo-button span, .rgb-button img, .rgb-button span {
+    pointer-events: none; /* Ensures the click goes to the button, not the inner elements */
+}
+
+.file-icon, .select-icon, .palettes-icon, .settings-icon, .undo-icon, .redo-icon {
+    height: 40px;
+    margin-right: 12px; /* Space between the icon and the text */
+}
+
+.file-text, .select-text, .palettes-text, .settings-text, .undo-text, .redo-text {
+    color: white;
+    font-size: 20px;
+    font-family: 'Roboto', sans-serif;
+}
+
+.file-button:hover, .select-button:hover, .palettes-button:hover, .settings-button:hover, .undo-button:hover, 
+.redo-button:hover, .toolbar-button:hover, .rgb-button:hover, .color-cell:hover {
+    opacity: 0.7;
+}
+
+/* =========================================================================================================================================== */
+/*                                                     Menubar/Colors/Dropdown Properties                                                      */
+/* =========================================================================================================================================== */
+
+.dropdown-palette {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px; 
+    width: 100%;
+}
+
+.palette-text {
+    flex: 1; /* Allows the text to take up available space */
+    color: white;
+    font-size: 14px;
+    font-family: 'Roboto', sans-serif;
+    text-align: left;
+}
+
+.palette-icon {
+    flex-shrink: 0; /* Prevents the image from shrinking */
+    width: 240px;
+    height: 24px;
+    object-fit: contain; /* Ensures the image fits within its container */
+}
+
+/* =========================================================================================================================================== */
+/*                                                          Toolbar Button Properties                                                          */
+/* =========================================================================================================================================== */
+
+.toolbar-button img {
+    width: 32px; 
+    height: 32px;
+    margin: 18px; 
+}
+
+.toolbar-button {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    position: relative;
+    cursor: pointer;
+}
+
+/* rgb-button properties */
+.rgb-button {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    position: relative;
+    top: 55px;
+    left: -50px;
+    cursor: pointer;
+}
+
+.rgb-button img {
+    width: 32px; 
+    height: 32px;
+}
+
+.color-indicator {
+    width: 30px;  
+    height: 30px; 
+    background-color: black; /* Default color (white) */
+    margin-left: 102px; 
+    margin-top: 20px;
+  }
+  
+/* =========================================================================================================================================== */
+/*                                                  Toolbar/Color-Palette (Cells) Properties                                                   */
+/* =========================================================================================================================================== */
+
+.color-palette-container {
+    position: absolute;
+    bottom: 6px;
+    left: 10px;
+    height: 240px; /* Height to show exactly 45 cells (5 rows x 22px, including gap) */
+    width: 120px;
+    padding-right: 133px; /* scrollbar spacing */
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.color-palette {
+    display: grid;
+    grid-template-columns: repeat(5, 20px); /* 5 columns of 20px each */
+    grid-template-rows: repeat(5, 20px);   /* 5 rows of 20px each */
+    gap: 5px;
+    width: 100%;
+    height: auto; /* Allows height to grow based on number of rows */
+}
+
+.color-cell {
+    width: 22px;
+    height: 22px;
+    cursor: pointer;
+    border: 1px solid #000;
+}
+
+/* Scrollbar Properties - Color-Cell */
+/* WebKit Browsers (Chrome, Safari, Edge) */
+.color-palette-container::-webkit-scrollbar {
+    width: 8px; 
+}
+
+.color-palette-container::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.color-palette-container::-webkit-scrollbar-thumb {
+    background: transparent; 
+    border-radius: 6px;
+}
+
+.color-palette-container::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.255);
+}
+
+/* Apply only if scrollbar customization is needed for Firefox */
+@supports (-moz-appearance: none) {
+    .color-palette-container {
+        scrollbar-width: thin;
+        scrollbar-color: rgba(255, 255, 255, 0.255) transparent;
+    }
+}
+
+/* =========================================================================================================================================== */
+/*                                                         Tool Settings Bar Properties                                                        */
+/* =========================================================================================================================================== */
+
+
+/* =========================================================================================================================================== */
+/*                                                 Modular UI Components (Dropdown/Dropup/etc.                                                 */
+/* =========================================================================================================================================== */
+
+/* Dropdown for file, select, settings Button */
+.dropdown-file, .dropdown-select, .dropdown-settings { 
+    background: rgba(0, 0, 0, 0.60);
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.125);
+    display: none;
+    position: absolute;
+    min-width: 150px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 2001;
+    top: 88%; 
+    left: 0;
+}
+
+/* Dropdown w/ scrollbar for Palettes Button */
+.dropdown-palettes-scroll {
+    background: rgba(0, 0, 0, 0.60);
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.125);
+    display: none;
+    position: absolute;
+    min-width: 150px;
+    max-height: 250px; 
+    overflow-y: auto;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 2001;
+    top: 88%; 
+    left: 0;
+}
+
+/* Scrollbar properties */
+/* WebKit Browsers (Chrome, Safari, Edge) */
+.dropdown-palettes-scroll::-webkit-scrollbar {
+    width: 8px; /* Width of the scrollbar */
+}
+
+.dropdown-palettes-scroll::-webkit-scrollbar-track {
+    background: transparent; /* Background of the track */
+}
+
+.dropdown-palettes-scroll::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.281); /* Color of the scrollbar thumb */
+    border-radius: 6px; /* Rounded corners of the scrollbar thumb */
+}
+
+.dropdown-palettes-scroll::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.255); /* Hover effect for the scrollbar thumb */
+}
+
+/* Apply only if scrollbar customization is needed for Firefox */
+@supports (-moz-appearance: none) {
+    .dropdown-palettes-scroll {
+        scrollbar-width: thin; /* Thin scrollbar */
+        scrollbar-color: rgba(255, 255, 255, 0.255) transparent; /* Thumb color and track color */
+    }
+}
+
+/* Dropup Properties for rgb-button */
+.dropup-rgb {
+    background: rgba(0, 0, 0, 0.801);
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.014);
+    display: none;
+    position: absolute;
+    min-width: 260px;
+    min-height: 260px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.055);
+    z-index: 1000;
+    bottom: 255px; /* Position it above the button */
+    right: -175px;
+}
+
+/* -------------------------- */
+/* Dropdown/Inside properties */
+/* -------------------------- */
+.dropdown-item, .dropdown-palettes {
+    color: white;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: flex; 
+    align-items: center;
+    cursor: pointer;
+}
+
+/* Style for the icons inside dropdown items */
+.dropdown-icon {
+    height: 20px; 
+    margin-right: 10px;
+}
+
+/* Divider properties */
+.dropdown-divider {
+    height: 1px;
+    background-color: white;
+    margin: 4px 0;
+}
+
+/* Change color of dropdown items on hover */
+.dropdown-item:hover, .dropdown-palettes:hover {
+    background: rgba(0, 0, 0, 0.20);
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.125);
+}
+
+/* ------------------------- */
+/*     Tooltip properties    */
+/* ------------------------- */
+.tooltip-down {
+    visibility: hidden;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 3px;
+    position: absolute;
+    z-index: 1;
+    top: 80%;
+    left: 55%;
+    margin-left: -40px;
+    width: 75px;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.tooltip-right {
+    visibility: hidden;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 3px;
+    position: absolute;
+    z-index: 1;
+    bottom: 1%;
+    left: 85%;
+    margin-left: 10px;
+    width: 75px;
+    opacity: 0; 
+    transition: opacity 0.3s;
+}
+
+/* =========================================================================================================================================== */
+/*                                                        Responsiveness (Cell/Tablet)                                                         */
+/* =========================================================================================================================================== */

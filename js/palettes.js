@@ -301,7 +301,7 @@ function applyPalette(paletteName) {
 }
 
 // Event listener for dropdown selection
-document.querySelectorAll('.dropdown-item').forEach(item => {
+document.querySelectorAll('.dropdown-palettes').forEach(item => {
     item.addEventListener('click', function() {
         const selectedPalette = this.getAttribute('data-palette');
         applyPalette(selectedPalette);
