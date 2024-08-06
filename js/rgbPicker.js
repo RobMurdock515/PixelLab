@@ -8,14 +8,14 @@ document.addEventListener('DOMContentLoaded', function() {
     const hexValue = document.getElementById('hexValue');
     const rgbValue = document.getElementById('rgbValue');
     const hslValue = document.getElementById('hslValue');
+    const hexInput = document.getElementById('hexInput');
 
     // Color Values
     let currentHue = 0;
     let currentSaturation = 100;
     let currentBrightness = 50;
 
-    function updateColorDisplay() {
-        const rgb = `rgb(${rgbValue.textContent})`;
+    function updateColorDisplay(rgb) {
         colorDisplay.style.backgroundColor = rgb;
     }
 
@@ -33,10 +33,13 @@ document.addEventListener('DOMContentLoaded', function() {
         rgbValue.textContent = `${rgb.r}, ${rgb.g}, ${rgb.b}`;
         hslValue.textContent = `${hsl.h}, ${hsl.s}%, ${hsl.l}%`;
 
-        updateColorDisplay();
+        updateColorDisplay(`rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`);
 
         colorCircle.style.left = `${x}px`;
         colorCircle.style.top = `${y}px`;
+
+        // Update inputs
+        hexInput.value = hex;
     }
 
     function hsbToRgb(h, s, v) {
@@ -91,6 +94,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const hslColor = `hsl(${currentHue}, 100%, 50%)`;
         colorBox.style.background = `linear-gradient(to top, black, rgba(0, 0, 0, 0)), linear-gradient(to right, white, ${hslColor})`;
         spectrumThumb.style.top = `${clampedY}px`;
+
+        // Update the RGB and other fields accordingly
+        const rgb = hsbToRgb(currentHue, currentSaturation, currentBrightness);
+        updateColorFromPosition(colorCircle.offsetLeft, colorCircle.offsetTop);
     }
 
     colorBox.addEventListener('mousedown', function(e) {
@@ -132,4 +139,33 @@ document.addEventListener('DOMContentLoaded', function() {
         document.addEventListener('mousemove', mouseMoveHandler);
         document.addEventListener('mouseup', mouseUpHandler);
     });
+
+    // Update color from hex input
+    hexInput.addEventListener('input', function() {
+        const hex = hexInput.value;
+        const rgb = hexToRgb(hex);
+        if (rgb) {
+            const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
+            currentHue = hsl.h;
+            currentSaturation = hsl.s;
+            currentBrightness = hsl.l;
+            updateHueFromPosition((currentHue / 360) * colorSpectrum.clientHeight);
+            updateColorFromPosition(colorCircle.offsetLeft, colorCircle.offsetTop);
+        }
+    });
+
+    // Helper to convert HEX to RGB
+    function hexToRgb(hex) {
+        const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+        hex = hex.replace(shorthandRegex, function(m, r, g, b) {
+            return r + r + g + g + b + b;
+        });
+
+        const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+        return result ? {
+            r: parseInt(result[1], 16),
+            g: parseInt(result[2], 16),
+            b: parseInt(result[3], 16)
+        } : null;
+    }
 });
