@@ -292,12 +292,23 @@ function applyPalette(paletteName) {
         colorCell.style.backgroundColor = color;
         colorCell.dataset.colorIndex = index;
         colorPalette.appendChild(colorCell);
+
+        // Add event listener to update the color indicator
+        colorCell.addEventListener('click', function() {
+            updateColorIndicator(color);
+        });
     });
 
     // Adjust the number of rows in the grid to fit all cells
     const totalCells = selectedPalette.length;
     const rowsNeeded = Math.ceil(totalCells / 5);
     colorPalette.style.gridTemplateRows = `repeat(${rowsNeeded}, 22px)`;
+}
+
+// Function to update the color indicator
+function updateColorIndicator(color) {
+    const colorIndicator = document.querySelector('.color-indicator');
+    colorIndicator.style.backgroundColor = color;
 }
 
 // Event listener for dropdown selection
@@ -312,3 +323,4 @@ document.querySelectorAll('.dropdown-palettes').forEach(item => {
 window.onload = function() {
     applyPalette('defaultPalette');
 };
+

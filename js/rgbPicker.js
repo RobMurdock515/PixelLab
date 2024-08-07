@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const rgbValue = document.getElementById('rgbValue');
     const hslValue = document.getElementById('hslValue');
     const hexInput = document.getElementById('hexInput');
+    const colorIndicator = document.querySelector('.color-indicator');
 
     // Color Values
     let currentHue = 0;
@@ -34,12 +35,17 @@ document.addEventListener('DOMContentLoaded', function() {
         hslValue.textContent = `${hsl.h}, ${hsl.s}%, ${hsl.l}%`;
 
         updateColorDisplay(`rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`);
+        updateColorIndicator(hex); // Update the color indicator
 
         colorCircle.style.left = `${x}px`;
         colorCircle.style.top = `${y}px`;
 
         // Update inputs
         hexInput.value = hex;
+    }
+
+    function updateColorIndicator(color) {
+        colorIndicator.style.backgroundColor = color;
     }
 
     function hsbToRgb(h, s, v) {
@@ -151,6 +157,7 @@ document.addEventListener('DOMContentLoaded', function() {
             currentBrightness = hsl.l;
             updateHueFromPosition((currentHue / 360) * colorSpectrum.clientHeight);
             updateColorFromPosition(colorCircle.offsetLeft, colorCircle.offsetTop);
+            updateColorIndicator(hex); // Update the color indicator
         }
     });
 
