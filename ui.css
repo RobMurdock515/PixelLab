@@ -372,75 +372,80 @@ body {
 .ToolSettingsbar .tool-info {
     display: flex;
     align-items: center;
-    margin-right: 80px; /* Space between the tool-info and the first slider group */
+    margin-right: 60px; /* Space between tool-info and the first slider group */
+    width: 100px; /* Fixed width to lock it in place */
 }
 
 .ToolSettingsbar .tool-info span:first-child {
     margin-right: 6px; /* Space between "Tool:" and the selected tool */
-    margin-left: 20px; /* Add space to push "Tool:" slightly to the right */
+    margin-left: 20px; /* Space to push "Tool:" slightly to the right */
 }
 
 .ToolSettingsbar .slider-group {
     display: flex;
     align-items: center;
-    margin-right: 80px; /* Space between this slider group and the next one */
+    margin-right: 60px; /* Space between this slider group and the next one */
+    width: 250px; /* Fixed width to lock it in place */
 }
 
 .ToolSettingsbar .slider-group span {
     margin-right: 10px; /* Space between the label and the slider */
+    white-space: nowrap; /* Prevents text wrapping */
 }
 
-.ToolSettingsbar .slider-group input[type="range"] {
+.ToolSettingsbar .slider-group input[type="range"] { /* Base Slider Styling */
+    flex-grow: 1; /* Ensures the slider takes up available space */
+    margin-right: 10px;
     margin-right: 10px; /* Space between the slider and its value */
     -webkit-appearance: none; /* Remove default styling */
     appearance: none; /* Remove default styling */
     width: 100px; /* Adjust width as needed */
-    background-color: #333; /* Background color of the scrollbar */
+    background-color: rgba(255, 255, 255, 0); /* Background color of the scrollbar */
     height: 6px; /* Height of the scrollbar track */
     border-radius: 4px; /* Optional: rounded corners */
 }
 
-.ToolSettingsbar .slider-group input[type="range"]::-webkit-slider-thumb {
-    background: #007bff; /* Thumb color */
+.ToolSettingsbar .slider-group input[type="range"]::-webkit-slider-thumb { /* (Chrome/Safari) */
+    background: rgba(255, 255, 255, 0.6); /* Thumb color */
     border-radius: 50%; /* Make the thumb round */
-    width: 20px; /* Thumb width */
-    height: 20px; /* Thumb height */
+    width: 10px; /* Thumb width */
+    height: 10px; /* Thumb height */
     cursor: pointer; /* Pointer cursor on hover */
     -webkit-appearance: none; /* Remove default styling */
 }
 
-.ToolSettingsbar .slider-group input[type="range"]::-moz-range-thumb {
-    background: #007bff; /* Thumb color */
+.ToolSettingsbar .slider-group input[type="range"]::-moz-range-thumb { /* Firefox) */
+    background: rgba(255, 255, 255, 0.6); /* Thumb color */
     border-radius: 50%; /* Make the thumb round */
-    width: 20px; /* Thumb width */
-    height: 20px; /* Thumb height */
+    width: 10px; /* Thumb width */
+    height: 10px; /* Thumb height */
     cursor: pointer; /* Pointer cursor on hover */
 }
 
-.ToolSettingsbar .slider-group input[type="range"]::-ms-thumb {
-    background: #007bff; /* Thumb color */
+.ToolSettingsbar .slider-group input[type="range"]::-ms-thumb { /* (Internet Explorer/Edge) */
+    background: rgba(255, 255, 255, 0.6); /* Thumb color */
     border-radius: 50%; /* Make the thumb round */
-    width: 20px; /* Thumb width */
-    height: 20px; /* Thumb height */
+    width: 10px; /* Thumb width */
+    height: 10px; /* Thumb height */
     cursor: pointer; /* Pointer cursor on hover */
 }
 
-.ToolSettingsbar .slider-group input[type="range"]::-webkit-slider-runnable-track {
-    background: #444; /* Background color of the track */
-    height: 6px; /* Height of the scrollbar track */
+.ToolSettingsbar .slider-group input[type="range"]::-webkit-slider-runnable-track { /* (Chrome/Safari) */
+    background: rgba(255, 255, 255, 0.255); /* Background color of the track */
+    height: 10px; /* Height of the scrollbar track */
     border-radius: 4px; /* Optional: rounded corners */
 }
 
-.ToolSettingsbar .slider-group input[type="range"]::-moz-range-track {
-    background: #444; /* Background color of the track */
-    height: 6px; /* Height of the scrollbar track */
+.ToolSettingsbar .slider-group input[type="range"]::-moz-range-track { /* (Firefox) */
+    background: rgba(255, 255, 255, 0.255); /* Background color of the track */
+    height: 10px; /* Height of the scrollbar track */
     border-radius: 4px; /* Optional: rounded corners */
 }
 
-.ToolSettingsbar .slider-group input[type="range"]::-ms-track {
-    background: transparent; /* Background color of the track */
-    border-color: transparent; /* Border color of the track */
-    color: transparent; /* Color of the track */
+.ToolSettingsbar .slider-group input[type="range"]::-ms-track { /* (Internet Explorer/Edge) */
+    background: rgba(255, 255, 255, 0.255); /* Background color of the track */
+    height: 10px; /* Height of the scrollbar track */
+    border-radius: 4px; /* Optional: rounded corners */
 }
 
 /* =========================================================================================================================================== */
