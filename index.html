@@ -339,7 +339,7 @@
     <!--   Toolbar (Tool Selector, RGB Picker, & Color-Cells)   -->
     <!------------------------------------------------------------>
     <div class="Toolbar">
-        <button class="toolbar-button"> <!-- Toolbar Buttons -->
+        <button class="toolbar-button" data-tool="pencil">
             <img src="img/Icons/pencil-icon.png" alt="Pencil Tool">
             <span class="tooltip-down">Pencil Tool</span>
         </button>
@@ -475,6 +475,7 @@
     <!------------------------------------------------------------>
     <div class="canvas-container">
         <canvas id="pixelCanvas"></canvas>
+        <div class="overlay-grid"></div>
     </div> 
 
     <!------------------------------------------------------------>
@@ -485,5 +486,6 @@
     <script src="js/palettes.js"></script>
     <script src="js/rgbPicker.js"></script>
     <script src="js/canvas.js"></script>
+    <script src="js/toolbar.js"></script>
 </body>
 </html>
