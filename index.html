@@ -343,35 +343,35 @@
             <img src="img/Icons/pencil-icon.png" alt="Pencil Tool">
             <span class="tooltip-down">Pencil Tool</span>
         </button>
-        <button class="toolbar-button">
+        <button class="toolbar-button" data-tool="eraser">
             <img src="img/Icons/eraser-icon.png" alt="Eraser Tool">
             <span class="tooltip-down">Eraser Tool</span>
         </button>
-        <button class="toolbar-button">
+        <button class="toolbar-button" data-tool="brush">
             <img src="img/Icons/brush-icon.png" alt="Brush Tool">
             <span class="tooltip-down">Brush Tool</span>
         </button>
-        <button class="toolbar-button">
+        <button class="toolbar-button" data-tool="line">
             <img src="img/Icons/line-icon.png" alt="Line Tool">
             <span class="tooltip-down">Line Tool</span>
         </button>
-        <button class="toolbar-button">
+        <button class="toolbar-button" data-tool="bucker">
             <img src="img/Icons/bucket-icon.png" alt="Bucket Tool">
             <span class="tooltip-down">Bucket Tool</span>
         </button>
-        <button class="toolbar-button">
+        <button class="toolbar-button" data-tool="move">
             <img src="img/Icons/move-icon.png" alt="Move Tool">
             <span class="tooltip-down">Move Tool</span>
         </button>
-        <button class="toolbar-button">
+        <button class="toolbar-button" data-tool="select">
             <img src="img/Icons/select2-icon.png" alt="Select Tool">
             <span class="tooltip-down">Select Tool</span>
         </button>
-        <button class="toolbar-button">
+        <button class="toolbar-button" data-tool="text">
             <img src="img/Icons/text-icon.png" alt="Text Tool">
             <span class="tooltip-down">Text Tool</span>
         </button>
-        <button class="toolbar-button">
+        <button class="toolbar-button" data-tool="spray">
             <img src="img/Icons/spray-icon.png" alt="Spray Tool">
             <span class="tooltip-down">Spray Tool</span>
         </button>
@@ -468,7 +468,25 @@
     <!------------------------------------------------------------>
     <!--ToolSettings Bar (Selected Tool, Pixel Size, & Strength)-->
     <!------------------------------------------------------------>
-    <div class="ToolSettingsbar"></div>
+    <div class="ToolSettingsbar">
+        <div class="tool-info">
+            <span>Tool:</span>
+            <span id="selected-tool"></span>
+        </div>
+        
+        <div class="slider-group">
+            <span>Pixel Size:</span>
+            <input type="range" id="pixel-size" min="1" max="24" value="1" step="1">
+            <span id="pixel-size-value">1</span>
+        </div>
+    
+        <div class="slider-group">
+            <span>Pixel Strength:</span>
+            <input type="range" id="pixel-strength" min="0" max="1" value="0" step="0.01">
+            <span id="pixel-strength-value">0</span>
+        </div>
+    </div>
+    
 
     <!------------------------------------------------------------>
     <!------------------  Canvas (Pixel Grid)  ------------------->

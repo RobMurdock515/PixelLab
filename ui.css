@@ -66,6 +66,12 @@ body {
     left: 145px; /* Position it next to the .Toolbar */
     z-index: 999; /* Ensure it's on the same level as .Menubar */
     display: flex;
+    align-items: center; /* Align items vertically in the center */
+    padding: 0 10px; /* Add some horizontal padding */
+    box-sizing: border-box; /* Include padding and border in element's total width and height */
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px; /* Set the font size */
+    color: #fff; /* Set text color */
 }
 
 /* =========================================================================================================================================== */
@@ -170,6 +176,12 @@ body {
     position: relative;
     cursor: pointer;
 }
+
+.toolbar-button.selected {
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 4px; /* Optional: for rounded corners */
+}
+
 
 /* rgb-button properties */
 .rgb-button {
@@ -356,6 +368,80 @@ body {
 /* =========================================================================================================================================== */
 /*                                                         Tool Settings Bar Properties                                                        */
 /* =========================================================================================================================================== */
+
+.ToolSettingsbar .tool-info {
+    display: flex;
+    align-items: center;
+    margin-right: 80px; /* Space between the tool-info and the first slider group */
+}
+
+.ToolSettingsbar .tool-info span:first-child {
+    margin-right: 6px; /* Space between "Tool:" and the selected tool */
+    margin-left: 20px; /* Add space to push "Tool:" slightly to the right */
+}
+
+.ToolSettingsbar .slider-group {
+    display: flex;
+    align-items: center;
+    margin-right: 80px; /* Space between this slider group and the next one */
+}
+
+.ToolSettingsbar .slider-group span {
+    margin-right: 10px; /* Space between the label and the slider */
+}
+
+.ToolSettingsbar .slider-group input[type="range"] {
+    margin-right: 10px; /* Space between the slider and its value */
+    -webkit-appearance: none; /* Remove default styling */
+    appearance: none; /* Remove default styling */
+    width: 100px; /* Adjust width as needed */
+    background-color: #333; /* Background color of the scrollbar */
+    height: 6px; /* Height of the scrollbar track */
+    border-radius: 4px; /* Optional: rounded corners */
+}
+
+.ToolSettingsbar .slider-group input[type="range"]::-webkit-slider-thumb {
+    background: #007bff; /* Thumb color */
+    border-radius: 50%; /* Make the thumb round */
+    width: 20px; /* Thumb width */
+    height: 20px; /* Thumb height */
+    cursor: pointer; /* Pointer cursor on hover */
+    -webkit-appearance: none; /* Remove default styling */
+}
+
+.ToolSettingsbar .slider-group input[type="range"]::-moz-range-thumb {
+    background: #007bff; /* Thumb color */
+    border-radius: 50%; /* Make the thumb round */
+    width: 20px; /* Thumb width */
+    height: 20px; /* Thumb height */
+    cursor: pointer; /* Pointer cursor on hover */
+}
+
+.ToolSettingsbar .slider-group input[type="range"]::-ms-thumb {
+    background: #007bff; /* Thumb color */
+    border-radius: 50%; /* Make the thumb round */
+    width: 20px; /* Thumb width */
+    height: 20px; /* Thumb height */
+    cursor: pointer; /* Pointer cursor on hover */
+}
+
+.ToolSettingsbar .slider-group input[type="range"]::-webkit-slider-runnable-track {
+    background: #444; /* Background color of the track */
+    height: 6px; /* Height of the scrollbar track */
+    border-radius: 4px; /* Optional: rounded corners */
+}
+
+.ToolSettingsbar .slider-group input[type="range"]::-moz-range-track {
+    background: #444; /* Background color of the track */
+    height: 6px; /* Height of the scrollbar track */
+    border-radius: 4px; /* Optional: rounded corners */
+}
+
+.ToolSettingsbar .slider-group input[type="range"]::-ms-track {
+    background: transparent; /* Background color of the track */
+    border-color: transparent; /* Border color of the track */
+    color: transparent; /* Color of the track */
+}
 
 /* =========================================================================================================================================== */
 /*                                                              Canvas Properties                                                              */

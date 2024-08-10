@@ -76,7 +76,7 @@ overlayGrid.addEventListener('mouseover', (event) => {
   }
 });
 
-// Remove hober on mouse leave
+// Remove hover on mouse leave
 overlayGrid.addEventListener('mouseout', () => {
   hoveredCell = null;
   if (highlightedCell) {
@@ -84,3 +84,4 @@ overlayGrid.addEventListener('mouseout', () => {
     highlightedCell = null;
   }
 });
+
