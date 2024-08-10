@@ -54,26 +54,6 @@ body {
     z-index: 999; /* Ensure it's below the .Menubar but above other content */
 }
 
-.ToolSettingsbar {
-    background-color: transparent;
-    backdrop-filter: blur(16px) saturate(180%);
-    -webkit-backdrop-filter: blur(16px) saturate(180%);
-    border: 1px solid rgba(255, 255, 255, 0.125);
-    width: calc(100% - 145px); /* Make it take the rest of the space next to .Toolbar */
-    height: 40px; 
-    position: fixed;
-    top: 55px; /* Position it right below the .Menubar */
-    left: 145px; /* Position it next to the .Toolbar */
-    z-index: 999; /* Ensure it's on the same level as .Menubar */
-    display: flex;
-    align-items: center; /* Align items vertically in the center */
-    padding: 0 10px; /* Add some horizontal padding */
-    box-sizing: border-box; /* Include padding and border in element's total width and height */
-    font-family: 'Roboto', sans-serif;
-    font-size: 14px; /* Set the font size */
-    color: #fff; /* Set text color */
-}
-
 /* =========================================================================================================================================== */
 /*                                                          MenuBar Button Properties                                                          */
 /* =========================================================================================================================================== */
@@ -368,85 +348,122 @@ body {
 /* =========================================================================================================================================== */
 /*                                                         Tool Settings Bar Properties                                                        */
 /* =========================================================================================================================================== */
+.ToolSettingsbar {
+    background-color: transparent;
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.125);
+    width: calc(100% - 145px);
+    height: 40px;
+    position: fixed;
+    top: 55px;
+    left: 145px;
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    color: #fff;
+}
 
 .ToolSettingsbar .tool-info {
     display: flex;
     align-items: center;
-    margin-right: 60px; /* Space between tool-info and the first slider group */
-    width: 100px; /* Fixed width to lock it in place */
+    margin-right: 60px;
+    width: 100px;
 }
 
 .ToolSettingsbar .tool-info span:first-child {
-    margin-right: 6px; /* Space between "Tool:" and the selected tool */
-    margin-left: 20px; /* Space to push "Tool:" slightly to the right */
+    margin: 0 6px 0 20px;
 }
 
 .ToolSettingsbar .slider-group {
     display: flex;
     align-items: center;
-    margin-right: 60px; /* Space between this slider group and the next one */
-    width: 250px; /* Fixed width to lock it in place */
+    margin-right: 60px;
+    width: 250px;
 }
 
 .ToolSettingsbar .slider-group span {
-    margin-right: 10px; /* Space between the label and the slider */
-    white-space: nowrap; /* Prevents text wrapping */
-}
-
-.ToolSettingsbar .slider-group input[type="range"] { /* Base Slider Styling */
-    flex-grow: 1; /* Ensures the slider takes up available space */
     margin-right: 10px;
-    margin-right: 10px; /* Space between the slider and its value */
-    -webkit-appearance: none; /* Remove default styling */
-    appearance: none; /* Remove default styling */
-    width: 100px; /* Adjust width as needed */
-    background-color: rgba(255, 255, 255, 0); /* Background color of the scrollbar */
-    height: 6px; /* Height of the scrollbar track */
-    border-radius: 4px; /* Optional: rounded corners */
+    white-space: nowrap;
 }
 
-.ToolSettingsbar .slider-group input[type="range"]::-webkit-slider-thumb { /* (Chrome/Safari) */
-    background: rgba(255, 255, 255, 0.6); /* Thumb color */
-    border-radius: 50%; /* Make the thumb round */
-    width: 10px; /* Thumb width */
-    height: 10px; /* Thumb height */
-    cursor: pointer; /* Pointer cursor on hover */
-    -webkit-appearance: none; /* Remove default styling */
+.ToolSettingsbar .slider-container {
+    position: relative;
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
 }
 
-.ToolSettingsbar .slider-group input[type="range"]::-moz-range-thumb { /* Firefox) */
-    background: rgba(255, 255, 255, 0.6); /* Thumb color */
-    border-radius: 50%; /* Make the thumb round */
-    width: 10px; /* Thumb width */
-    height: 10px; /* Thumb height */
-    cursor: pointer; /* Pointer cursor on hover */
+.ToolSettingsbar .slider-container input[type="range"] {
+    flex-grow: 1;
+    margin-right: 10px;
+    width: 100%; /* Make the slider take full width of the container */
+    background-color: transparent;
+    height: 6px;
+    border-radius: 4px;
+    -webkit-appearance: none;
+    appearance: none;
 }
 
-.ToolSettingsbar .slider-group input[type="range"]::-ms-thumb { /* (Internet Explorer/Edge) */
-    background: rgba(255, 255, 255, 0.6); /* Thumb color */
-    border-radius: 50%; /* Make the thumb round */
-    width: 10px; /* Thumb width */
-    height: 10px; /* Thumb height */
-    cursor: pointer; /* Pointer cursor on hover */
+.ToolSettingsbar .slider-container span {
+    position: absolute;
+    right: 0; /* Position the value to the far right of the slider */
+    transform: translateX(100%); /* Move it slightly to the right so it doesn’t overlap the slider */
+    margin-right: 1px; /* Optional: Add space between slider and value */
+    white-space: nowrap;
 }
 
-.ToolSettingsbar .slider-group input[type="range"]::-webkit-slider-runnable-track { /* (Chrome/Safari) */
-    background: rgba(255, 255, 255, 0.255); /* Background color of the track */
-    height: 10px; /* Height of the scrollbar track */
-    border-radius: 4px; /* Optional: rounded corners */
+/* Specific thumb styling for each browser */
+.ToolSettingsbar .slider-group input[type="range"]::-webkit-slider-thumb {
+    background: rgba(255, 255, 255, 0.6);
+    border-radius: 50%;
+    width: 10px;
+    height: 10px;
+    cursor: pointer;
+    -webkit-appearance: none;
 }
 
-.ToolSettingsbar .slider-group input[type="range"]::-moz-range-track { /* (Firefox) */
-    background: rgba(255, 255, 255, 0.255); /* Background color of the track */
-    height: 10px; /* Height of the scrollbar track */
-    border-radius: 4px; /* Optional: rounded corners */
+.ToolSettingsbar .slider-group input[type="range"]::-moz-range-thumb {
+    background: rgba(255, 255, 255, 0.6);
+    border-radius: 50%;
+    width: 10px;
+    height: 10px;
+    cursor: pointer;
 }
 
-.ToolSettingsbar .slider-group input[type="range"]::-ms-track { /* (Internet Explorer/Edge) */
-    background: rgba(255, 255, 255, 0.255); /* Background color of the track */
-    height: 10px; /* Height of the scrollbar track */
-    border-radius: 4px; /* Optional: rounded corners */
+.ToolSettingsbar .slider-group input[type="range"]::-ms-thumb {
+    background: rgba(255, 255, 255, 0.6);
+    border-radius: 50%;
+    width: 10px;
+    height: 10px;
+    cursor: pointer;
 }
+
+/* Specific track styling for each browser */
+.ToolSettingsbar .slider-group input[type="range"]::-webkit-slider-runnable-track {
+    background: rgba(255, 255, 255, 0.255);
+    height: 10px;
+    border-radius: 4px;
+}
+
+.ToolSettingsbar .slider-group input[type="range"]::-moz-range-track {
+    background: rgba(255, 255, 255, 0.255);
+    height: 10px;
+    border-radius: 4px;
+}
+
+.ToolSettingsbar .slider-group input[type="range"]::-ms-track {
+    background: rgba(255, 255, 255, 0.255);
+    height: 10px;
+    border-radius: 4px;
+    border: none;
+    color: transparent; /* Hide track appearance specific to IE/Edge */
+}
+
 
 /* =========================================================================================================================================== */
 /*                                                              Canvas Properties                                                              */
@@ -474,13 +491,13 @@ body {
     position: absolute;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
+    width: 640px; /* Match the canvas size */
+    height: 640px; /* Match the canvas size */
     display: grid;
-    grid-template-columns: repeat(64, 1fr); /* Adjust for your canvas size */
-    grid-template-rows: repeat(64, 1fr);
+    grid-template-columns: repeat(64, 20px); /* Adjust cell size */
+    grid-template-rows: repeat(64, 20px); /* Adjust cell size */
     cursor: url('img/Icons/cursor-crosshair.png') 16 16, auto;
-  }
+}
   
   .overlay-grid div {
     /* Default cell style */

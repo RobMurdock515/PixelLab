@@ -20,18 +20,6 @@ function drawCheckerboard() {
   }
 }
 
-//   000000 Alter this/modify it with overlay grid - hover below
-let highlightedCell = null;
-
-function highlightCell(row, col) {
-  ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear entire canvas
-  drawCheckerboard(); // Redraw checkerboard
-
-  ctx.fillStyle = 'red'; // Change color as desired
-  ctx.fillRect(col * cellSize, row * cellSize, cellSize, cellSize);
-  highlightedCell = { row, col };
-}
-
 // Draw the initial checkerboard
 drawCheckerboard();
 
