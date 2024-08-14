@@ -32,29 +32,45 @@ const overlayGrid = document.querySelector('.overlay-grid');
 // Create overlay grid cells
 for (let i = 0; i < 64 * 64; i++) {
   const cell = document.createElement('div');
+  cell.classList.add('grid-cell'); // Ensure you have this class in your CSS for sizing and positioning
+  cell.dataset.row = Math.floor(i / 64);
+  cell.dataset.col = i % 64;
   overlayGrid.appendChild(cell);
 }
 
 // Hover effect and canvas interaction
 let hoveredCell = null;
+let isDrawing = false;
 
 // Highlight on hover
-overlayGrid.addEventListener('mouseover', (event) => { 
+overlayGrid.addEventListener('mouseover', (event) => {
   const cell = event.target;
   const row = cell.dataset.row;
   const col = cell.dataset.col;
   hoveredCell = { row, col };
+
+  if (hoveredCell && isDrawing) {
+    drawOnCanvas(row, col);
+  }
+});
+
+// Start drawing on mousedown
+overlayGrid.addEventListener('mousedown', () => {
+  isDrawing = true;
   if (hoveredCell) {
-    highlightCell(row, col);
+    drawOnCanvas(hoveredCell.row, hoveredCell.col);
   }
 });
 
-// Remove hover on mouse leave
-overlayGrid.addEventListener('mouseout', () => {
-  hoveredCell = null;
-  if (highlightedCell) {
-    ctx.clearRect(highlightedCell.col * cellSize, highlightedCell.row * cellSize, cellSize, cellSize);
-    highlightedCell = null;
-  }
+// Stop drawing on mouseup
+document.addEventListener('mouseup', () => {
+  isDrawing = false;
 });
 
+// Function to draw on the canvas
+function drawOnCanvas(row, col) {
+  if (ctx) {
+    ctx.fillStyle = getCurrentColor(); // Function to get the current color from the .color-indicator
+    ctx.fillRect(col * cellSize, row * cellSize, cellSize, cellSize);
+  }
+}

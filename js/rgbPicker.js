@@ -10,11 +10,14 @@ document.addEventListener('DOMContentLoaded', function() {
     const hslValue = document.getElementById('hslValue');
     const hexInput = document.getElementById('hexInput');
     const colorIndicator = document.querySelector('.color-indicator');
+    const colorText = colorIndicator.querySelector('.color-text'); // Targeting the color-text span
+    const rgbButton = document.querySelector('.rgb-button');
 
     // Color Values
     let currentHue = 0;
     let currentSaturation = 100;
     let currentBrightness = 50;
+    let lastSelectedHex = '#FFFFFF'; // Default to white or any initial value
 
     function updateColorDisplay(rgb) {
         colorDisplay.style.backgroundColor = rgb;
@@ -42,12 +45,21 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Update inputs
         hexInput.value = hex;
+
+        // Store the last selected hex value
+        lastSelectedHex = hex;
     }
 
     function updateColorIndicator(color) {
         colorIndicator.style.backgroundColor = color;
-    }
+        colorIndicator.dataset.color = color; // Save color in a dataset attribute
 
+        // Update the text content of the .color-text span
+        if (colorText) {
+            colorText.textContent = color; // Display the hex value in the .color-text span
+        }
+    }
+    
     function hsbToRgb(h, s, v) {
         s /= 100;
         v /= 100;
@@ -158,7 +170,15 @@ document.addEventListener('DOMContentLoaded', function() {
             updateHueFromPosition((currentHue / 360) * colorSpectrum.clientHeight);
             updateColorFromPosition(colorCircle.offsetLeft, colorCircle.offsetTop);
             updateColorIndicator(hex); // Update the color indicator
+            
+            // Store the last selected hex value
+            lastSelectedHex = hex;
         }
+    });
+
+    // Handle RGB button click to restore last selected color
+    rgbButton.addEventListener('click', function() {
+        updateColorIndicator(lastSelectedHex);
     });
 
     // Helper to convert HEX to RGB

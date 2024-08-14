@@ -308,7 +308,14 @@ function applyPalette(paletteName) {
 // Function to update the color indicator
 function updateColorIndicator(color) {
     const colorIndicator = document.querySelector('.color-indicator');
-    colorIndicator.style.backgroundColor = color;
+    const colorText = colorIndicator.querySelector('.color-text');
+
+    colorIndicator.style.backgroundColor = color; // Update the background color
+    colorIndicator.dataset.color = color; // Save color in a dataset attribute
+
+    if (colorText) {
+        colorText.textContent = color; // Update the text content of the .color-text span
+    }
 }
 
 // Event listener for dropdown selection
@@ -323,4 +330,3 @@ document.querySelectorAll('.dropdown-palettes').forEach(item => {
 window.onload = function() {
     applyPalette('defaultPalette');
 };
-
