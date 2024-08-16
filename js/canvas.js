@@ -4,6 +4,8 @@
 
 const canvas = document.getElementById('pixelCanvas');
 const ctx = canvas.getContext('2d');
+const widthDisplay = document.getElementById('canvas-width');
+const heightDisplay = document.getElementById('canvas-height');
 
 // Set canvas dimensions and cell size
 canvas.width = 640; // Adjust canvas size as needed
@@ -23,11 +25,22 @@ function drawCheckerboard() {
 // Draw the initial checkerboard
 drawCheckerboard();
 
+// Function to update canvas dimensions display
+function updateCanvasDimensions() {
+  widthDisplay.textContent = canvas.width;
+  heightDisplay.textContent = canvas.height;
+}
+
+// Initial update of dimensions display
+updateCanvasDimensions();
+
 /* =========================================================================================================================================== */
-/*                                                         Overlay Grid - Hover                                                                */
+/*                                                Overlay Grid - Hover/Xy Coordinates                                                          */
 /* =========================================================================================================================================== */
 
 const overlayGrid = document.querySelector('.overlay-grid');
+const xDisplay = document.getElementById('x-coordinate');
+const yDisplay = document.getElementById('y-coordinate');
 
 // Create overlay grid cells
 for (let i = 0; i < 64 * 64; i++) {
@@ -42,15 +55,20 @@ for (let i = 0; i < 64 * 64; i++) {
 let hoveredCell = null;
 let isDrawing = false;
 
-// Highlight on hover
-overlayGrid.addEventListener('mouseover', (event) => {
+// Highlight on hover and update coordinates
+overlayGrid.addEventListener('mousemove', (event) => {
   const cell = event.target;
-  const row = cell.dataset.row;
-  const col = cell.dataset.col;
-  hoveredCell = { row, col };
+  if (cell.classList.contains('grid-cell')) { // Ensure it's a grid cell
+    const row = cell.dataset.row;
+    const col = cell.dataset.col;
+    hoveredCell = { row, col };
 
-  if (hoveredCell && isDrawing) {
-    drawOnCanvas(row, col);
+    xDisplay.textContent = col;
+    yDisplay.textContent = row;
+    
+    if (isDrawing) {
+      drawOnCanvas(row, col);
+    }
   }
 });
 
@@ -58,23 +76,3 @@ overlayGrid.addEventListener('mouseover', (event) => {
 /*                                                   Canvas/Cell - Draw Function                                                               */
 /* =========================================================================================================================================== */
 
-// Start drawing on mousedown
-overlayGrid.addEventListener('mousedown', () => {
-  isDrawing = true;
-  if (hoveredCell) {
-    drawOnCanvas(hoveredCell.row, hoveredCell.col);
-  }
-});
-
-// Stop drawing on mouseup
-document.addEventListener('mouseup', () => {
-  isDrawing = false;
-});
-
-// Function to draw on the canvas
-function drawOnCanvas(row, col) {
-  if (ctx) {
-    ctx.fillStyle = getCurrentColor(); // Function to get the current color from the .color-indicator
-    ctx.fillRect(col * cellSize, row * cellSize, cellSize, cellSize);
-  }
-}

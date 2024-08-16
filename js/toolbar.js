@@ -1,12 +1,9 @@
 /* =========================================================================================================================================== */
-/*                                             Toolbar Button - Activation/Toggle                                                             */
+/*                                             Section 1: Activating/Selecting a Button                                                        */
 /* =========================================================================================================================================== */
 document.addEventListener('DOMContentLoaded', () => {
     const toolbarButtons = document.querySelectorAll('.toolbar-button');
     const selectedToolDisplay = document.getElementById('selected-tool');
-
-    let currentTool = 'pencil'; // Default tool
-    let currentColor = '#000000'; // Default color
 
     toolbarButtons.forEach(button => {
         button.addEventListener('click', () => {
@@ -20,35 +17,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const tool = button.getAttribute('data-tool');
             selectedToolDisplay.textContent = tool.charAt(0).toUpperCase() + tool.slice(1);
             
-            // Set the current tool
-            currentTool = tool;
-            
-            // Optional: Handle tool activation logic here
-            activateTool(tool);
         });
     });
-
-    function activateTool(tool) {
-        console.log(`Tool activated: ${tool}`);
-    }
-
-    // Function to get the current color from the color-indicator
-    function getCurrentColor() {
-        return currentColor;
-    }
-
-    // Event listener for color changes
-    document.querySelector('.color-indicator').addEventListener('change', (event) => {
-        currentColor = event.target.value; // Assuming the color value is directly accessible
-    });
-
-    // Make sure the current tool and color are accessible
-    window.getCurrentTool = () => currentTool;
-    window.getCurrentColor = () => currentColor;
 });
 
 /* =========================================================================================================================================== */
-/*                                            Tool Settings Bar - Pixel Size/Strength Slider                                                */
+/*                                              Section 2: Pixel Size and Strength Settings                                                    */
 /* =========================================================================================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -71,8 +45,9 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /* =========================================================================================================================================== */
-/*                                                        Toolbar Tool - Pencil                                                                */
+/*                                                Section 3: Current Tool Selection                                                            */
 /* =========================================================================================================================================== */
 
-// Assuming you have the canvas drawing functionality in another script (canvas.js)
-// Make sure to integrate the drawing logic properly with the pencil tool
+/* =========================================================================================================================================== */
+/*                                                Section 4: Pencil Tool                                                                       */
+/* =========================================================================================================================================== */
