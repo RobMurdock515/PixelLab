@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function updateColorHistoryDisplay() {
         colorCells.forEach((cell, index) => {
-            const color = colorHistory[index] || 'transparent'; // Default to black if no color
+            const color = colorHistory[index] || 'transparent'; // Default to transparent if no color
             cell.style.backgroundColor = color;
         });
     }
@@ -130,6 +130,20 @@ document.addEventListener('DOMContentLoaded', function() {
         };
     }
 
+    function hexToRgb(hex) {
+        let shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+        hex = hex.replace(shorthandRegex, function(m, r, g, b) {
+            return r + r + g + g + b + b;
+        });
+    
+        let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+        return result ? {
+            r: parseInt(result[1], 16),
+            g: parseInt(result[2], 16),
+            b: parseInt(result[3], 16)
+        } : null;
+    }
+
     function updateHueFromPosition(y) {
         const spectrumRect = colorSpectrum.getBoundingClientRect();
         const thumbHeight = spectrumThumb.offsetHeight;
@@ -139,7 +153,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
         currentHue = (clampedY / spectrumRect.height) * 360;
         const hslColor = `hsl(${currentHue}, 100%, 50%)`;
-        colorBox.style.background = `linear-gradient(to top, black, rgba(0, 0, 0, 0)), linear-gradient(to right, white, ${hslColor})`;
+        colorBox.style.background = `linear-gradient(to top, black, rgba(0, 0, 0, 0)), 
+                                     linear-gradient(to right, white, ${hslColor})`;
         spectrumThumb.style.top = `${clampedY}px`;
     }
 
@@ -172,16 +187,22 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     colorSpectrum.addEventListener('mousedown', function(e) {
+        mouseIsDown = true;
         const rect = colorSpectrum.getBoundingClientRect();
         const y = e.clientY - rect.top;
         updateHueFromPosition(y);
+        updateColorFromPosition(colorCircle.offsetLeft, colorCircle.offsetTop, false); // Update based on hue change
 
         function mouseMoveHandler(e) {
-            const y = e.clientY - rect.top;
-            updateHueFromPosition(y);
+            if (mouseIsDown) {
+                const y = e.clientY - rect.top;
+                updateHueFromPosition(y);
+                updateColorFromPosition(colorCircle.offsetLeft, colorCircle.offsetTop, false);
+            }
         }
 
         function mouseUpHandler() {
+            mouseIsDown = false;
             document.removeEventListener('mousemove', mouseMoveHandler);
             document.removeEventListener('mouseup', mouseUpHandler);
         }
@@ -190,50 +211,38 @@ document.addEventListener('DOMContentLoaded', function() {
         document.addEventListener('mouseup', mouseUpHandler);
     });
 
-    // Update color from hex input
     hexInput.addEventListener('input', function() {
         const hex = hexInput.value;
         const rgb = hexToRgb(hex);
+
         if (rgb) {
             const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
             currentHue = hsl.h;
             currentSaturation = hsl.s;
             currentBrightness = hsl.l;
-            updateHueFromPosition((currentHue / 360) * colorSpectrum.clientHeight);
-            updateColorFromPosition(colorCircle.offsetLeft, colorCircle.offsetTop, true); // Update history
-            
-            // Update the color indicator
-            updateColorIndicator(hex);
+
+            updateColorFromPosition(colorCircle.offsetLeft, colorCircle.offsetTop, true);
         }
     });
 
-    // Handle RGB button click to restore last selected color
     rgbButton.addEventListener('click', function() {
-        // Only restore the color if a color has been chosen (i.e., colorHistory is not empty)
         if (colorHistory.length > 0) {
-            updateColorFromPosition(colorCircle.offsetLeft, colorCircle.offsetTop, false);
+            const lastColor = colorHistory[0]; // Get the last selected color
+            if (lastColor) {
+                updateColorIndicator(lastColor);
+            }
         }
     });
 
-    // Handle RGB cell click to update the current color
-    colorCells.forEach(cell => {
+    // Add event listeners for rgb-cells to update the selected color
+    colorCells.forEach((cell, index) => {
         cell.addEventListener('click', function() {
-            const selectedColor = cell.style.backgroundColor;
-            if (selectedColor) {
-                const rgb = selectedColor.match(/\d+/g).map(Number);
-                const hex = rgbToHex(rgb[0], rgb[1], rgb[2]);
-
-                // Convert RGB to HSL and update the current values
-                const hsl = rgbToHsl(rgb[0], rgb[1], rgb[2]);
-                currentHue = hsl.h;
-                currentSaturation = hsl.s;
-                currentBrightness = hsl.l;
-                updateHueFromPosition((currentHue / 360) * colorSpectrum.clientHeight);
-                updateColorFromPosition(colorCircle.offsetLeft, colorCircle.offsetTop, true); // Update history
-                
-                // Update the color indicator
-                updateColorIndicator(hex);
+            const color = colorHistory[index];
+            if (color) {
+                updateColorIndicator(color);
+                addColorToHistory(color); // Move selected color to the front
             }
         });
     });
+
 });
