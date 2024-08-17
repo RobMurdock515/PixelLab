@@ -496,12 +496,11 @@ body {
 /* =========================================================================================================================================== */
 
 .canvas-container {
-    width: 100%; /* Adjust width as needed */
-    max-width: 1280px; /* Maximum width for the container */
+    max-width: 1300px; /* Maximum width for the container */
     margin: 0 auto; /* Center the canvas */
     position: relative;
-    top: -220px;
-    transform: scale(0.45); /* Adjust the scale factor as needed */
+    top: -238px;
+    transform: scale(0.47); /* Adjust the scale factor as needed */
     border: 1px solid rgba(255, 255, 255, 0.125); /* Optional border */
     z-index: 1; /* Ensure the canvas is below the overlay grid */
 }
@@ -510,32 +509,21 @@ body {
     display: block;
     width: 100%; /* Responsive width */
     height: 100%; /* Maintain aspect ratio */
-    transform: scale(1.0); /* Adjust the scale factor as needed */
-    transform-origin: top left; /* Set the origin for scaling */
 }
 
 .overlay-grid {
     position: absolute;
     top: 0;
     left: 0;
-    width: 640px; /* Match the canvas size */
-    height: 640px; /* Match the canvas size */
-    display: grid;
-    grid-template-columns: repeat(64, 20px); /* Adjust cell size */
-    grid-template-rows: repeat(64, 20px); /* Adjust cell size */
     cursor: url('img/Icons/cursor-crosshair.png') 16 16, auto;
     z-index: 2; /* Ensure the overlay grid is above the canvas */
 }
-  
-  .overlay-grid div {
-    /* Default cell style */
-    border: 1px solid transparent;
-  }
   
   .overlay-grid div:hover {
     background-color: rgba(255, 255, 255, 0.411);
   }
 
+  /* Displays x-y canvas coordinates */
   .coordinate-display {
     margin: 20px;
     font-family: 'Roboto', sans-serif;
@@ -549,6 +537,7 @@ body {
     border-radius: 5px;
 }
 
+/* Displays Current Canvas Size */
 .dimensions-display {
     margin: 20px;
     font-family: 'Roboto', sans-serif;
