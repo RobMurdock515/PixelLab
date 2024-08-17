@@ -83,3 +83,73 @@ overlayGrid.addEventListener('mousemove', (event) => {
         }
     }
 });
+
+/* =========================================================================================================================================== */
+/*                                Canvas - Draw Functionality                                                                                  */
+/* =========================================================================================================================================== */
+
+const toolDisplay = document.getElementById('selected-tool'); // Display for the selected tool
+const colorIndicator = document.querySelector('.color-indicator'); // Color indicator element
+
+// Function to get the current tool from the display
+function getCurrentTool() {
+    return toolDisplay.textContent.toLowerCase();
+}
+
+// Function to get the current color from the color-indicator class
+function getCurrentColor() {
+    return colorIndicator.style.backgroundColor || 'rgba(0, 0, 0, 0)'; 
+}
+
+// Function to draw on the canvas
+function drawOnCanvas(row, col) {
+    const tool = getCurrentTool();
+    const color = getCurrentColor();
+    
+    // Prevent drawing with transparent color
+    if (color === 'rgba(0, 0, 0, 0)' || color === '') {
+        return; // No drawing action if color is transparent
+    }
+    
+    ctx.fillStyle = color;
+    
+    // Draw based on the selected tool
+    if (tool === 'pencil') {
+        ctx.fillRect(col * cellSize, row * cellSize, cellSize, cellSize);
+    } else if (tool === 'brush') {
+        drawBrushPattern(row, col);
+    }
+}
+
+// Function to draw brush pattern
+function drawBrushPattern(row, col) {
+    const brushPattern = [
+        [0, 0], [2, 0], [-2, 0], [0, 2], [0, -2],
+        [3, 2], [3, -2], [-3, 2], [-3, -2],
+        [2, 3], [3, 1], [-2, -3], [-3, -1],
+        [2, -3], [-2, 3], [3, -1], [-3, 1]
+    ];
+
+    brushPattern.forEach(([dx, dy]) => {
+        const x = col * cellSize + dx * cellSize;
+        const y = row * cellSize + dy * cellSize;
+
+        if (Math.random() < 0.7) { // Adjust density if needed
+            ctx.fillRect(x, y, cellSize, cellSize);
+        }
+    });
+}
+
+
+// Mouse event listeners for drawing
+overlayGrid.addEventListener('mousedown', () => {
+    isDrawing = true;
+});
+
+overlayGrid.addEventListener('mouseup', () => {
+    isDrawing = false;
+});
+
+overlayGrid.addEventListener('mouseleave', () => {
+    isDrawing = false;
+});
