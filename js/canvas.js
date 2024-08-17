@@ -84,6 +84,7 @@ overlayGrid.addEventListener('mousemove', (event) => {
     }
 });
 
+
 /* =========================================================================================================================================== */
 /*                                Canvas - Draw Functionality                                                                                  */
 /* =========================================================================================================================================== */
@@ -121,24 +122,45 @@ function drawOnCanvas(row, col) {
     }
 }
 
-// Function to draw brush pattern
+// Function to draw brush pattern with a more refined organic look
 function drawBrushPattern(row, col) {
     const brushPattern = [
-        [0, 0], [2, 0], [-2, 0], [0, 2], [0, -2],
-        [3, 2], [3, -2], [-3, 2], [-3, -2],
-        [2, 3], [3, 1], [-2, -3], [-3, -1],
-        [2, -3], [-2, 3], [3, -1], [-3, 1]
+        // Central core (very dense)
+        [0, 0], [1, 0], [-1, 0], [0, 1], [0, -1],
+        [1, 1], [-1, -1], [1, -1], [-1, 1],
+        [2, 0], [-2, 0], [0, 2], [0, -2],
+        [2, 1], [-2, -1], [1, 2], [-1, -2],
+        [2, 2], [-2, -2], [2, -2], [-2, 2],
+
+        // Intermediate scattering (medium dense)
+        [3, 0], [-3, 0], [0, 3], [0, -3],
+        [3, 1], [-3, -1], [1, 3], [-1, -3],
+        [3, 2], [-3, -2], [2, 3], [-2, -3],
+
+        // Outer scattering (low density)
+        [4, 0], [-4, 0], [0, 4], [0, -4],
+        [4, 1], [-4, -1], [1, 4], [-1, -4],
+        [4, 2], [-4, -2], [2, 4], [-2, -4],
+        [4, 3], [-4, -3], [3, 4], [-3, -4],
     ];
 
-    brushPattern.forEach(([dx, dy]) => {
+    brushPattern.forEach(([dx, dy], index) => {
         const x = col * cellSize + dx * cellSize;
         const y = row * cellSize + dy * cellSize;
 
-        if (Math.random() < 0.7) { // Adjust density if needed
+        if (index < 9) {
+            // Central core: almost always filled
             ctx.fillRect(x, y, cellSize, cellSize);
+        } else if (index < 17) {
+            // Intermediate scattering: moderate chance of filling
+            if (Math.random() < 0.7) ctx.fillRect(x, y, cellSize, cellSize);
+        } else {
+            // Outer scattering: lower chance of filling
+            if (Math.random() < 0.4) ctx.fillRect(x, y, cellSize, cellSize);
         }
     });
 }
+
 
 
 // Mouse event listeners for drawing
