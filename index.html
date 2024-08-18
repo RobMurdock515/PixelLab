@@ -36,6 +36,33 @@
                     <img src="img/Icons/resize-icon.png" alt="Resize Icon" class="dropdown-icon">
                     Resize Canvas
                 </div>
+                
+                <!-- Resize Canvas Pop-Up Box -->
+                <div id="resizePopup" class="resize-popup" style="display: none;">
+                    <button class="close-btn" onclick="closeResizePopup()">&times;</button>
+                    <h2>Resize Canvas</h2>
+                    <div class="size-options">
+                        <button onclick="resizeCanvas(16)">16x16</button>
+                        <button onclick="resizeCanvas(32)">32x32</button>
+                        <button onclick="resizeCanvas(64)">64x64</button>
+                        <button onclick="resizeCanvas(128)">128x128</button>
+                    </div>
+                    <div class="popup-footer">
+                        <button onclick="applyResize()">Apply</button>
+                        <div class="orientation-options">
+                            <label>
+                                <input type="radio" name="orientation" value="portrait" checked> 
+                                <span>Portrait</span>
+                            </label>
+                            <label>
+                                <input type="radio" name="orientation" value="landscape">
+                                <span>Landscape</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+
                 <div class="dropdown-divider"></div>
                 <div class="dropdown-item">
                     <img src="img/Icons/open-icon.png" alt="Open Icon" class="dropdown-icon">
@@ -519,6 +546,7 @@
     <!------------------------- Scripts  ------------------------->
     <!------------------------------------------------------------>
     <script src="js/uiMenus.js"></script>
+    <script src="js/menus.js"></script>
     <script src="js/tooltip.js"></script> 
     <script src="js/rgbPicker.js"></script>
     <script src="js/canvas.js"></script>
