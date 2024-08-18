@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /* =========================================================================================================================================== */
-/*                                                Section 3: Pencil Tool                                                                       */
+/*                                                Section 3: Eraser Tool                                                                       */
 /* =========================================================================================================================================== */
 
 /* Skip Eraser Functionality for now */
@@ -93,7 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /* =========================================================================================================================================== */
-/*                                                Section 4: Line Tool                                                                        */
+/*                                                Section 5: Line Tool                                                                         */
 /* =========================================================================================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -108,6 +108,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Set default pixel size for the line tool
             pixelSizeInput.value = 1;
+            document.getElementById('pixel-size-value').textContent = pixelSizeInput.value;
+        });
+    }
+});
+
+/* =========================================================================================================================================== */
+/*                                                Section 6: Spray Tool                                                                        */
+/* =========================================================================================================================================== */
+
+document.addEventListener('DOMContentLoaded', () => {
+    const brushButton = document.querySelector('[data-tool="spray"]');
+    const pixelSizeInput = document.getElementById('pixel-size'); // Assuming this is your pixel size input
+
+    // Set default pixel size for the spray tool
+    if (sprayButton) {
+        sprayButton.addEventListener('click', () => {
+            // Logic for selecting and using the spray tool
+            console.log('Spray tool selected');
+
+            // Set default pixel size for the spray tool
+            pixelSizeInput.value = 24; // Example value
             document.getElementById('pixel-size-value').textContent = pixelSizeInput.value;
         });
     }

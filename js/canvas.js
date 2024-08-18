@@ -1,5 +1,5 @@
 /* =========================================================================================================================================== */
-/*                                             Draw Canvas Size/Checkerboard - Default Pixel (x/y)                                             */
+/*                                             Section 1: Draw Canvas Size/Checkerboard - Default Pixel (x/y)                                             */
 /* =========================================================================================================================================== */
 
 const canvas = document.getElementById('pixelCanvas');
@@ -7,10 +7,10 @@ const ctx = canvas.getContext('2d');
 const widthDisplay = document.getElementById('canvas-width');
 const heightDisplay = document.getElementById('canvas-height');
 
-// Set canvas dimensions and cell size
+// Set canvas dimensions and default cell size
 canvas.width = 650; // Adjust canvas size as needed
 canvas.height = 650;
-let cellSize = 10; // Size of each cell on the canvas
+let cellSize = 10; // Default size of each cell on the canvas
 
 // Function to draw a checkerboard pattern
 function drawCheckerboard() {
@@ -35,7 +35,7 @@ function updateCanvasDimensions() {
 updateCanvasDimensions();
 
 /* =========================================================================================================================================== */
-/*                                Overlay Grid - Hover/Xy Coordinates                                                                                                 */
+/*                                Section 2: Overlay Grid - Hover/Xy Coordinates                                                               */
 /* =========================================================================================================================================== */
 
 const overlayGrid = document.querySelector('.overlay-grid');
@@ -84,9 +84,8 @@ overlayGrid.addEventListener('mousemove', (event) => {
     }
 });
 
-
 /* =========================================================================================================================================== */
-/*                                Canvas - Draw Functionality                                                                                  */
+/*                                Section 4: Canvas - Draw Functionality                                                                       */
 /* =========================================================================================================================================== */
 
 const toolDisplay = document.getElementById('selected-tool'); // Display for the selected tool
@@ -119,6 +118,8 @@ function drawOnCanvas(row, col) {
         ctx.fillRect(col * cellSize, row * cellSize, cellSize, cellSize);
     } else if (tool === 'brush') {
         drawBrushPattern(row, col);
+    } else if (tool === 'spray') {
+        drawSprayPattern(row, col, parseInt(document.getElementById('pixel-size').value), parseFloat(document.getElementById('pixel-strength').value), 0); // Default angle to 0
     }
 }
 
@@ -161,11 +162,42 @@ function drawBrushPattern(row, col) {
     });
 }
 
+// Function to draw spray pattern with varying density and fade-out effect
+function drawSprayPattern(row, col, brushSize, pressure, angle) {
+    const brushPattern = [];
+    const radius = brushSize / 2;
 
+    // Generate random positions with varying density
+    for (let i = 0; i < Math.floor(brushSize * brushSize * pressure * 1.5); i++) {
+        const randAngle = Math.random() * Math.PI * 2;
+        const distance = Math.random() * radius;
+        const dx = Math.cos(randAngle) * distance;
+        const dy = Math.sin(randAngle) * distance;
+        brushPattern.push([dx, dy]);
+    }
+
+    brushPattern.forEach(([dx, dy]) => {
+        const x = col * cellSize + dx * cellSize * Math.cos(angle) - dy * cellSize * Math.sin(angle);
+        const y = row * cellSize + dx * cellSize * Math.sin(angle) + dy * cellSize * Math.cos(angle);
+
+        const distanceToCenter = Math.sqrt(dx * dx + dy * dy);
+        const alpha = pressure * (1 - distanceToCenter / radius) * 0.8; // Adjust alpha for fade-out
+
+        ctx.globalAlpha = alpha;
+        ctx.fillRect(x, y, cellSize, cellSize);
+    });
+
+    ctx.globalAlpha = 1; // Reset global alpha
+}
 
 // Mouse event listeners for drawing
-overlayGrid.addEventListener('mousedown', () => {
-    isDrawing = true;
+overlayGrid.addEventListener('mousedown', (event) => {
+    if (event.button === 0) { // Check if the left mouse button is clicked
+        isDrawing = true;
+        if (hoveredCell) {
+            drawOnCanvas(hoveredCell.row, hoveredCell.col);
+        }
+    }
 });
 
 overlayGrid.addEventListener('mouseup', () => {
