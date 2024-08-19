@@ -32,23 +32,23 @@
                     <img src="img/Icons/clear-icon.png" alt="Clear Icon" class="dropdown-icon">
                     Clear
                 </div>
-                <div class="dropdown-item">
+                <div class="dropdown-item" id="resizeCanvasButton">
                     <img src="img/Icons/resize-icon.png" alt="Resize Icon" class="dropdown-icon">
                     Resize Canvas
-                </div>
+                </div>                
                 
                 <!-- Resize Canvas Pop-Up Box -->
                 <div id="resizePopup" class="resize-popup" style="display: none;">
                     <button class="close-btn" onclick="closeResizePopup()">&times;</button>
                     <h2>Resize Canvas</h2>
                     <div class="size-options">
-                        <button onclick="resizeCanvas(16)">16x16</button>
-                        <button onclick="resizeCanvas(32)">32x32</button>
-                        <button onclick="resizeCanvas(64)">64x64</button>
-                        <button onclick="resizeCanvas(128)">128x128</button>
+                        <button>16x16</button>
+                        <button>32x32</button>
+                        <button>64x64</button>
+                        <button>128x128</button>
                     </div>
                     <div class="popup-footer">
-                        <button onclick="applyResize()">Apply</button>
+                        <button class="apply-btn">Apply</button>
                         <div class="orientation-options">
                             <label>
                                 <input type="radio" name="orientation" value="portrait" checked> 
@@ -61,6 +61,7 @@
                         </div>
                     </div>
                 </div>
+
 
 
                 <div class="dropdown-divider"></div>
@@ -551,10 +552,6 @@
     <script src="js/rgbPicker.js"></script>
     <script src="js/canvas.js"></script>
     <script src="js/toolbar.js"></script>
-    <script src="js/file.js"></script>
     <script src="js/palettes.js"></script>
-    <script src="js/select.js"></script>
-    <script src="js/settings.js"></script>
-    <script src="js/unRedo.js"></script>
 </body>
 </html>

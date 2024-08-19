@@ -99,7 +99,6 @@ body {
 /* =========================================================================================================================================== */
 
 /* Styles for the resize canvas pop-up box */
-/* Styles for the resize canvas pop-up box */
 .resize-popup {
     position: absolute;
     width: 450px;
@@ -132,9 +131,9 @@ body {
     background-color: #c42e3bd5;
 }
 
-/* Active state */
-.resize-popup button.active {
-    background-color: #c42e3bd5; /* Color for the active button */
+/* Styles for the selected button */
+.resize-popup .active-button {
+    background-color: #c42e3b; /* Red color for the selected button */
 }
 
 /* Label for orientation selection */
@@ -175,7 +174,7 @@ body {
     display: flex;
     justify-content: space-between; /* Space between Apply button and orientation options */
     align-items: center;
-    margin-top: 20px; /* Adjust as needed */
+    
 }
 
 /* Container for orientation options */
@@ -183,7 +182,10 @@ body {
     display: flex;
     flex-direction: column;
     align-items: flex-start; /* Align items to the left */
-    margin-left: 20px; /* Space between Apply button and orientation options */
+}
+
+.resize-popup .orientation-options label {
+    padding: 5px; /* Add space to each label */
 }
 
 

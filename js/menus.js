@@ -2,85 +2,65 @@
 /*                                                Section 1: File Buttons                                                                      */
 /* =========================================================================================================================================== */
 
-// Resize Canvas Button - Functionality
+// Show resize pop-up
 function showResizePopup() {
-    const existingPopup = document.querySelector('.resize-popup');
-    if (!existingPopup) {
-        createResizePopup(); // Create the popup if it does not already exist
-    }
-    const popup = document.querySelector('.resize-popup');
-    popup.style.display = 'block';
+    document.getElementById('resizePopup').style.display = 'block';
 }
 
-// Function to close the resize pop-up box
+// Close resize pop-up
 function closeResizePopup() {
-    const popup = document.querySelector('.resize-popup');
-    if (popup) {
-        popup.style.display = 'none';
-    }
+    document.getElementById('resizePopup').style.display = 'none';
 }
 
-// Function to create the resize pop-up box HTML structure
-function createResizePopup() {
-    const popup = document.createElement('div');
-    popup.className = 'resize-popup';
-    popup.style.display = 'none'; // Ensure it's hidden initially
-    popup.style.position = 'absolute'; // Ensure it's positioned relative to the page
-    popup.style.backgroundColor = 'white'; // Set a background color for visibility
-    popup.style.border = '1px solid black'; // Optional: Add a border for visibility
-    popup.style.padding = '10px'; // Optional: Add padding for spacing
-    popup.style.zIndex = '1000'; // Ensure it appears above other content
+// Event listener for "Resize Canvas" button
+document.getElementById('resizeCanvasButton').addEventListener('click', function(event) {
+    event.stopPropagation();
+    showResizePopup();
+});
 
-    // Grid size buttons
-    const sizes = [16, 32, 64, 128];
-    sizes.forEach(size => {
-        const button = document.createElement('button');
-        button.textContent = `${size}x${size}`;
-        button.addEventListener('click', () => resizeCanvas(size, size));
-        popup.appendChild(button);
-    });
-
-    // Portrait/Landscape options
-    const orientationLabel = document.createElement('label');
-    orientationLabel.textContent = 'Orientation: ';
-    popup.appendChild(orientationLabel);
-
-    const portraitOption = document.createElement('input');
-    portraitOption.type = 'radio';
-    portraitOption.name = 'orientation';
-    portraitOption.value = 'portrait';
-    portraitOption.checked = true;
-    portraitOption.addEventListener('change', updateOrientation);
-    popup.appendChild(portraitOption);
-    popup.appendChild(document.createTextNode('Portrait'));
-
-    const landscapeOption = document.createElement('input');
-    landscapeOption.type = 'radio';
-    landscapeOption.name = 'orientation';
-    landscapeOption.value = 'landscape';
-    landscapeOption.addEventListener('change', updateOrientation);
-    popup.appendChild(landscapeOption);
-    popup.appendChild(document.createTextNode('Landscape'));
-
-    document.body.appendChild(popup);
-}
-
-// Handle "Resize Canvas" selection
-function setupResizeCanvasMenu() {
-    const resizeCanvasButton = document.querySelector('.dropdown-file .dropdown-item:nth-child(3)'); // Adjust selector if needed
-    resizeCanvasButton.addEventListener('click', function(event) {
-        event.stopPropagation();
-        showResizePopup();
-    });
-}
-
-// Close pop-up if clicking outside of it
-window.addEventListener('click', function(event) {
-    if (!event.target.matches('.dropdown-file .dropdown-item:nth-child(3)') &&
-        !event.target.closest('.resize-popup')) {
+// Close resize popup when clicking outside
+document.addEventListener('click', function(event) {
+    if (!document.getElementById('resizePopup').contains(event.target) &&
+        !document.getElementById('resizeCanvasButton').contains(event.target)) {
         closeResizePopup();
     }
 });
 
-// Initialize setup
-setupResizeCanvasMenu();
+// Track selected size and previous size
+let selectedSize = null;
+let previousSize = null;
+
+// Event listeners for grid size buttons
+document.querySelectorAll('.size-options button').forEach(function(button) {
+    button.addEventListener('click', function() {
+        // Remove active class from all buttons
+        document.querySelectorAll('.size-options button').forEach(btn => btn.classList.remove('active-button'));
+
+        // Add active class to the clicked button
+        this.classList.add('active-button');
+        
+        // Handle grid size selection
+        const newSize = parseInt(this.textContent); // Assuming the button text is the new size
+        if ([16, 32, 64, 128].includes(newSize)) {
+            selectedSize = newSize;
+            previousSize = window.cellSize; // Save the current size
+        }
+    });
+});
+
+// Apply the selected size
+function applyResize() {
+    if (selectedSize) {
+        window.resizeCanvas(selectedSize);
+        closeResizePopup();
+        selectedSize = null; // Reset selected size
+    }
+}
+
+// Event listener for the Apply button
+document.querySelector('.popup-footer button').addEventListener('click', function() {
+    applyResize();
+});
+
+// Expose the applyResize function to other scripts
+window.applyResize = applyResize;

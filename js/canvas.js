@@ -7,29 +7,38 @@ const ctx = canvas.getContext('2d');
 const widthDisplay = document.getElementById('canvas-width');
 const heightDisplay = document.getElementById('canvas-height');
 
-// Set canvas dimensions and default cell size
-canvas.width = 650; // Adjust canvas size as needed
-canvas.height = 650;
-let cellSize = 10; // Default size of each cell on the canvas
+const canvasWidth = 650;
+const canvasHeight = 650;
 
-// Function to draw a checkerboard pattern
-function drawCheckerboard() {
-    for (let x = 0; x < canvas.width / cellSize; x++) {
-        for (let y = 0; y < canvas.height / cellSize; y++) {
-            ctx.fillStyle = (x + y) % 2 === 0 ? 'rgba(255, 255, 255, 0.125)' : 'transparent';
-            ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
-        }
+let cellSize = 10; // Default cell size
+let cellsPerRow = 64; // Default number of cells per row and column
+
+function drawCheckerboard(canvas, ctx, cellSize) {
+  canvas.width = canvasWidth;
+  canvas.height = canvasHeight;
+
+  for (let x = 0; x < canvas.width / cellSize; x++) {
+    for (let y = 0; y < canvas.height / cellSize; y++) {
+      ctx.fillStyle = (x + y) % 2 === 0 ? 'rgba(255, 255, 255, 0.125)' : 'transparent';
+      ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
     }
+  }
 }
 
-// Draw the initial checkerboard
-drawCheckerboard();
-
-// Function to update canvas dimensions display
 function updateCanvasDimensions() {
-    widthDisplay.textContent = canvas.width;
-    heightDisplay.textContent = canvas.height;
+  widthDisplay.textContent = canvasWidth;
+  heightDisplay.textContent = canvasHeight;
 }
 
-// Initial update of dimensions display
+function resizeCanvas(newCellsPerRow) {
+  cellsPerRow = newCellsPerRow;
+  cellSize = canvasWidth / cellsPerRow; // Adjust cell size based on the new number of cells
+  drawCheckerboard(canvas, ctx, cellSize);
+}
+
+// Initial setup
+resizeCanvas(64); // Default grid size
 updateCanvasDimensions();
+
+// Expose the resizeCanvas function to other scripts
+window.resizeCanvas = resizeCanvas;
