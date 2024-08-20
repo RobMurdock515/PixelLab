@@ -141,6 +141,7 @@ body {
     font-size: 16px;
     font-weight: bold;
     margin-right: 10px;
+    padding: 5px; /* Add space to each label */
 }
 
 /* Radio buttons for orientation options */
@@ -151,7 +152,7 @@ body {
 
 /* Text for orientation options */
 .resize-popup input[type="radio"] + span {
-    font-size: 16px;
+    font-size: 14px;
     margin-right: 15px;
     cursor: pointer;
 }
@@ -184,9 +185,7 @@ body {
     align-items: flex-start; /* Align items to the left */
 }
 
-.resize-popup .orientation-options label {
-    padding: 5px; /* Add space to each label */
-}
+
 
 
 
@@ -592,19 +591,19 @@ body {
 /* =========================================================================================================================================== */
 
 .canvas-container {
-    max-width: 1300px; /* Maximum width for the container */
-    margin: 0 auto; /* Center the canvas */
-    position: relative;
-    top: -238px;
-    transform: scale(0.47); /* Adjust the scale factor as needed */
-    border: 1px solid rgba(255, 255, 255, 0.125); /* Optional border */
+    position: absolute;
+    top: 56.5%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.95); /* Center the element and then scale it */
     z-index: 1; /* Ensure the canvas is below the overlay grid */
 }
+
 
 #pixelCanvas {
     display: block;
     width: 100%; /* Responsive width */
     height: 100%; /* Maintain aspect ratio */
+    image-rendering: pixelated; /* Ensures sharp pixel art scaling */
 }
 
 .overlay-grid {

@@ -26,9 +26,9 @@ document.addEventListener('click', function(event) {
     }
 });
 
-// Track selected size and previous size
+// Track selected size and orientation
 let selectedSize = null;
-let previousSize = null;
+let selectedOrientation = '1:1';
 
 // Event listeners for grid size buttons
 document.querySelectorAll('.size-options button').forEach(function(button) {
@@ -43,22 +43,35 @@ document.querySelectorAll('.size-options button').forEach(function(button) {
         const newSize = parseInt(this.textContent); // Assuming the button text is the new size
         if ([16, 32, 64, 128].includes(newSize)) {
             selectedSize = newSize;
-            previousSize = window.cellSize; // Save the current size
         }
     });
 });
 
-// Apply the selected size
+// Event listener for orientation radio buttons
+document.querySelectorAll('input[name="orientation"]').forEach(function(radio) {
+    radio.addEventListener('change', function() {
+        selectedOrientation = this.value;
+    });
+});
+
+// Apply the selected size and orientation
 function applyResize() {
+    if (selectedOrientation === 'portrait') {
+        window.setCanvasSize(640, 640);
+    } else if (selectedOrientation === 'landscape') {
+        window.setCanvasSize(1080, 720);
+    }
+
     if (selectedSize) {
         window.resizeCanvas(selectedSize);
-        closeResizePopup();
-        selectedSize = null; // Reset selected size
     }
+    
+    closeResizePopup();
+    selectedSize = null; // Reset selected size
 }
 
 // Event listener for the Apply button
-document.querySelector('.popup-footer button').addEventListener('click', function() {
+document.querySelector('.popup-footer .apply-btn').addEventListener('click', function() {
     applyResize();
 });
 
