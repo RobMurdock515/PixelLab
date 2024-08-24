@@ -1,0 +1,961 @@
+/* =========================================================================================================================================== */
+/*                                            Section 0: PixelLab - Global Reset and Base Styles                                               */
+/* =========================================================================================================================================== */
+
+* {
+    box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+    margin: 0; 
+    padding: 0;
+}
+
+html, body {
+    height: 100vh;
+    background: 
+        radial-gradient(circle at top left, 
+            rgba(240, 11, 42, 0.466) 0%,    /* Bright red with adjusted transparency */
+            rgba(26, 2, 58, 0) 30%        /* More transparent purple */
+        ),
+        radial-gradient(circle at bottom right, 
+            rgba(255, 2, 35, 0.9) 10%,    /* Slightly moved red color */
+            rgba(26, 2, 58, 0) 25%        /* Soften the transition */
+        ),
+        linear-gradient(290deg, 
+            #06000a 100%,       /* Dark purple for central focus */
+            #960ca3 35%,      /* Blue-purple */
+            #190724 55%,      /* Dark purple continues */
+            #c309d8 100%,      /* Deep dark purple towards bottom right */
+            #480CA8 100%      /* Darker purple towards bottom right */
+        );
+    background-position: center;
+    background-repeat: no-repeat;
+    overflow: hidden;
+}
+
+.background-overlay {
+    position: fixed; 
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: transparent;
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    z-index: 1; /* Ensure it's behind other elements */
+}
+
+/* =========================================================================================================================================== */
+/*                                            Section 0.1: PixelLab - Tooltips                                                                 */
+/* =========================================================================================================================================== */
+
+.tooltip-down {
+    visibility: hidden;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 3px;
+    position: absolute;
+    z-index: 1;
+    top: 80%;
+    left: 55%;
+    margin-left: -40px;
+    width: 75px;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.tooltip-right {
+    visibility: hidden;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 3px;
+    position: absolute;
+    z-index: 1;
+    bottom: 1%;
+    left: 85%;
+    margin-left: 10px;
+    width: 75px;
+    opacity: 0; 
+    transition: opacity 0.3s;
+}
+
+/* =========================================================================================================================================== */
+/*                                            Section 0.2: PixelLab - Modular UI Components (Dropdown/Dropup/etc.)                             */
+/* =========================================================================================================================================== */
+
+/* Dropdown for file, select, settings Button */
+.dropdown-file, .dropdown-select, .dropdown-settings { 
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.199);
+    display: none;
+    position: absolute;
+    min-width: 150px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 3;
+    top: 74%; 
+    left: 8%;
+}
+
+/* Dropdown w/ scrollbar for Palettes Button */
+.dropdown-palettes-scroll {
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.125);
+    display: none;
+    position: absolute;
+    min-width: 150px;
+    max-height: 250px; 
+    overflow-y: auto;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 3;
+    top: 74%; 
+    left: 0;
+}
+
+/* Scrollbar properties */
+/* WebKit Browsers (Chrome, Safari, Edge) */
+.dropdown-palettes-scroll::-webkit-scrollbar {
+    width: 8px; /* Width of the scrollbar */
+}
+
+.dropdown-palettes-scroll::-webkit-scrollbar-track {
+    background: transparent; /* Background of the track */
+}
+
+.dropdown-palettes-scroll::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.281); /* Color of the scrollbar thumb */
+    border-radius: 6px; /* Rounded corners of the scrollbar thumb */
+}
+
+.dropdown-palettes-scroll::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.255); /* Hover effect for the scrollbar thumb */
+}
+
+/* Apply only if scrollbar customization is needed for Firefox */
+@supports (-moz-appearance: none) {
+    .dropdown-palettes-scroll {
+        scrollbar-width: thin; /* Thin scrollbar */
+        scrollbar-color: rgba(255, 255, 255, 0.255) transparent; /* Thumb color and track color */
+    }
+}
+
+/* =========================================================================================================================================== */
+/*                                            Section 0.3: PixelLab -  Dropdown Element Properties                                             */
+/* =========================================================================================================================================== */
+
+.dropdown-item, .dropdown-palettes {
+    color: white;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: flex; 
+    align-items: center;
+    cursor: pointer;
+}
+
+/* Style for the icons inside dropdown items */
+.dropdown-icon {
+    height: 20px; 
+    margin-right: 10px;
+}
+
+/* Divider properties */
+.dropdown-divider {
+    height: 1px;
+    background-color: white;
+    margin: 4px 0;
+}
+
+/* Change color of dropdown items on hover */
+.dropdown-item:hover, .dropdown-palettes:hover {
+    background: rgba(0, 0, 0, 0.20);
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.125);
+}
+
+
+/* =========================================================================================================================================== */
+/*                                            Section 1: PixelLab - Menubar                                                                    */
+/* =========================================================================================================================================== */
+
+.menu-bar {
+    position: relative; /* Ensure it stacks above the .background-overlay */
+    z-index: 2;
+    background-color: transparent;
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.25); /* Slightly more visible border */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Slightly stronger shadow */
+    width: 100%;
+    height: 55px;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+}
+
+.menu-bar-container { /* Styles All Menu-Bar Elements */
+    display: flex;
+    align-items: center;
+    position: relative;
+    margin: 8px;
+    padding: 5px; 
+}
+
+.file-button, .select-button, .palettes-button, .settings-button, .undo-button, .redo-button {
+    background: none;
+    border: none;
+    display: flex;
+    align-items: center;
+    color: white;
+    cursor: pointer;
+    margin: 30px; 
+}
+
+.tools-icon, .file-icon, .select-icon, .palettes-icon, .settings-icon, .undo-icon, .redo-icon {
+    height: 40px;
+    margin-right: 12px; /* Space between the icon and the text */
+}
+
+.tools-text, .file-text, .select-text, .palettes-text, .settings-text, .undo-text, .redo-text {
+    color: white;
+    font-size: 20px;
+    font-family: 'Roboto', sans-serif;
+}
+
+.file-button:hover, .select-button:hover, .palettes-button:hover, .settings-button:hover, .undo-button:hover, 
+.redo-button:hover, .toolbar-button:hover, .rgb-button:hover, .color-cell:hover {
+    opacity: 0.7;
+}
+
+.file-button img, .file-button span, .select-button img, .select-button span, .palettes-button img, 
+.palettes-button span, .settings-button img, .settings-button span, .undo-button img, .undo-button span,
+.redo-button img, .redo-button span, .rgb-button img, .rgb-button span {
+    pointer-events: none; /* Ensures the click goes to the button, not the inner elements */
+}
+
+/* =========================================================================================================================================== */
+/*                                            Section 1.1: PixelLab - Menubar/File                                                             */
+/* =========================================================================================================================================== */
+
+/* Styles for the resize canvas pop-up box */
+.resize-popup {
+    position: absolute;
+    width: 430px;
+    height: 250px;
+    top: 160px; /* Adjust as needed */
+    left: 400px; /* Adjust as needed */
+    padding: 20px;
+    border: 1px solid #000;
+    background-color: rgba(0, 0, 0, 0.50);
+    z-index: 1000; /* Ensure it appears on top of other elements */
+    font-family: 'Roboto', sans-serif; /* Apply the Roboto font */
+    color: white; /* Set text color to white */
+}
+
+/* Button styles for selecting grid sizes */
+.resize-popup button {
+    background-color: rgb(77, 57, 57);
+    color: white;
+    padding: 12px 12px;
+    margin: 20px 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+    font-family: 'Roboto', sans-serif;
+}
+
+.resize-popup button:hover, .close-btn:hover {
+    background-color: #c42e3bd5;
+}
+
+/* Styles for the selected button */
+.resize-popup .active-button {
+    background-color: #c42e3b; /* Red color for the selected button */
+}
+
+/* Label for orientation selection */
+.resize-popup label {
+    font-size: 16px;
+    font-weight: bold;
+    margin-right: 10px;
+    padding: 5px; /* Add space to each label */
+}
+
+/* Radio buttons for orientation options */
+.resize-popup input[type="radio"] {
+    margin-right: 5px;
+    cursor: pointer;
+}
+
+/* Text for orientation options */
+.resize-popup input[type="radio"] + span {
+    font-size: 14px;
+    margin-right: 15px;
+    cursor: pointer;
+}
+
+/* Optional: Add a close button */
+.resize-popup .close-btn {
+    position: absolute;
+    top: -20px;
+    right: -10px;
+    background-color: rgb(77, 57, 57);
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    color: #aaa;
+    transition: color 0.3s ease;
+}
+
+/* Container for footer elements */
+.resize-popup .popup-footer {
+    display: flex;
+    justify-content: space-between; /* Space between Apply button and orientation options */
+    align-items: center;
+    
+}
+
+/* Container for orientation options */
+.resize-popup .orientation-options {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Align items to the left */
+}
+
+/* =========================================================================================================================================== */
+/*                                            Section 1.2: PixelLab - Menubar/Palettes                                                         */
+/* =========================================================================================================================================== */
+
+.dropdown-palette {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px; 
+    width: 100%;
+}
+
+.palette-text {
+    flex: 1; /* Allows the text to take up available space */
+    color: white;
+    font-size: 14px;
+    font-family: 'Roboto', sans-serif;
+    text-align: left;
+}
+
+.palette-icon {
+    flex-shrink: 0; /* Prevents the image from shrinking */
+    width: 240px;
+    height: 24px;
+    object-fit: contain; /* Ensures the image fits within its container */
+}
+
+/* =========================================================================================================================================== */
+/*                                            Section 2: PixelLab - Tool Bar (Tool Buttons)                                                    */
+/* =========================================================================================================================================== */
+
+.tool-bar {
+    position: relative; /* Ensure it stacks above the .background-overlay */
+    z-index: 1;
+    background-color: transparent;
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.25); /* Slightly more visible border */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Slightly stronger shadow */
+    top: 0; /* Positioned below the .menu-bar */
+    left: 0; /* Aligns to the left edge of the viewport */
+    width: 145px; /* Fixed width for the toolbar */
+    height: calc(100% - 55px); /* Fills the remaining height below the .menu-bar */
+}
+
+.toolbar-button img {
+    width: 32px; 
+    height: 32px;
+    margin: 17px; 
+}
+
+.toolbar-button {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    position: relative;
+    cursor: pointer;
+}
+
+.toolbar-button.selected {
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 4px; 
+}
+
+/* =========================================================================================================================================== */
+/*                                            Section 2.1: PixelLab - Tool Bar (RGB Color Picker Button)                                       */
+/* =========================================================================================================================================== */
+
+.rgb-button { /* rgb-button / img properties */
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    position: relative;
+    top: 55px;
+    left: -50px;
+    cursor: pointer;
+
+    img { /* nested */
+        width: 32px; 
+        height: 32px;
+    }
+}
+
+/* Dropup Properties for rgb-button */
+.rgb-dropup {
+    background: rgba(0, 0, 0, 0.801);
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.014);
+    display: none;
+    position: absolute;
+    min-width: 260px;
+    min-height: 260px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.055);
+    z-index: 2;
+    bottom: 260px;
+    left: 60px;
+    border-radius: 10px;
+}
+
+.color-picker-container {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+}
+
+.color-display {
+    width: 100%;
+    height: 40px;
+    background-color: #000;
+    margin-bottom: 10px;
+}
+
+.color-codes { /* Provides values on current color selection */
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    color: white;
+    font-family: 'Roboto', sans-serif;
+    font-size: 10px;
+}
+
+.color-code span {
+    color: white; /* Ensures the text is white */
+}
+
+.color-selector {
+    display: flex;
+    flex-direction: row;
+}
+
+.color-box {
+    width: 210px;
+    height: 180px;
+    position: relative;
+    cursor: crosshair;
+    background: linear-gradient(to top, black, rgba(0, 0, 0, 0)),
+                linear-gradient(to left, rgb(206, 14, 14), rgba(0, 0, 0, 0)),
+                linear-gradient(to right, white, rgba(255, 255, 255, 0));
+    overflow: hidden;
+}
+
+.color-saturation {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+.color-circle {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 1px solid #fff;
+    position: absolute;
+    pointer-events: none;
+}
+
+.color-spectrum {
+    width: 22px;
+    height: 180px;
+    background: linear-gradient(to bottom, red, yellow, lime, cyan, blue, magenta, red);
+    margin-left: 10px;
+    position: relative;
+    cursor: pointer;
+}
+
+.spectrum-thumb {
+    width: 22px;
+    height: 4px;
+    background-color: white;
+    position: absolute;
+    left: 0;
+    pointer-events: none;
+    transform: translateY(-50%);
+    border-radius: 2px;
+}
+
+.color-inputs {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.color-inputs input {
+    width: 30%;
+    padding: 5px;
+    background-color: rgba(255, 255, 255, 0.125);
+    border: none;
+    color: #fff;
+    text-align: center;
+    border-radius: 3px;
+    font-size: 14px;
+}
+
+.color-inputs input[type="text"] {
+    width: 45%;
+}
+
+/* New color history styles */
+.color-history {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.rgb-cell {
+    width: 40px;
+    height: 40px;
+    background-color: transparent;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.rgb-cell:hover {
+    border-color: #ddd;
+}
+
+/* =========================================================================================================================================== */
+/*                                            Section 2.2: PixelLab - Tool Bar (Color Cells)                                                   */
+/* =========================================================================================================================================== */
+
+/* Shows Selected Color (RGB/Color Cells) */
+.color-indicator {
+    width: 30px;  
+    height: 30px; 
+    background-color: transparent; /* Default color appearance (transparent) */
+    margin-left: 102px; 
+    margin-top: 20px;
+  }
+
+  .color-indicator .color-text {
+    position: absolute; /* Position text absolutely within .color-indicator */
+    margin-left: 15px; 
+    margin-top: -10px;
+    transform: translate(-50%, -50%); /* Center text perfectly */
+    color: #000000; /* Text color */
+    font-size: 12px; /* Font size */
+    font-weight: bold; /* Font weight */
+    display: block; /* Ensure the text is visible */
+}
+
+.color-palette-container {
+    position: absolute;
+    bottom: 6px;
+    left: 10px;
+    height: 240px; /* Height to show exactly 45 cells (5 rows x 22px, including gap) */
+    width: 120px;
+    padding-right: 133px; /* scrollbar spacing */
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.color-palette {
+    display: grid;
+    grid-template-columns: repeat(5, 20px); /* 5 columns of 20px each */
+    grid-template-rows: repeat(5, 20px);   /* 5 rows of 20px each */
+    gap: 5px;
+    width: 100%;
+    height: auto; /* Allows height to grow based on number of rows */
+}
+
+.color-cell {
+    width: 22px;
+    height: 22px;
+    cursor: pointer;
+    border: 1px solid #000;
+}
+
+/* Scrollbar Properties - Color-Cell */
+/* WebKit Browsers (Chrome, Safari, Edge) */
+.color-palette-container::-webkit-scrollbar {
+    width: 8px; 
+}
+
+.color-palette-container::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.color-palette-container::-webkit-scrollbar-thumb {
+    background: transparent; 
+    border-radius: 6px;
+}
+
+.color-palette-container::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.255);
+}
+
+/* Apply only if scrollbar customization is needed for Firefox */
+@supports (-moz-appearance: none) {
+    .color-palette-container {
+        scrollbar-width: thin;
+        scrollbar-color: rgba(255, 255, 255, 0.255) transparent;
+    }
+}
+
+/* =========================================================================================================================================== */
+/*                                            Section 3: PixelLab - Tool Settings Bar                                                          */
+/* =========================================================================================================================================== */
+
+.tool-settings-bar {
+    position: relative; /* Ensure it stacks above the .background-overlay */
+    z-index: 1;
+    background-color: transparent;
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.25); /* Slightly more visible border */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Slightly stronger shadow */
+    position: fixed;
+    top: 55px; /* Starts below the .menu-bar */
+    left: 145px; /* Starts to the right of the .tool-bar */
+    height: 40px; /* Height of the tool settings bar */
+    width: calc(100% - 145px); /* Adjusts width to fill the remaining space to the right of the .tool-bar */
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    color: #fff;
+}
+
+.tool-settings-bar .tool-info {
+    display: flex;
+    align-items: center;
+    margin-right: 60px;
+    width: 100px;
+}
+
+.tool-settings-bar .tool-info span:first-child {
+    margin: 0 6px 0 20px;
+}
+
+.tool-settings-bar .slider-group {
+    display: flex;
+    align-items: center;
+    margin-right: 60px;
+    width: 250px;
+}
+
+.tool-settings-bar .slider-group span {
+    margin-right: 10px;
+    white-space: nowrap;
+}
+
+.tool-settings-bar .slider-container {
+    position: relative;
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+}
+
+.tool-settings-bar .slider-container input[type="range"] {
+    flex-grow: 1;
+    margin-right: 10px;
+    width: 100%; /* Make the slider take full width of the container */
+    background-color: transparent;
+    height: 6px;
+    border-radius: 4px;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.tool-settings-bar .slider-container span {
+    position: absolute;
+    right: 0; /* Position the value to the far right of the slider */
+    transform: translateX(100%); /* Move it slightly to the right so it doesn’t overlap the slider */
+    margin-right: 1px; /* Optional: Add space between slider and value */
+    white-space: nowrap;
+}
+
+/* Specific thumb styling for each browser */
+.tool-settings-bar .slider-group input[type="range"]::-webkit-slider-thumb {
+    background: rgba(255, 255, 255, 0.6);
+    border-radius: 50%;
+    width: 10px;
+    height: 10px;
+    cursor: pointer;
+    -webkit-appearance: none;
+}
+
+.tool-settings-bar .slider-group input[type="range"]::-moz-range-thumb {
+    background: rgba(255, 255, 255, 0.6);
+    border-radius: 50%;
+    width: 10px;
+    height: 10px;
+    cursor: pointer;
+}
+
+.tool-settings-bar .slider-group input[type="range"]::-ms-thumb {
+    background: rgba(255, 255, 255, 0.6);
+    border-radius: 50%;
+    width: 10px;
+    height: 10px;
+    cursor: pointer;
+}
+
+/* Specific track styling for each browser */
+.tool-settings-bar .slider-group input[type="range"]::-webkit-slider-runnable-track {
+    background: rgba(255, 255, 255, 0.255);
+    height: 10px;
+    border-radius: 4px;
+}
+
+.tool-settings-bar .slider-group input[type="range"]::-moz-range-track {
+    background: rgba(255, 255, 255, 0.255);
+    height: 10px;
+    border-radius: 4px;
+}
+
+.tool-settings-bar .slider-group input[type="range"]::-ms-track {
+    background: rgba(255, 255, 255, 0.255);
+    height: 10px;
+    border-radius: 4px;
+    border: none;
+    color: transparent; /* Hide track appearance specific to IE/Edge */
+}
+
+/* =========================================================================================================================================== */
+/*                                            Section 4: PixelLab - Canvas                                                                     */
+/* =========================================================================================================================================== */
+
+/* Wrapper to center content */
+.canvas-wrapper {
+    position: fixed; /* Ensure it stays in place */
+    top: 0;
+    left: 0;
+    width: 100vw; /* Full viewport width */
+    height: 100vh; /* Full viewport height */
+    display: flex;
+    align-items: center; /* Center vertically */
+    justify-content: center; /* Center horizontally */
+    overflow: hidden; /* Prevent overflow */
+    z-index: 20; /* Ensure it's above other elements */
+}
+
+/* Canvas container */
+.canvas-container {
+    position: relative; /* Ensure proper alignment */
+    transform: translate(10%, 7%) scale(0.95); /* Default for portrait */
+    transition: transform 0.5s ease; /* Smooth transition for scaling */
+}
+
+/* Landscape mode */
+.landscape-scale {
+    transform: translate(0%, 7%) scale(0.85); /* Adjust for landscape scaling */
+    transition: transform 0.5s ease; /* Smooth transition for scaling */
+}
+
+/* Pixel canvas */
+#pixelCanvas {
+    display: block;
+    width: 100%; /* Responsive width */
+    height: 100%; /* Maintain aspect ratio */
+    image-rendering: pixelated; /* Ensures sharp pixel art scaling */
+}
+
+
+.overlay-grid {
+    position: absolute;
+    top: 0;
+    left: 0;
+    cursor: url('img/Icons/cursor-crosshair.png') 16 16, auto;
+    z-index: 2; /* Ensure the overlay grid is above the canvas */
+}
+  
+  .overlay-grid div:hover {
+    background-color: rgba(255, 255, 255, 0.411);
+  }
+
+  /* Displays x-y canvas coordinates */
+  .coordinate-display {
+    margin: 20px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    color: #ffffff;
+    position: absolute;
+    top: 90px;
+    left: 140px;
+    background-color: rgba(255, 255, 255, 0.125);
+    padding: 10px;
+    border-radius: 5px;
+}
+
+/* Displays Current Canvas Size */
+.dimensions-display {
+    margin: 20px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 10px;
+    color: #ffffff;
+    position: absolute;
+    background-color: rgba(255, 255, 255, 0.125);
+    padding: 5px;
+    top: 665px;
+    left: 140px;
+    border-radius: 5px;
+}
+
+
+/* =========================================================================================================================================== */
+/*                                            Section 5: PixelLab - Responsive                                                                 */
+/* =========================================================================================================================================== */
+
+
+
+/* Styles for smaller screens (smartphones) */
+@media (max-width: 425px), (max-width: 375px), (max-width: 325px) {
+    .tool-bar, .tool-settings-bar {
+        display: none;
+    }
+    
+    .mobile-bar {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 200px; /* Adjust height as needed */
+        background-color: rgba(0, 0, 0, 0.7); /* Example background */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10; /* Ensure it's above the canvas */
+    }
+
+    .canvas-container {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -85%) scale(1.95); /* Center the element and then scale it */
+    }
+}
+
+/* Styles for medium screens (tablets) */
+@media (max-width: 768px) and (min-width: 426px) {
+
+    .canvas-container {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-25%, -40%) scale(1.30); /* Center the element and then scale it */
+    }
+
+    .landscape-scale {
+        transform: translate(-30%, -40%) scale(1.50); /* Adjust the scale value as needed */
+    }
+
+    /* Displays Current Canvas Size */
+    .dimensions-display { 
+        top: 565px;
+    }
+    
+    .tool-bar {
+    padding: 4px; /* Add some top padding */
+    }
+
+    .toolbar-button {
+        margin-left: 9px; /* Adjust left margin for button spacing */
+    }
+
+    .toolbar-button img {
+        width: 32px; 
+        height: 32px;
+        margin: 10px;
+    }
+
+    .rgb-button { /* rgb-button / img properties */
+        top: 43px;
+        left: -40px;
+        img { /* nested */
+            width: 28px; 
+            height: 28px;
+        }
+    }
+    
+    .rgb-dropup {
+        bottom: 250px;
+        left: 65px;
+    }
+
+    .color-indicator {
+        margin-left: 98px; 
+        margin-top: 10px;
+    }
+
+    .color-palette-container {
+        padding-right: 132px; /* scrollbar spacing */
+    }
+    
+    .color-palette-container::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.150);     
+    }
+    
+    .menu-bar-container { /* Styles All Menu-Bar Elements */
+        margin: 4px;
+        padding: 12px; 
+    }
+    
+    .file-button, .select-button, .palettes-button, .settings-button, .undo-button, .redo-button {
+        margin: 5px; 
+    }
+    
+    .tools-icon, .file-icon, .select-icon, .palettes-icon, .settings-icon, .undo-icon, .redo-icon {
+        height: 30px;
+        width: 30px;
+        margin-right: 6px; /* Space between the icon and the text */
+    }
+    
+    .tools-text, .file-text, .select-text, .palettes-text, .settings-text, .undo-text, .redo-text {
+        font-size: 13px;
+    }
+
+    /* Dropdown for file, select, settings Button */
+    .dropdown-file, .dropdown-select, .dropdown-settings { 
+        top: 92%; 
+    }
+
+    /* Dropdown w/ scrollbar for Palettes Button */
+    .dropdown-palettes-scroll {
+        top: 92%; 
+    }
+
+    .resize-popup {
+        top: 160px; /* Adjust as needed */
+        left: 150px; /* Adjust as needed */
+    }
+      
+}

@@ -1,5 +1,5 @@
 /* =========================================================================================================================================== */
-/*                                             Section 1: Draw Canvas Size/Checkerboard - Default Pixel (x/y)                                             */
+/*                                            Section 0: Draw Canvas Size/Checkerboard - Default Pixel (x/y)                                   */
 /* =========================================================================================================================================== */
 
 const canvas = document.getElementById('pixelCanvas');
@@ -10,7 +10,7 @@ const heightDisplay = document.getElementById('canvas-height');
 let canvasWidth = 640; // Default width
 let canvasHeight = 640; // Default height
 
-let cellSize = 10; // Default cell size
+let cellSize = 1; // Default cell size
 let cellsPerRow = 64; // Default number of cells per row and column
 
 function drawCheckerboard(canvas, ctx, cellSize) {
@@ -63,7 +63,6 @@ if (selectedOrientation === 'portrait') {
 } else if (selectedOrientation === 'landscape') {
   setCanvasSize(1080, 720); // Adjust dimensions as needed
 }
-
 
 // Initial setup
 resizeCanvas(64); // Default grid size
