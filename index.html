@@ -8,7 +8,7 @@
         <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     </head>
     <body>
-
+    
         <div class="background-overlay"> <!-- Glassmorphism background overlay  -->
             <div class="canvas-wrapper"> <!--  -->
                 <div class="canvas-container">
@@ -336,10 +336,12 @@
                         <span class="settings-text">Settings</span>
                     </button>
                     <div class="dropdown-settings"> <!-- Settings Button - Dropdown Menu -->
-                        <div class="dropdown-item">
+                        <div class="dropdown-item" id="fullscreen-toggle">
                             <img src="img/Icons/fullscreen-icon.png" alt="Fullscreen Icon" class="dropdown-icon">
                             Fullscreen
                         </div>
+                 
+                    
                         <div class="dropdown-divider"></div>
                         <div class="dropdown-item">
                             <img src="img/Icons/background-icon.png" alt="Background Icon" class="dropdown-icon">
@@ -386,7 +388,7 @@
                 <img src="img/Icons/line-icon.png" alt="Line Tool">
                 <span class="tooltip-down">Line Tool</span>
             </button>
-            <button class="toolbar-button" data-tool="bucker">
+            <button class="toolbar-button" data-tool="bucket">
                 <img src="img/Icons/bucket-icon.png" alt="Bucket Tool">
                 <span class="tooltip-down">Bucket Tool</span>
             </button>

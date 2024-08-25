@@ -71,3 +71,95 @@ updateCanvasDimensions();
 // Expose functions to other scripts
 window.setCanvasSize = setCanvasSize;
 window.resizeCanvas = resizeCanvas;
+
+/* =========================================================================================================================================== */
+/*                                            Section 1: Overlay Grid + X/Y Coordinates                                                        */
+/* =========================================================================================================================================== */
+
+// Function to create the overlay grid
+function createOverlayGrid(cellSize) {
+  const overlayGrid = document.querySelector('.overlay-grid');
+
+  // Clear existing grid
+  overlayGrid.innerHTML = '';
+
+  // Set the grid dimensions to match the canvas
+  overlayGrid.style.width = `${canvasWidth}px`;
+  overlayGrid.style.height = `${canvasHeight}px`;
+
+  // Calculate the number of cells based on the canvas size and cell size
+  const rows = Math.floor(canvasHeight / cellSize);
+  const cols = Math.floor(canvasWidth / cellSize);
+
+  // Create grid cells
+  for (let row = 0; row < rows; row++) {
+      for (let col = 0; col < cols; col++) {
+          const cell = document.createElement('div');
+          cell.classList.add('grid-cell');
+          cell.style.width = `${cellSize}px`;
+          cell.style.height = `${cellSize}px`;
+          cell.style.position = 'absolute';
+          cell.style.top = `${row * cellSize}px`;
+          cell.style.left = `${col * cellSize}px`;
+
+          // Optional: Add hover effect to cells if needed
+          cell.addEventListener('mouseenter', function () {
+              this.style.backgroundColor = 'rgba(255, 255, 255, 0.411)'; // Change color on hover
+              updateCoordinateDisplay(col, row);
+          });
+
+          cell.addEventListener('mouseleave', function () {
+              this.style.backgroundColor = 'transparent'; // Reset color when not hovering
+          });
+
+          overlayGrid.appendChild(cell);
+      }
+  }
+}
+
+// Function to update the coordinate display based on mouse position
+function updateCoordinateDisplay(col, row) {
+  document.getElementById('x-coordinate').textContent = col;
+  document.getElementById('y-coordinate').textContent = row;
+}
+
+// Update the overlay grid whenever the canvas is resized or cell size changes
+function updateOverlayGrid() {
+  createOverlayGrid(cellSize);
+}
+
+// Initial call to create the grid
+createOverlayGrid(cellSize);
+
+// Update the overlay grid whenever the canvas is resized
+window.addEventListener('resize', updateOverlayGrid);
+window.addEventListener('orientationchange', updateOverlayGrid);
+
+// Call updateOverlayGrid within resizeCanvas function to adapt to changes
+function resizeCanvas(newCellsPerRow) {
+  cellsPerRow = newCellsPerRow;
+  cellSize = canvasWidth / cellsPerRow; // Adjust cell size based on the new number of cells
+
+  const rows = Math.floor(canvasHeight / cellSize);
+  const cols = Math.floor(canvasWidth / cellSize);
+
+  canvasHeight = rows * cellSize;
+  canvasWidth = cols * cellSize;
+
+  drawCheckerboard(canvas, ctx, cellSize);
+  updateOverlayGrid(); // Update overlay grid whenever canvas is resized
+}
+
+function setCanvasSize(width, height) {
+  canvasWidth = width;
+  canvasHeight = height;
+  drawCheckerboard(canvas, ctx, cellSize);
+  updateOverlayGrid(); // Update overlay grid whenever canvas size changes
+  updateCanvasDimensions();
+}
+
+
+/* =========================================================================================================================================== */
+/*                                            Section 2: Canvas - Draw Functionality                                                           */
+/* =========================================================================================================================================== */
+

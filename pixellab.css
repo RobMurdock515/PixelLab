@@ -12,20 +12,19 @@
 html, body {
     height: 100vh;
     background: 
-        radial-gradient(circle at top left, 
-            rgba(240, 11, 42, 0.466) 0%,    /* Bright red with adjusted transparency */
-            rgba(26, 2, 58, 0) 30%        /* More transparent purple */
+            radial-gradient(circle at top left, 
+            rgba(255, 0, 55, 0.8) 0%,    /* Bright red with some transparency */
+            rgba(26, 0, 58, 0.4) 40%     /* Dark purple transitioning to more transparent */
         ),
         radial-gradient(circle at bottom right, 
-            rgba(255, 2, 35, 0.9) 10%,    /* Slightly moved red color */
-            rgba(26, 2, 58, 0) 25%        /* Soften the transition */
+            rgba(255, 69, 0, 0.7) 15%,   /* Softer orange-red hue for a gentle transition */
+            rgba(26, 0, 58, 0.1) 50%     /* Smooth fade to a very light dark purple */
         ),
         linear-gradient(290deg, 
-            #06000a 100%,       /* Dark purple for central focus */
-            #960ca3 35%,      /* Blue-purple */
-            #190724 55%,      /* Dark purple continues */
-            #c309d8 100%,      /* Deep dark purple towards bottom right */
-            #480CA8 100%      /* Darker purple towards bottom right */
+            #06000a 5%,        /* Very dark almost black */
+            #190724 35%,       /* Deep dark purple, extended middle to appear larger */
+            #190724 65%,       /* Continue deep dark purple for a wider middle */
+            #06000a 100%        /* Orange-red hue to match the desired background fade */
         );
     background-position: center;
     background-repeat: no-repeat;
@@ -83,7 +82,7 @@ html, body {
 }
 
 /* =========================================================================================================================================== */
-/*                                            Section 0.2: PixelLab - Modular UI Components (Dropdown/Dropup/etc.)                             */
+/*                                            Section 0.2: PixelLab -  (Dropdown/Dropup/etc.)                                                  */
 /* =========================================================================================================================================== */
 
 /* Dropdown for file, select, settings Button */
@@ -96,8 +95,8 @@ html, body {
     position: absolute;
     min-width: 150px;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 3;
-    top: 74%; 
+    z-index: 2002;
+    top: 72%; 
     left: 8%;
 }
 
@@ -113,8 +112,8 @@ html, body {
     max-height: 250px; 
     overflow-y: auto;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 3;
-    top: 74%; 
+    z-index: 2001;
+    top: 72%; 
     left: 0;
 }
 
@@ -193,7 +192,7 @@ html, body {
     border: 1px solid rgba(255, 255, 255, 0.25); /* Slightly more visible border */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Slightly stronger shadow */
     width: 100%;
-    height: 55px;
+    height: 50px;
     display: flex;
     align-items: center;
     padding: 0 10px;
@@ -358,21 +357,55 @@ html, body {
 }
 
 /* =========================================================================================================================================== */
+/*                                            Section 1.3: PixelLab - Menubar/Select                                                           */
+/* =========================================================================================================================================== */
+
+/* =========================================================================================================================================== */
+/*                                            Section 1.2: PixelLab - Menubar/Settings                                                         */
+/* =========================================================================================================================================== */
+
+/* Styles for fullscreen mode */
+:fullscreen .dimensions-display {
+    top: 835px;
+}
+
+:fullscreen .canvas-container {
+    transform: translate(0%, 7%) scale(1.20); /* Default for portrait */
+}
+
+:fullscreen .landscape-scale {
+    transform: translate(0%, 7%) scale(1.00); /* Adjust for landscape scaling */
+}
+
+:fullscreen .rgb-button {
+    top: 241px;
+}
+
+:fullscreen .color-indicator .color-text {
+    top: 555px;
+    position: fixed;
+}
+
+:fullscreen .color-indicator {
+    top: 535px;
+    position: fixed;
+}
+
+/* =========================================================================================================================================== */
 /*                                            Section 2: PixelLab - Tool Bar (Tool Buttons)                                                    */
 /* =========================================================================================================================================== */
 
 .tool-bar {
-    position: relative; /* Ensure it stacks above the .background-overlay */
-    z-index: 1;
     background-color: transparent;
     backdrop-filter: blur(16px) saturate(180%);
     -webkit-backdrop-filter: blur(16px) saturate(180%);
-    border: 1px solid rgba(255, 255, 255, 0.25); /* Slightly more visible border */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Slightly stronger shadow */
-    top: 0; /* Positioned below the .menu-bar */
-    left: 0; /* Aligns to the left edge of the viewport */
-    width: 145px; /* Fixed width for the toolbar */
-    height: calc(100% - 55px); /* Fills the remaining height below the .menu-bar */
+    border: 1px solid rgba(255, 255, 255, 0.125);
+    width: 145px;
+    height: calc(100vh - 50px); /* Adjusted height to match .Menubar */
+    position: fixed;
+    top: 50px; /* Starts just below the .Menubar */
+    left: 0; /* Align to the left of the viewport */
+    z-index: 1000; /* Ensure it's below the .Menubar but above other content */
 }
 
 .toolbar-button img {
@@ -426,7 +459,7 @@ html, body {
     min-width: 260px;
     min-height: 260px;
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.055);
-    z-index: 2;
+    z-index: 1000;
     bottom: 260px;
     left: 60px;
     border-radius: 10px;
@@ -641,7 +674,7 @@ html, body {
     border: 1px solid rgba(255, 255, 255, 0.25); /* Slightly more visible border */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Slightly stronger shadow */
     position: fixed;
-    top: 55px; /* Starts below the .menu-bar */
+    top: 50px; /* Starts below the .menu-bar */
     left: 145px; /* Starts to the right of the .tool-bar */
     height: 40px; /* Height of the tool settings bar */
     width: calc(100% - 145px); /* Adjusts width to fill the remaining space to the right of the .tool-bar */
@@ -765,13 +798,13 @@ html, body {
     align-items: center; /* Center vertically */
     justify-content: center; /* Center horizontally */
     overflow: hidden; /* Prevent overflow */
-    z-index: 20; /* Ensure it's above other elements */
+    z-index: 2; /* Ensure it's above other elements */
 }
 
-/* Canvas container */
+/* Portrait mode */
 .canvas-container {
     position: relative; /* Ensure proper alignment */
-    transform: translate(10%, 7%) scale(0.95); /* Default for portrait */
+    transform: translate(0%, 7%) scale(0.95); /* Default for portrait */
     transition: transform 0.5s ease; /* Smooth transition for scaling */
 }
 
@@ -789,13 +822,12 @@ html, body {
     image-rendering: pixelated; /* Ensures sharp pixel art scaling */
 }
 
-
 .overlay-grid {
     position: absolute;
     top: 0;
     left: 0;
     cursor: url('img/Icons/cursor-crosshair.png') 16 16, auto;
-    z-index: 2; /* Ensure the overlay grid is above the canvas */
+    z-index: 3; /* Ensure the overlay grid is above the canvas */
 }
   
   .overlay-grid div:hover {
@@ -809,7 +841,7 @@ html, body {
     font-size: 14px;
     color: #ffffff;
     position: absolute;
-    top: 90px;
+    top: 85px;
     left: 140px;
     background-color: rgba(255, 255, 255, 0.125);
     padding: 10px;
@@ -835,127 +867,3 @@ html, body {
 /*                                            Section 5: PixelLab - Responsive                                                                 */
 /* =========================================================================================================================================== */
 
-
-
-/* Styles for smaller screens (smartphones) */
-@media (max-width: 425px), (max-width: 375px), (max-width: 325px) {
-    .tool-bar, .tool-settings-bar {
-        display: none;
-    }
-    
-    .mobile-bar {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        height: 200px; /* Adjust height as needed */
-        background-color: rgba(0, 0, 0, 0.7); /* Example background */
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 10; /* Ensure it's above the canvas */
-    }
-
-    .canvas-container {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -85%) scale(1.95); /* Center the element and then scale it */
-    }
-}
-
-/* Styles for medium screens (tablets) */
-@media (max-width: 768px) and (min-width: 426px) {
-
-    .canvas-container {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-25%, -40%) scale(1.30); /* Center the element and then scale it */
-    }
-
-    .landscape-scale {
-        transform: translate(-30%, -40%) scale(1.50); /* Adjust the scale value as needed */
-    }
-
-    /* Displays Current Canvas Size */
-    .dimensions-display { 
-        top: 565px;
-    }
-    
-    .tool-bar {
-    padding: 4px; /* Add some top padding */
-    }
-
-    .toolbar-button {
-        margin-left: 9px; /* Adjust left margin for button spacing */
-    }
-
-    .toolbar-button img {
-        width: 32px; 
-        height: 32px;
-        margin: 10px;
-    }
-
-    .rgb-button { /* rgb-button / img properties */
-        top: 43px;
-        left: -40px;
-        img { /* nested */
-            width: 28px; 
-            height: 28px;
-        }
-    }
-    
-    .rgb-dropup {
-        bottom: 250px;
-        left: 65px;
-    }
-
-    .color-indicator {
-        margin-left: 98px; 
-        margin-top: 10px;
-    }
-
-    .color-palette-container {
-        padding-right: 132px; /* scrollbar spacing */
-    }
-    
-    .color-palette-container::-webkit-scrollbar-thumb {
-        background: rgba(255, 255, 255, 0.150);     
-    }
-    
-    .menu-bar-container { /* Styles All Menu-Bar Elements */
-        margin: 4px;
-        padding: 12px; 
-    }
-    
-    .file-button, .select-button, .palettes-button, .settings-button, .undo-button, .redo-button {
-        margin: 5px; 
-    }
-    
-    .tools-icon, .file-icon, .select-icon, .palettes-icon, .settings-icon, .undo-icon, .redo-icon {
-        height: 30px;
-        width: 30px;
-        margin-right: 6px; /* Space between the icon and the text */
-    }
-    
-    .tools-text, .file-text, .select-text, .palettes-text, .settings-text, .undo-text, .redo-text {
-        font-size: 13px;
-    }
-
-    /* Dropdown for file, select, settings Button */
-    .dropdown-file, .dropdown-select, .dropdown-settings { 
-        top: 92%; 
-    }
-
-    /* Dropdown w/ scrollbar for Palettes Button */
-    .dropdown-palettes-scroll {
-        top: 92%; 
-    }
-
-    .resize-popup {
-        top: 160px; /* Adjust as needed */
-        left: 150px; /* Adjust as needed */
-    }
-      
-}
