@@ -45,125 +45,155 @@ document.addEventListener('DOMContentLoaded', function() {
 /* =========================================================================================================================================== */
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Elements
-    var dropdownButtons = document.querySelectorAll('.file-button, .palettes-button, .select-button, .settings-button');
-    var rgbButton = document.querySelector('.rgb-button');
-    var dropupRgb = document.querySelector('.rgb-dropup');
+    let timeoutId = null;
+    const closeDelay = 500; // Time in milliseconds before closing a menu
 
-    // State tracking
-    var closeTimeout;
-    var openDropdown = null;
-
-    // Close dropdown function
-    function closeDropdown() {
-        if (openDropdown) {
-            openDropdown.style.display = 'none';
-            openDropdown.style.opacity = '0';
-            openDropdown = null;
-        }
+    function closeAllMenus() {
+        document.querySelectorAll('.dropdown-file, .dropdown-palettes-scroll, .dropdown-select, .dropdown-settings, .rgb-dropup').forEach(menu => {
+            menu.classList.add('hidden');
+        });
     }
 
-    // Toggle dropdown visibility
-    function toggleDropdown(dropdownContent) {
-        if (dropdownContent.style.display === 'block') {
-            closeDropdown();
+    function showMenu(menu) {
+        closeAllMenus(); // Close all menus
+        menu.classList.remove('hidden'); // Show the selected menu
+    }
+
+    // Toggle dropdown menu visibility for the file button
+    document.querySelector('.file-button').addEventListener('click', function(event) {
+        event.stopPropagation(); // Prevent event from propagating
+        const dropdownMenu = document.querySelector('.dropdown-file');
+        if (dropdownMenu.classList.contains('hidden')) {
+            showMenu(dropdownMenu);
         } else {
-            closeDropdown();
-            dropdownContent.style.display = 'block';
-            dropdownContent.style.opacity = '1';
-            openDropdown = dropdownContent;
+            dropdownMenu.classList.add('hidden');
         }
-    }
+    });
 
-    // Handle button click and hover events
-    function handleButtonClick(button, dropdownContent) {
-        button.addEventListener('click', function(event) {
-            event.stopPropagation();
-            toggleDropdown(dropdownContent);
-        });
-    }
-
-    function handleMouseEnter(button, dropdownContent) {
-        button.addEventListener('mouseenter', function() {
-            clearTimeout(closeTimeout);
-        });
-
-        if (dropdownContent) {
-            dropdownContent.addEventListener('mouseenter', function() {
-                clearTimeout(closeTimeout);
-            });
-
-            dropdownContent.addEventListener('mouseleave', function() {
-                closeTimeout = setTimeout(closeDropdown, 450);
-            });
+    // Toggle dropdown menu visibility for the palettes button
+    document.querySelector('.palettes-button').addEventListener('click', function(event) {
+        event.stopPropagation(); // Prevent event from propagating
+        const dropdownMenu = document.querySelector('.dropdown-palettes-scroll');
+        if (dropdownMenu.classList.contains('hidden')) {
+            showMenu(dropdownMenu);
+        } else {
+            dropdownMenu.classList.add('hidden');
         }
-    }
+    });
 
-    function setupHoverHandlers() {
-        dropdownButtons.forEach(function(button) {
-            var dropdownContent = button.nextElementSibling;
-            if (dropdownContent) {
-                handleButtonClick(button, dropdownContent);
-                handleMouseEnter(button, dropdownContent);
+    // Toggle dropdown menu visibility for the select button
+    document.querySelector('.select-button').addEventListener('click', function(event) {
+        event.stopPropagation(); // Prevent event from propagating
+        const dropdownMenu = document.querySelector('.dropdown-select');
+        if (dropdownMenu.classList.contains('hidden')) {
+            showMenu(dropdownMenu);
+        } else {
+            dropdownMenu.classList.add('hidden');
+        }
+    });
+
+    // Toggle dropdown menu visibility for the settings button
+    document.querySelector('.settings-button').addEventListener('click', function(event) {
+        event.stopPropagation(); // Prevent event from propagating
+        const dropdownMenu = document.querySelector('.dropdown-settings');
+        if (dropdownMenu.classList.contains('hidden')) {
+            showMenu(dropdownMenu);
+        } else {
+            dropdownMenu.classList.add('hidden');
+        }
+    });
+
+    // Toggle dropup menu visibility for the RGB button
+    document.querySelector('.rgb-button').addEventListener('click', function(event) {
+        event.stopPropagation(); // Prevent event from propagating
+        const dropupMenu = document.querySelector('.rgb-dropup');
+        if (dropupMenu.classList.contains('hidden')) {
+            showMenu(dropupMenu);
+        } else {
+            dropupMenu.classList.add('hidden');
+        }
+    });
+
+    // Handle mouse enter and leave for menus
+    function handleMenuHover(menu) {
+        menu.addEventListener('mouseenter', function() {
+            if (timeoutId) {
+                clearTimeout(timeoutId); // Cancel timeout if mouse enters the menu
+                timeoutId = null;
             }
         });
 
-        handleButtonClick(rgbButton, dropupRgb);
-        handleMouseEnter(rgbButton, dropupRgb);
+        menu.addEventListener('mouseleave', function() {
+            timeoutId = setTimeout(() => {
+                menu.classList.add('hidden'); // Hide menu after delay
+            }, closeDelay);
+        });
     }
 
-    setupHoverHandlers();
+    // Apply hover handling to all menus
+    document.querySelectorAll('.dropdown-file, .dropdown-palettes-scroll, .dropdown-select, .dropdown-settings, .rgb-dropup').forEach(menu => {
+        handleMenuHover(menu);
+    });
 
-    // Close dropdown/dropup if user clicks outside
-    window.addEventListener('click', function(event) {
-        if (!event.target.matches('.file-button, .palettes-button, .select-button, .settings-button, .rgb-button') &&
-            !event.target.closest('.dropdown-file, .dropdown-select, .dropdown-settings, .rgb-dropup, .dropdown-palettes-scroll')) {
-            closeDropdown();
+    // Close all menus if clicking outside
+    document.addEventListener('click', function(event) {
+        const dropdownFile = document.querySelector('.dropdown-file');
+        const dropdownPalettes = document.querySelector('.dropdown-palettes-scroll');
+        const dropdownSelect = document.querySelector('.dropdown-select');
+        const dropdownSettings = document.querySelector('.dropdown-settings');
+        const dropupRGB = document.querySelector('.rgb-dropup');
+
+        if (!dropdownFile.contains(event.target) && !document.querySelector('.file-button').contains(event.target)) {
+            dropdownFile.classList.add('hidden'); // Hide dropdown if clicking outside
+        }
+
+        if (!dropdownPalettes.contains(event.target) && !document.querySelector('.palettes-button').contains(event.target)) {
+            dropdownPalettes.classList.add('hidden'); // Hide dropdown if clicking outside
+        }
+
+        if (!dropdownSelect.contains(event.target) && !document.querySelector('.select-button').contains(event.target)) {
+            dropdownSelect.classList.add('hidden'); // Hide dropdown if clicking outside
+        }
+
+        if (!dropdownSettings.contains(event.target) && !document.querySelector('.settings-button').contains(event.target)) {
+            dropdownSettings.classList.add('hidden'); // Hide dropdown if clicking outside
+        }
+
+        if (!dropupRGB.contains(event.target) && !document.querySelector('.rgb-button').contains(event.target)) {
+            dropupRGB.classList.add('hidden'); // Hide dropup if clicking outside
         }
     });
 
-    // Handle hover over buttons and dropdown/palettes scroll
-    document.addEventListener('mousemove', function(event) {
-        var isHoveringAnyButton = event.target.matches('.file-button, .palettes-button, .select-button, .settings-button, .rgb-button') ||
-                                  event.target.closest('.dropdown-file, .dropdown-select, .dropdown-settings, .rgb-dropup, .dropdown-palettes-scroll');
-        
-        if (!isHoveringAnyButton) {
-            clearTimeout(closeTimeout);
-            closeTimeout = setTimeout(closeDropdown, 450);
+    // Show popup and hide dropdown when 'Resize Canvas' button is clicked
+    document.getElementById('resizeCanvasButton').addEventListener('click', function() {
+        const dropdownMenu = document.querySelector('.dropdown-file');
+        const resizePopup = document.getElementById('resizePopup');
+        dropdownMenu.classList.add('hidden'); // Hide dropdown menu
+        resizePopup.classList.remove('hidden'); // Show resize popup
+    });
+
+    // Close resize popup when clicking outside
+    document.addEventListener('click', function(event) {
+        if (!document.getElementById('resizePopup').contains(event.target) &&
+            !document.getElementById('resizeCanvasButton').contains(event.target)) {
+            closeResizePopup();
         }
     });
+
+    // Close resize popup
+    window.closeResizePopup = function() {
+        const resizePopup = document.getElementById('resizePopup');
+        resizePopup.classList.add('hidden'); // Hide resize popup
+    };
 });
 
 /* =========================================================================================================================================== */
 /*                                            Section 2: PixelLab - File Button Menu                                                           */
 /* =========================================================================================================================================== */
 
-// Show resize pop-up
-function showResizePopup() {
-    document.getElementById('resizePopup').style.display = 'block';
-}
-
-// Close resize pop-up
-function closeResizePopup() {
-    document.getElementById('resizePopup').style.display = 'none';
-}
-
-// Event listener for "Resize Canvas" button
-document.getElementById('resizeCanvasButton').addEventListener('click', function(event) {
-    event.stopPropagation();
-    showResizePopup();
-});
-
-// Close resize popup when clicking outside
-document.addEventListener('click', function(event) {
-    if (!document.getElementById('resizePopup').contains(event.target) &&
-        !document.getElementById('resizeCanvasButton').contains(event.target)) {
-        closeResizePopup();
-    }
-});
 
 // Track selected size and orientation
-let selectedSize = null;
+let selectedSize = 64; // Set default selected size to 64
 let selectedOrientation = '1:1';
 
 // Event listeners for grid size buttons

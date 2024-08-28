@@ -75,7 +75,7 @@ function updatePixelStrength(strength) {
 /* =========================================================================================================================================== */
 
 const pencilToolButton = document.querySelector('[data-tool="pencil"]');
-const maxPencilSize = 24;
+const maxPencilSize = 12;
 const defaultPencilSize = 1;
 
 // Set default size for pencil tool
