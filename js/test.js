@@ -121,3 +121,15 @@ overlayGrid.addEventListener('mouseup', () => {
 overlayGrid.addEventListener('mouseleave', () => {
     isDrawing = false;
 });
+
+
+
+
+
+
+
+
+
+
+
+

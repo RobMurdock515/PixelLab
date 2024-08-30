@@ -52,69 +52,20 @@ document.addEventListener('DOMContentLoaded', function() {
         document.querySelectorAll('.dropdown-file, .dropdown-palettes-scroll, .dropdown-select, .dropdown-settings, .rgb-dropup').forEach(menu => {
             menu.classList.add('hidden');
         });
+        closeAllPopups(); // Close all popups
+    }
+
+    function closeAllPopups() {
+        document.querySelectorAll('#backgroundPopup, #aboutPixelLabPopup, #resizePopup').forEach(popup => {
+            popup.classList.add('hidden');
+        });
     }
 
     function showMenu(menu) {
-        closeAllMenus(); // Close all menus
+        closeAllMenus(); // Close all menus and popups
         menu.classList.remove('hidden'); // Show the selected menu
     }
 
-    // Toggle dropdown menu visibility for the file button
-    document.querySelector('.file-button').addEventListener('click', function(event) {
-        event.stopPropagation(); // Prevent event from propagating
-        const dropdownMenu = document.querySelector('.dropdown-file');
-        if (dropdownMenu.classList.contains('hidden')) {
-            showMenu(dropdownMenu);
-        } else {
-            dropdownMenu.classList.add('hidden');
-        }
-    });
-
-    // Toggle dropdown menu visibility for the palettes button
-    document.querySelector('.palettes-button').addEventListener('click', function(event) {
-        event.stopPropagation(); // Prevent event from propagating
-        const dropdownMenu = document.querySelector('.dropdown-palettes-scroll');
-        if (dropdownMenu.classList.contains('hidden')) {
-            showMenu(dropdownMenu);
-        } else {
-            dropdownMenu.classList.add('hidden');
-        }
-    });
-
-    // Toggle dropdown menu visibility for the select button
-    document.querySelector('.select-button').addEventListener('click', function(event) {
-        event.stopPropagation(); // Prevent event from propagating
-        const dropdownMenu = document.querySelector('.dropdown-select');
-        if (dropdownMenu.classList.contains('hidden')) {
-            showMenu(dropdownMenu);
-        } else {
-            dropdownMenu.classList.add('hidden');
-        }
-    });
-
-    // Toggle dropdown menu visibility for the settings button
-    document.querySelector('.settings-button').addEventListener('click', function(event) {
-        event.stopPropagation(); // Prevent event from propagating
-        const dropdownMenu = document.querySelector('.dropdown-settings');
-        if (dropdownMenu.classList.contains('hidden')) {
-            showMenu(dropdownMenu);
-        } else {
-            dropdownMenu.classList.add('hidden');
-        }
-    });
-
-    // Toggle dropup menu visibility for the RGB button
-    document.querySelector('.rgb-button').addEventListener('click', function(event) {
-        event.stopPropagation(); // Prevent event from propagating
-        const dropupMenu = document.querySelector('.rgb-dropup');
-        if (dropupMenu.classList.contains('hidden')) {
-            showMenu(dropupMenu);
-        } else {
-            dropupMenu.classList.add('hidden');
-        }
-    });
-
-    // Handle mouse enter and leave for menus
     function handleMenuHover(menu) {
         menu.addEventListener('mouseenter', function() {
             if (timeoutId) {
@@ -130,54 +81,71 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // Toggle menu visibility and show popups
+    document.addEventListener('click', function(event) {
+        const target = event.target;
+
+        // Handle button clicks
+        if (target.matches('.file-button')) {
+            const dropdownMenu = document.querySelector('.dropdown-file');
+            showMenu(dropdownMenu);
+        } else if (target.matches('.palettes-button')) {
+            const dropdownMenu = document.querySelector('.dropdown-palettes-scroll');
+            showMenu(dropdownMenu);
+        } else if (target.matches('.select-button')) {
+            const dropdownMenu = document.querySelector('.dropdown-select');
+            showMenu(dropdownMenu);
+        } else if (target.matches('.settings-button')) {
+            const dropdownMenu = document.querySelector('.dropdown-settings');
+            showMenu(dropdownMenu);
+        } else if (target.matches('.rgb-button')) {
+            const dropupMenu = document.querySelector('.rgb-dropup');
+            showMenu(dropupMenu);
+        } else if (target.matches('#background-settings-button')) {
+            const dropdownSettings = document.querySelector('.dropdown-settings');
+            const backgroundPopup = document.getElementById('backgroundPopup');
+            dropdownSettings.classList.add('hidden'); // Hide dropdown menu
+            showMenu(backgroundPopup); // Show background popup
+        } else if (target.matches('#about-pixel-lab-button')) {
+            const dropdownSettings = document.querySelector('.dropdown-settings');
+            const aboutPopup = document.getElementById('aboutPixelLabPopup');
+            dropdownSettings.classList.add('hidden'); // Hide dropdown menu
+            showMenu(aboutPopup); // Show About PixelLab popup
+        } else if (target.matches('#resizeCanvasButton')) {
+            const dropdownMenu = document.querySelector('.dropdown-file');
+            const resizePopup = document.getElementById('resizePopup');
+            dropdownMenu.classList.add('hidden'); // Hide dropdown menu
+            showMenu(resizePopup); // Show resize popup
+        } else if (target.matches('#closeResizePopup')) {
+            closeResizePopup(); // Close resize popup
+        } else if (target.matches('#closeBackgroundPopup')) {
+            closeBackgroundPopup(); // Close background popup
+        } else if (target.matches('#closeAboutPixelLabPopup')) {
+            closeAboutPixelLabPopup(); // Close About PixelLab popup
+        } else if (!target.closest('.dropdown-file') &&
+                   !target.closest('.dropdown-palettes-scroll') &&
+                   !target.closest('.dropdown-select') &&
+                   !target.closest('.dropdown-settings') &&
+                   !target.closest('.rgb-dropup') &&
+                   !target.closest('.file-button') &&
+                   !target.closest('.palettes-button') &&
+                   !target.closest('.select-button') &&
+                   !target.closest('.settings-button') &&
+                   !target.closest('.rgb-button') &&
+                   !target.closest('#backgroundPopup') &&
+                   !target.closest('#aboutPixelLabPopup') &&
+                   !target.closest('#resizePopup') &&
+                   !target.closest('#background-settings-button') &&
+                   !target.closest('#about-pixel-lab-button') &&
+                   !target.closest('#resizeCanvasButton')) {
+            closeAllMenus(); // Close all menus if clicking outside
+            closeAllPopups(); // Close all popups if clicking outside
+        }
+    });
+
     // Apply hover handling to all menus
     document.querySelectorAll('.dropdown-file, .dropdown-palettes-scroll, .dropdown-select, .dropdown-settings, .rgb-dropup').forEach(menu => {
         handleMenuHover(menu);
-    });
-
-    // Close all menus if clicking outside
-    document.addEventListener('click', function(event) {
-        const dropdownFile = document.querySelector('.dropdown-file');
-        const dropdownPalettes = document.querySelector('.dropdown-palettes-scroll');
-        const dropdownSelect = document.querySelector('.dropdown-select');
-        const dropdownSettings = document.querySelector('.dropdown-settings');
-        const dropupRGB = document.querySelector('.rgb-dropup');
-
-        if (!dropdownFile.contains(event.target) && !document.querySelector('.file-button').contains(event.target)) {
-            dropdownFile.classList.add('hidden'); // Hide dropdown if clicking outside
-        }
-
-        if (!dropdownPalettes.contains(event.target) && !document.querySelector('.palettes-button').contains(event.target)) {
-            dropdownPalettes.classList.add('hidden'); // Hide dropdown if clicking outside
-        }
-
-        if (!dropdownSelect.contains(event.target) && !document.querySelector('.select-button').contains(event.target)) {
-            dropdownSelect.classList.add('hidden'); // Hide dropdown if clicking outside
-        }
-
-        if (!dropdownSettings.contains(event.target) && !document.querySelector('.settings-button').contains(event.target)) {
-            dropdownSettings.classList.add('hidden'); // Hide dropdown if clicking outside
-        }
-
-        if (!dropupRGB.contains(event.target) && !document.querySelector('.rgb-button').contains(event.target)) {
-            dropupRGB.classList.add('hidden'); // Hide dropup if clicking outside
-        }
-    });
-
-    // Show popup and hide dropdown when 'Resize Canvas' button is clicked
-    document.getElementById('resizeCanvasButton').addEventListener('click', function() {
-        const dropdownMenu = document.querySelector('.dropdown-file');
-        const resizePopup = document.getElementById('resizePopup');
-        dropdownMenu.classList.add('hidden'); // Hide dropdown menu
-        resizePopup.classList.remove('hidden'); // Show resize popup
-    });
-
-    // Close resize popup when clicking outside
-    document.addEventListener('click', function(event) {
-        if (!document.getElementById('resizePopup').contains(event.target) &&
-            !document.getElementById('resizeCanvasButton').contains(event.target)) {
-            closeResizePopup();
-        }
     });
 
     // Close resize popup
@@ -185,7 +153,21 @@ document.addEventListener('DOMContentLoaded', function() {
         const resizePopup = document.getElementById('resizePopup');
         resizePopup.classList.add('hidden'); // Hide resize popup
     };
+
+    // Close background popup
+    window.closeBackgroundPopup = function() {
+        const backgroundPopup = document.getElementById('backgroundPopup');
+        backgroundPopup.classList.add('hidden'); // Hide background popup
+    };
+
+    // Close About PixelLab popup
+    window.closeAboutPixelLabPopup = function() {
+        const aboutPopup = document.getElementById('aboutPixelLabPopup');
+        aboutPopup.classList.add('hidden'); // Hide About PixelLab popup
+    };
 });
+
+
 
 /* =========================================================================================================================================== */
 /*                                            Section 2: PixelLab - File Button Menu                                                           */
@@ -589,7 +571,7 @@ window.onload = function() {
 /* =========================================================================================================================================== */
 
 /* =========================================================================================================================================== */
-/*                                            Section 5: PixelLab - Settings Button Menu                                                       */
+/*                                            Section 5: PixelLab - Settings - Full Screen                                                     */
 /* =========================================================================================================================================== */
 
 document.getElementById('fullscreen-toggle').addEventListener('click', toggleFullscreen);
@@ -619,3 +601,65 @@ function toggleFullscreen() {
         }
     }
 }
+
+/* =========================================================================================================================================== */
+/*                                            Section 5.1: PixelLab - Settings - Background                                                    */
+/* =========================================================================================================================================== */
+
+// JavaScript to handle background color changes
+document.addEventListener('DOMContentLoaded', () => {
+    const backgroundPopup = document.getElementById('backgroundPopup');
+    const closeBackgroundPopup = document.getElementById('closeBackgroundPopup');
+    const backgroundButtons = document.querySelectorAll('.background-btn');
+
+    // Define background color styles
+    const backgroundColors = {
+        default: `
+            radial-gradient(circle at top left, 
+                rgba(255, 0, 55, 0.8) 0%,
+                rgba(26, 0, 58, 0.4) 40%
+            ),
+            radial-gradient(circle at bottom right, 
+                rgba(255, 69, 0, 0.7) 15%,
+                rgba(26, 0, 58, 0.1) 50%
+            ),
+            linear-gradient(290deg, 
+                #06000a 5%,
+                #190724 35%,
+                #190724 65%,
+                #06000a 100%
+            )
+        `,
+        bluedreams: `
+            rgba(3, 50, 70, 0.75)
+        `,
+        sprucetrail: `
+            rgba(35, 51, 36, 0.85)
+        `,
+        autumnumber: `
+            rgba(85, 75, 60, 0.85)
+        `,
+        darkmode: `
+            black
+        `
+    };
+
+    // Function to change the background color
+    function changeBackground(colorKey) {
+        document.body.style.background = backgroundColors[colorKey];
+    }
+
+    // Event listener for buttons
+    backgroundButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const colorKey = button.getAttribute('data-color');
+            changeBackground(colorKey);
+        });
+    });
+
+    // Close popup event
+    closeBackgroundPopup.addEventListener('click', () => {
+        backgroundPopup.classList.add('hidden');
+    });
+});
+

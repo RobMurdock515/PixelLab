@@ -323,18 +323,64 @@
                             Fullscreen
                         </div>
                         <div class="dropdown-divider"></div>
-                        <div class="dropdown-item">
+                        <div class="dropdown-item" id="background-settings-button">
                             <img src="img/Icons/background-icon.png" alt="Background Icon" class="dropdown-icon">
                             Background
                         </div>
                         <div class="dropdown-divider"></div>
-                        <div class="dropdown-item">
+                        <div class="dropdown-item" id="about-pixel-lab-button">
                             <img src="img/Icons/about-icon.png" alt="About Icon" class="dropdown-icon">
                             About PixelLab
                         </div>
                     </div>
                 </div>
 
+                <!-- Background Settings Popup -->
+                <div id="backgroundPopup" class="background-popup hidden">
+                    <!-- Content for Background Popup -->
+                    <div class="popup-header">
+                        <h2>Background Settings</h2><br>
+                        <button id="closeBackgroundPopup" class="popup-close">X</button>
+                    </div>
+                    <div class="popup-content">
+                        <!-- Buttons for changing background colors -->
+                        <br><button class="background-btn default" data-color="default">Default Background</button>
+                        <br><button class="background-btn bluedreams" data-color="bluedreams">Blue Dreams</button>
+                        <br><button class="background-btn sprucetrail" data-color="sprucetrail">Spruce Trail</button>
+                        <br><button class="background-btn autumnumber" data-color="autumnumber">Autumn Umber</button>
+                        <br><button class="background-btn darkmode" data-color="darkmode">Dark Mode</button>
+                    </div>
+                </div>
+                <!-- About PixelLab Popup -->
+                <div id="aboutPixelLabPopup" class="about-popup hidden">
+                    <!-- Content for About PixelLab Popup -->
+                    <div class="popup-header">
+                        <h2>About PixelLab</h2>
+                        <button id="closeAboutPixelLabPopup" class="popup-close">X</button>
+                    </div>
+                    <div class="popup-content">
+                        <br><h3>Welcome to PixelLab:</h3>
+                        <p>PixelLab is a passion project aimed at helping you create pixel art easily and effectively. 
+                            Designed for both newcomers and experienced artists, it provides a simple, intuitive platform for your creative projects.
+                            We hope you find it useful and enjoyable.</p>
+
+                        <br><h3>Features:</h3>
+                        <ul>
+                            <li>Customizable canvas sizes and resolutions</li>
+                            <li>Variety of drawing tools and brushes</li>
+                            <li>Color palettes</li>
+                            <li>Export options in various formats</li>
+                        </ul>
+
+                        <br><h3>Version Information:</h3>
+                        <p><strong>PixelLab Version:</strong> 1.0.0</p>
+                        <p><strong>Release Date:</strong> October 2024</p>
+
+                        <br><h3>Credits:</h3>
+                        <p>Robert Murdock - <a href="https://github.com/RobMurdock515/PixelLab">Pixel Lab Source Code</a></p>
+                    </div>
+                </div>
+                
                 <div class="menu-bar-container">
                     <button class="undo-button"> <!-- Undo Button -->
                         <img src="img/Icons/undo-icon.png" alt="Undo Icon" class="undo-icon">

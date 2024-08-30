@@ -394,6 +394,142 @@ html, body {
     position: fixed;
 }
 
+/* Styles for Background Change Popup */
+.background-popup {
+    position: fixed;
+    top: 0%;
+    left: 50%;
+    transform: translate(-60%, 30%);
+    width: 600px;
+    height: 250px;
+    padding: 20px;
+    border: 1px solid #000;
+    background-color: rgba(0, 0, 0, 0.50);
+    z-index: 4; /* Ensure it appears on top of other elements */
+    font-family: 'Roboto', sans-serif; /* Apply the Roboto font */
+    color: white; /* Set text color to white */
+}
+
+.background-popup .popup-close {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    top: 0px;
+    right: 0px;
+    background-color: rgba(255, 255, 255, 0.185);
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    color: #aaa;
+    transition: color 0.3s ease;
+}
+
+.background-popup .popup-content {
+    display: flex;
+    flex-wrap: wrap; /* Allow buttons to wrap to the next line */
+    gap: 10px; /* Space between buttons */
+}
+
+.background-popup .background-btn {
+    flex: 1 0 100px; /* Allow buttons to grow and shrink, set base width */
+    height: 50px;
+    border: none;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    color: white;
+    text-align: center; /* Center text inside the button */
+   
+}
+
+/* Add space before each <br> tag */
+.background-popup br {
+    content: "";
+    display: block;
+    margin-top: 30px; /* Adjust the vertical space */
+}
+
+.background-popup .default:hover, .bluedreams:hover, 
+.sprucetrail:hover, .autumnumber:hover, .darkmode:hover {
+    opacity: 0.7;
+}
+
+.background-popup .default {
+    background: 
+            radial-gradient(circle at top left, 
+            rgba(255, 0, 55, 0.8) 0%,    /* Bright red with some transparency */
+            rgba(26, 0, 58, 0.4) 40%     /* Dark purple transitioning to more transparent */
+        ),
+        radial-gradient(circle at bottom right, 
+            rgba(255, 69, 0, 0.7) 15%,   /* Softer orange-red hue for a gentle transition */
+            rgba(26, 0, 58, 0.1) 50%     /* Smooth fade to a very light dark purple */
+        ),
+        linear-gradient(290deg, 
+            #06000a 5%,        /* Very dark almost black */
+            #190724 35%,       /* Deep dark purple, extended middle to appear larger */
+            #190724 65%,       /* Continue deep dark purple for a wider middle */
+            #06000a 100%        /* Orange-red hue to match the desired background fade */
+        );
+}
+
+.background-popup .bluedreams {
+    background-color:  rgba(3, 50, 70, 0.75);
+}
+
+.background-popup .sprucetrail {
+    background-color: rgba(35, 51, 36, 0.85);
+}
+
+.background-popup .autumnumber {
+    background-color: rgba(85, 75, 60, 0.85);
+}
+
+.background-popup .darkmode {
+    background-color: black;
+}
+
+/* Styles for About Pixel Lab Popup*/
+.about-popup {
+    position: fixed;
+    top: 0%;
+    left: 50%;
+    transform: translate(-60%, 30%);
+    width: 600px;
+    height: 450px;
+    padding: 20px;
+    border: 1px solid #000;
+    background-color: rgba(0, 0, 0, 0.50);
+    z-index: 4; /* Ensure it appears on top of other elements */
+    font-family: 'Roboto', sans-serif; /* Apply the Roboto font */
+    color: white; /* Set text color to white */
+}
+
+.about-popup .popup-close {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    top: 0px;
+    right: 0px;
+    background-color: rgba(255, 255, 255, 0.185);
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    color: #aaa;
+    transition: color 0.3s ease;
+}
+
+/* Styles for links inside the popup */
+.about-popup a {
+    color: #fafafaa1; /* Choose a color for the link, e.g., DodgerBlue */
+    text-decoration: none; /* Remove underline from links */
+}
+
+.about-popup a:hover {
+    color: #fafafa31; /* Choose a hover color for the link, e.g., OrangeRed */
+    text-decoration: none; /* Optional: Add underline on hover */
+}
+
 /* =========================================================================================================================================== */
 /*                                            Section 2: PixelLab - Tool Bar (Tool Buttons)                                                    */
 /* =========================================================================================================================================== */
@@ -427,7 +563,7 @@ html, body {
 }
 
 .toolbar-button.selected {
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(26, 25, 25, 0.5);
     border-radius: 4px; 
 }
 
@@ -604,9 +740,8 @@ html, body {
     margin-left: 15px; 
     margin-top: -10px;
     transform: translate(-50%, -50%); /* Center text perfectly */
-    color: #000000; /* Text color */
+    color: #ffffff; /* Text color */
     font-size: 12px; /* Font size */
-    font-weight: bold; /* Font weight */
     display: block; /* Ensure the text is visible */
 }
 
@@ -823,6 +958,7 @@ html, body {
     width: 100%; /* Responsive width */
     height: 100%; /* Maintain aspect ratio */
     image-rendering: pixelated; /* Ensures sharp pixel art scaling */
+    z-index: 2;
 }
 
 .overlay-grid {

@@ -39,25 +39,23 @@ function resizeCanvas(newCellsPerRow) {
   cellsPerRow = newCellsPerRow;
   cellSize = canvasWidth / cellsPerRow; // Adjust cell size based on the new number of cells
 
-  // Ensure the number of rows and columns are integers
-  const rows = Math.floor(canvasHeight / cellSize);
-  const cols = Math.floor(canvasWidth / cellSize);
-  
-  // If needed, adjust canvas dimensions to fit exact rows/cols
-  canvasHeight = rows * cellSize;
-  canvasWidth = cols * cellSize;
+  // Adjust canvas dimensions to fit exact rows/cols
+  canvasHeight = Math.ceil(canvasHeight / cellSize) * cellSize;
+  canvasWidth = Math.ceil(canvasWidth / cellSize) * cellSize;
 
   drawCheckerboard(canvas, ctx, cellSize);
+  updateOverlayGrid(); // Update overlay grid whenever canvas is resized
 }
-
 
 function setCanvasSize(width, height) {
   canvasWidth = width;
   canvasHeight = height;
   drawCheckerboard(canvas, ctx, cellSize);
+  updateOverlayGrid(); // Update overlay grid whenever canvas size changes
   updateCanvasDimensions();
 }
 
+// Initial setup based on orientation
 if (selectedOrientation === 'portrait') {
   setCanvasSize(640, 640);
 } else if (selectedOrientation === 'landscape') {
@@ -67,10 +65,6 @@ if (selectedOrientation === 'portrait') {
 // Initial setup
 resizeCanvas(64); // Default grid size
 updateCanvasDimensions();
-
-// Expose functions to other scripts
-window.setCanvasSize = setCanvasSize;
-window.resizeCanvas = resizeCanvas;
 
 /* =========================================================================================================================================== */
 /*                                            Section 1: Overlay Grid + X/Y Coordinates                                                        */
@@ -136,30 +130,9 @@ function updateOverlayGrid() {
 window.addEventListener('resize', updateOverlayGrid);
 window.addEventListener('orientationchange', updateOverlayGrid);
 
-// Call updateOverlayGrid within resizeCanvas function to adapt to changes
-function resizeCanvas(newCellsPerRow) {
-  cellsPerRow = newCellsPerRow;
-  cellSize = canvasWidth / cellsPerRow; // Adjust cell size based on the new number of cells
-
-  // Adjust canvas dimensions to fit exact rows/cols
-  canvasHeight = Math.ceil(canvasHeight / cellSize) * cellSize;
-  canvasWidth = Math.ceil(canvasWidth / cellSize) * cellSize;
-
-  drawCheckerboard(canvas, ctx, cellSize);
-  updateOverlayGrid(); // Update overlay grid whenever canvas is resized
-}
-
-function setCanvasSize(width, height) {
-  canvasWidth = width;
-  canvasHeight = height;
-  drawCheckerboard(canvas, ctx, cellSize);
-  updateOverlayGrid(); // Update overlay grid whenever canvas size changes
-  updateCanvasDimensions();
-}
-
-
+// Call updateOverlayGrid initially
+updateOverlayGrid();
 
 /* =========================================================================================================================================== */
 /*                                            Section 2: Canvas - Draw Functionality                                                           */
 /* =========================================================================================================================================== */
-
