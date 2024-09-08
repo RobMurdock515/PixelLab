@@ -172,61 +172,7 @@ document.addEventListener('DOMContentLoaded', function() {
 /* =========================================================================================================================================== */
 
 
-// Track selected size and orientation
-let selectedSize = 64; // Set default selected size to 64
-let selectedOrientation = '1:1';
 
-// Event listeners for grid size buttons
-document.querySelectorAll('.size-options button').forEach(function(button) {
-    button.addEventListener('click', function() {
-        // Remove active class from all buttons
-        document.querySelectorAll('.size-options button').forEach(btn => btn.classList.remove('active-button'));
-
-        // Add active class to the clicked button
-        this.classList.add('active-button');
-        
-        // Handle grid size selection
-        const newSize = parseInt(this.textContent); // Assuming the button text is the new size
-        if ([16, 32, 64, 128].includes(newSize)) {
-            selectedSize = newSize;
-        }
-    });
-});
-
-// Event listener for orientation radio buttons
-document.querySelectorAll('input[name="orientation"]').forEach(function(radio) {
-    radio.addEventListener('change', function() {
-        selectedOrientation = this.value;
-    });
-});
-
-// Apply the selected size and orientation
-function applyResize() {
-    const canvasContainer = document.querySelector('.canvas-container');
-
-    if (selectedOrientation === 'portrait') {
-        window.setCanvasSize(640, 640);
-        canvasContainer.classList.remove('landscape-scale'); // Remove landscape class if present
-    } else if (selectedOrientation === 'landscape') {
-        window.setCanvasSize(1080, 720);
-        canvasContainer.classList.add('landscape-scale'); // Add landscape class if needed
-    }
-
-    if (selectedSize) {
-        window.resizeCanvas(selectedSize);
-    }
-    
-    closeResizePopup();
-    selectedSize = null; // Reset selected size
-}
-
-// Event listener for the Apply button
-document.querySelector('.popup-footer .apply-btn').addEventListener('click', function() {
-    applyResize();
-});
-
-// Expose the applyResize function to other scripts
-window.applyResize = applyResize;
 
 
 /* =========================================================================================================================================== */

@@ -1,5 +1,5 @@
     /* =========================================================================================================================================== */
-    /*                                            Section 0: Canvas Setup and Initialization                                                    */
+    /*                                            Section 0: Canvas Setup and Initialization                                                       */
     /* =========================================================================================================================================== */
 
 window.onload = function() {
@@ -9,11 +9,17 @@ window.onload = function() {
     const drawContext = drawCanvas.getContext('2d');
     const hoverCanvas = document.getElementById('hoverCanvas');
     const hoverContext = hoverCanvas.getContext('2d');
-
-    const cellSize = 10; // Fixed size of each cell
-    const numCells = 64; // Number of cells per row/column
-    const width = cellSize * numCells; // Canvas width
-    const height = cellSize * numCells; // Canvas height
+    
+    const defaultPortraitWidth = 640; // Default width for portrait
+    const defaultPortraitHeight = 640; // Default height for portrait
+    const defaultLandscapeWidth = 1080; // Default width for landscape
+    const defaultLandscapeHeight = 720; // Default height for landscape
+    
+    let numCells = 64; // Default number of cells per row/column (64x64)
+    let cellSize = defaultPortraitWidth / numCells; // Initial cell size based on portrait orientation
+    let width = defaultPortraitWidth;
+    let height = defaultPortraitHeight;
+    let selectedOrientation = 'portrait'; // Default orientation is portrait
 
     let pixelSize = 1; // Default pixel size value (1x1 cells)
     let selectedTool = 'none'; // Variable to keep track of the selected tool
@@ -22,11 +28,11 @@ window.onload = function() {
 
     let lineStartX = null; // Start X coordinate for line tool
     let lineStartY = null; // Start Y coordinate for line tool
-
+    
     /* =========================================================================================================================================== */
     /*                                            Section 1: Checkerboard Canvas Layer - Generates Default Cells (x/y)                             */
     /* =========================================================================================================================================== */
-
+    
     function drawCheckerboard() {
         checkerboardCanvas.width = width;
         checkerboardCanvas.height = height;
@@ -43,44 +49,94 @@ window.onload = function() {
                 checkerboardContext.fillRect(col * cellSize, row * cellSize, cellSize, cellSize);
             }
         }
-
+    
         updateDimensionsDisplay(width, height); // Update the displayed canvas dimensions
     }
-
+    
     function updateDimensionsDisplay(width, height) {
         document.getElementById('canvas-width').textContent = width;
         document.getElementById('canvas-height').textContent = height;
     }
-
+    
     /* =========================================================================================================================================== */
     /*                                            Section 2: Canvas Resizing                                                                       */
     /* =========================================================================================================================================== */
-
+    
+    // Variables to track selected size and orientation
+    let selectedSize = 64; // Default size is 64x64
+    
+    // Function to apply canvas resizing based on size and orientation
+    function resizeCanvas() {
+        // Update number of cells based on selected size
+        numCells = selectedSize;
+            
+        // Update cell size based on canvas size and number of cells
+        cellSize = (selectedOrientation === 'portrait' ? defaultPortraitWidth : defaultLandscapeWidth) / numCells;
+            
+        // Set canvas dimensions based on orientation
+        width = selectedOrientation === 'portrait' ? defaultPortraitWidth : defaultLandscapeWidth;
+        height = selectedOrientation === 'portrait' ? defaultPortraitHeight : defaultLandscapeHeight;
+            
+        // Redraw the checkerboard with updated cell size
+        drawCheckerboard();
+    }
+    
+    // Event listener for size buttons in the resizePopup
+    document.querySelectorAll('.size-options button').forEach(button => {
+        button.addEventListener('click', function() {
+            // Update selected size
+            selectedSize = parseInt(this.textContent);
+                
+            // Remove 'active-button' class from other buttons
+            document.querySelectorAll('.size-options button').forEach(btn => btn.classList.remove('active-button'));
+            // Add 'active-button' class to clicked button
+            this.classList.add('active-button');
+        });
+    });
+    
+    // Event listener for orientation radio buttons
+    document.querySelectorAll('input[name="orientation"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            selectedOrientation = this.value; // Update selected orientation
+        });
+    });
+    
+    // Apply button event listener to resize the canvas
+    document.querySelector('.apply-btn').addEventListener('click', function() {
+        resizeCanvas(); // Resize canvas when apply is clicked
+        closeResizePopup(); // Close the resize popup after applying changes
+    });
+    
+    // Function to close the resize popup
+    function closeResizePopup() {
+        document.getElementById('resizePopup').classList.add('hidden');
+    }
+    
     /* =========================================================================================================================================== */
     /*                                            Section 3: Hover Layer                                                                           */
     /* =========================================================================================================================================== */
-
+    
     function highlightCellAndDisplayCoordinates(x, y) {
         const cellX = Math.floor(x / cellSize);
         const cellY = Math.floor(y / cellSize);
-
+    
         hoverContext.clearRect(0, 0, hoverCanvas.width, hoverCanvas.height);
-
+    
         hoverContext.fillStyle = 'rgba(255, 255, 255, 0.3)'; // Semi-transparent white
-        
+            
         // Draw highlighted area based on pixel size
         const size = cellSize * pixelSize;
         hoverContext.fillRect(cellX * cellSize, cellY * cellSize, size, size);
-
+    
         document.getElementById('x-coordinate').textContent = cellX + 1; // Display X coordinate
         document.getElementById('y-coordinate').textContent = cellY + 1; // Display Y coordinate
     }
-
+    
     function resetCoordinates() {
         document.getElementById('x-coordinate').textContent = 0;
         document.getElementById('y-coordinate').textContent = 0;
     }
-
+    
     /* =========================================================================================================================================== */
     /*                                            Section 4: Draw Layer                                                                            */
     /* =========================================================================================================================================== */
