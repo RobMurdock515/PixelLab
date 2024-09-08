@@ -167,8 +167,6 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 });
 
-
-
 /* =========================================================================================================================================== */
 /*                                            Section 2: PixelLab - File Button Menu                                                           */
 /* =========================================================================================================================================== */
@@ -229,6 +227,7 @@ document.querySelector('.popup-footer .apply-btn').addEventListener('click', fun
 
 // Expose the applyResize function to other scripts
 window.applyResize = applyResize;
+
 
 /* =========================================================================================================================================== */
 /*                                            Section 3: PixelLab - Palettes Button Menu                                                       */
@@ -561,11 +560,6 @@ document.querySelectorAll('.dropdown-palettes').forEach(item => {
     });
 });
 
-// On page load, apply the default palette
-window.onload = function() {
-    applyPalette('defaultPalette');
-};
-
 /* =========================================================================================================================================== */
 /*                                            Section 4: PixelLab - Select Button Menu                                                         */
 /* =========================================================================================================================================== */
@@ -662,4 +656,3 @@ document.addEventListener('DOMContentLoaded', () => {
         backgroundPopup.classList.add('hidden');
     });
 });
-

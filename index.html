@@ -4,13 +4,13 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>PixelLab</title>
-        <link rel="stylesheet" href="../PixelLab/pixellab.css">
+        <link rel="stylesheet" href="../pixellab/styles.css">
         <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     </head>
-    <body>
-        <div class="menu-bar">
-            <div class="menu-bar-container">
-                <img src="img/Icons/tools-icon.png" alt="Tools Icon" class="tools-icon"> <!-- Tools icon -->
+        <body>
+            <div class="menu-bar">
+                <div class="menu-bar-container">
+                    <img src="img/Icons/tools-icon.png" alt="Tools Icon" class="tools-icon"> <!-- Tools icon -->
                 <span class="tools-text">Tools</span>
                 <div class="menu-bar-container">
                     <button class="file-button">
@@ -67,9 +67,9 @@
                                 </label>
                             </div>
                         </div>
-                    </div>                 
+                    </div>      
                 </div>
-
+                
                 <div class="menu-bar-container"> <!-- Palettes Button Dropdown -->
                     <button class="palettes-button"> <!-- Palettes Button -->
                         <img src="img/Icons/palettes-icon.png" alt="Palettes Icon" class="palettes-icon">
@@ -271,8 +271,9 @@
                     </div>
                 </div>
                 
+                <!-- Select Button -->
                 <div class="menu-bar-container">
-                    <button class="select-button"> <!-- Select Button -->
+                    <button class="select-button">
                         <img src="img/Icons/select-icon.png" alt="Select Icon" class="select-icon">
                         <span class="select-text">Select</span>
                     </button>
@@ -312,8 +313,9 @@
                     </div>
                 </div>
 
+                <!-- Settings Button -->
                 <div class="menu-bar-container">
-                    <button class="settings-button"> <!-- Settings Button -->
+                    <button class="settings-button">
                         <img src="img/Icons/settings-icon.png" alt="Settings Icon" class="settings-icon">
                         <span class="settings-text">Settings</span>
                     </button>
@@ -334,7 +336,6 @@
                         </div>
                     </div>
                 </div>
-
                 <!-- Background Settings Popup -->
                 <div id="backgroundPopup" class="background-popup hidden">
                     <!-- Content for Background Popup -->
@@ -369,7 +370,7 @@
                             <li>Customizable canvas sizes and resolutions</li>
                             <li>Variety of drawing tools and brushes</li>
                             <li>Color palettes</li>
-                            <li>Export options in various formats</li>
+                            <li>Export options</li>
                         </ul>
 
                         <br><h3>Version Information:</h3>
@@ -380,14 +381,14 @@
                         <p>Robert Murdock - <a href="https://github.com/RobMurdock515/PixelLab">Pixel Lab Source Code</a></p>
                     </div>
                 </div>
-                
+
                 <div class="menu-bar-container">
                     <button class="undo-button"> <!-- Undo Button -->
                         <img src="img/Icons/undo-icon.png" alt="Undo Icon" class="undo-icon">
                         <span class="undo-text">Undo</span>
                     </button>
                 </div>
-        
+
                 <div class="menu-bar-container">
                     <button class="settings-button"> <!-- Redo Button -->
                         <img src="img/Icons/redo-icon.png" alt="Redo Icon" class="redo-icon">
@@ -396,184 +397,172 @@
                 </div>
             </div>
 
-            <div class="tool-bar">
-                <button class="toolbar-button" data-tool="pencil">
-                    <img src="img/Icons/pencil-icon.png" alt="Pencil Tool">
-                    <span class="tooltip-down">Pencil Tool</span>
-                </button>
-                <button class="toolbar-button" data-tool="eraser">
-                    <img src="img/Icons/eraser-icon.png" alt="Eraser Tool">
-                    <span class="tooltip-down">Eraser Tool</span>
-                </button>
-                <button class="toolbar-button" data-tool="brush">
-                    <img src="img/Icons/brush-icon.png" alt="Brush Tool">
-                    <span class="tooltip-down">Brush Tool</span>
-                </button>
-                <button class="toolbar-button" data-tool="line">
-                    <img src="img/Icons/line-icon.png" alt="Line Tool">
-                    <span class="tooltip-down">Line Tool</span>
-                </button>
-                <button class="toolbar-button" data-tool="bucket">
-                    <img src="img/Icons/bucket-icon.png" alt="Bucket Tool">
-                    <span class="tooltip-down">Bucket Tool</span>
-                </button>
-                <button class="toolbar-button" data-tool="move">
-                    <img src="img/Icons/move-icon.png" alt="Move Tool">
-                    <span class="tooltip-down">Move Tool</span>
-                </button>
-                <button class="toolbar-button" data-tool="select">
-                    <img src="img/Icons/select2-icon.png" alt="Select Tool">
-                    <span class="tooltip-down">Select Tool</span>
-                </button>
-                <button class="toolbar-button" data-tool="text">
-                    <img src="img/Icons/text-icon.png" alt="Text Tool">
-                    <span class="tooltip-down">Text Tool</span>
-                </button>
-                <button class="toolbar-button" data-tool="spray">
-                    <img src="img/Icons/spray-icon.png" alt="Spray Tool">
-                    <span class="tooltip-down">Spray Tool</span>
-                </button>
-                <button class="rgb-button"> <!-- RGB Color Picker Button -->
-                    <img src="img/Icons/color-icon.png" alt="RGB Tool">
-                    <span class="tooltip-right">RGB Color Picker</span>
-                </button>
-    
-                <div class="rgb-dropup hidden"> <!-- RGB Button - Dropup Menu -->
-                    <div class="color-picker-container">
-                        <div class="color-display" id="colorDisplay"></div>
-                        <div class="color-codes">
-                            <div class="color-code">
-                                HEX: <span id="hexValue">#000000</span>
-                            </div>
-                            <div class="color-code">
-                                RGB: <span id="rgbValue">0, 0, 0</span>
-                            </div>
-                            <div class="color-code">
-                                HSL: <span id="hslValue">0, 0%, 0%</span>
-                            </div>
-                        </div>
-                        <div class="color-selector">
-                            <div class="color-box">
-                                <div class="color-saturation">
-                                    <div class="color-circle"></div>
+                <div class="tool-bar">
+                    <button class="toolbar-button" data-tool="pencil">
+                        <img src="img/Icons/pencil-icon.png" alt="Pencil Tool">
+                        <span class="tooltip-down">Pencil Tool</span>
+                    </button>
+                    <button class="toolbar-button" data-tool="eraser">
+                        <img src="img/Icons/eraser-icon.png" alt="Eraser Tool">
+                        <span class="tooltip-down">Eraser Tool</span>
+                    </button>
+                    <button class="toolbar-button" data-tool="brush">
+                        <img src="img/Icons/brush-icon.png" alt="Brush Tool">
+                        <span class="tooltip-down">Brush Tool</span>
+                    </button>
+                    <button class="toolbar-button" data-tool="spray">
+                        <img src="img/Icons/spray-icon.png" alt="Spray Tool">
+                        <span class="tooltip-down">Spray Tool</span>
+                    </button>
+                    <button class="toolbar-button" data-tool="bucket">
+                        <img src="img/Icons/bucket-icon.png" alt="Bucket Tool">
+                        <span class="tooltip-down">Bucket Tool</span>
+                    </button>
+                    <button class="toolbar-button" data-tool="line">
+                        <img src="img/Icons/line-icon.png" alt="Line Tool">
+                        <span class="tooltip-down">Line Tool</span>
+                    </button>
+                    <button class="toolbar-button" data-tool="select">
+                        <img src="img/Icons/select2-icon.png" alt="Select Tool">
+                        <span class="tooltip-down">Select Tool</span>
+                    </button>
+                    <button class="toolbar-button" data-tool="move">
+                        <img src="img/Icons/move-icon.png" alt="Move Tool">
+                        <span class="tooltip-down">Move Tool</span>
+                    </button>
+                    <button class="rgb-button"> <!-- RGB Color Picker Button -->
+                        <img src="img/Icons/color-icon.png" alt="RGB Tool">
+                        <span class="tooltip-right">RGB Color Picker</span>
+                    </button>
+
+                    <div class="rgb-dropup hidden"> <!-- RGB Button - Dropup Menu -->
+                        <div class="color-picker-container">
+                            <div class="color-display" id="colorDisplay"></div>
+                            <div class="color-codes">
+                                <div class="color-code">
+                                    HEX: <span id="hexValue">#000000</span>
+                                </div>
+                                <div class="color-code">
+                                    RGB: <span id="rgbValue">0, 0, 0</span>
+                                </div>
+                                <div class="color-code">
+                                    HSL: <span id="hslValue">0, 0%, 0%</span>
                                 </div>
                             </div>
-                            <div class="color-spectrum">
-                                <div class="spectrum-thumb"></div>
+                            <div class="color-selector">
+                                <div class="color-box">
+                                    <div class="color-saturation">
+                                        <div class="color-circle"></div>
+                                    </div>
+                                </div>
+                                <div class="color-spectrum">
+                                    <div class="spectrum-thumb"></div>
+                                </div>
+                            </div>
+                            <div class="color-inputs">
+                                <input type="text" id="hexInput" placeholder="HEX" maxlength="7">
+                            </div>
+                            <div class="color-history">
+                                <div class="rgb-cell" id="rgbCell1"></div>
+                                <div class="rgb-cell" id="rgbCell2"></div>
+                                <div class="rgb-cell" id="rgbCell3"></div>
+                                <div class="rgb-cell" id="rgbCell4"></div>
+                                <div class="rgb-cell" id="rgbCell5"></div>
                             </div>
                         </div>
-                        <div class="color-inputs">
-                            <input type="text" id="hexInput" placeholder="HEX" maxlength="7">
-                        </div>
-                        <div class="color-history">
-                            <div class="rgb-cell" id="rgbCell1"></div>
-                            <div class="rgb-cell" id="rgbCell2"></div>
-                            <div class="rgb-cell" id="rgbCell3"></div>
-                            <div class="rgb-cell" id="rgbCell4"></div>
-                            <div class="rgb-cell" id="rgbCell5"></div>
-                        </div>
                     </div>
-                </div>
-    
-                <div class="color-indicator"> <!-- Shows Current Selected Color -->
-                    <span class="color-text"></span> <!-- Hex value will be displayed here -->
-                </div>
         
-                <div class="color-palette-container"> <!-- Color Palette (cells) -->
-                    <div class="color-palette">
-                        <div class="color-cell" data-color-index="0"></div>
-                        <div class="color-cell" data-color-index="1"></div>
-                        <div class="color-cell" data-color-index="2"></div>
-                        <div class="color-cell" data-color-index="3"></div>
-                        <div class="color-cell" data-color-index="4"></div>
-                        <div class="color-cell" data-color-index="5"></div>
-                        <div class="color-cell" data-color-index="6"></div>
-                        <div class="color-cell" data-color-index="7"></div>
-                        <div class="color-cell" data-color-index="8"></div>
-                        <div class="color-cell" data-color-index="9"></div>
-                        <div class="color-cell" data-color-index="10"></div>
-                        <div class="color-cell" data-color-index="11"></div>
-                        <div class="color-cell" data-color-index="12"></div>
-                        <div class="color-cell" data-color-index="13"></div>
-                        <div class="color-cell" data-color-index="14"></div>
-                        <div class="color-cell" data-color-index="15"></div>
-                        <div class="color-cell" data-color-index="16"></div>
-                        <div class="color-cell" data-color-index="17"></div>
-                        <div class="color-cell" data-color-index="18"></div>
-                        <div class="color-cell" data-color-index="19"></div>
-                        <div class="color-cell" data-color-index="20"></div>
-                        <div class="color-cell" data-color-index="21"></div>
-                        <div class="color-cell" data-color-index="22"></div>
-                        <div class="color-cell" data-color-index="23"></div>
-                        <div class="color-cell" data-color-index="24"></div>
-                        <div class="color-cell" data-color-index="25"></div>
-                        <div class="color-cell" data-color-index="26"></div>
-                        <div class="color-cell" data-color-index="27"></div>
-                        <div class="color-cell" data-color-index="28"></div>
-                        <div class="color-cell" data-color-index="29"></div>
-                        <div class="color-cell" data-color-index="30"></div>
-                        <div class="color-cell" data-color-index="31"></div>
-                        <div class="color-cell" data-color-index="32"></div>
-                        <div class="color-cell" data-color-index="33"></div>
-                        <div class="color-cell" data-color-index="34"></div>
-                        <div class="color-cell" data-color-index="35"></div>
-                        <div class="color-cell" data-color-index="36"></div>
-                        <div class="color-cell" data-color-index="37"></div>
-                        <div class="color-cell" data-color-index="38"></div>
-                        <div class="color-cell" data-color-index="39"></div>
-                        <div class="color-cell" data-color-index="40"></div>
-                        <div class="color-cell" data-color-index="41"></div>
-                        <div class="color-cell" data-color-index="42"></div>
-                        <div class="color-cell" data-color-index="43"></div>
-                        <div class="color-cell" data-color-index="44"></div>
+                    <div class="color-indicator"> <!-- Shows Current Selected Color -->
+                        <span class="color-text"></span> <!-- Hex value will be displayed here -->
+                    </div>
+            
+                    <div class="color-palette-container"> <!-- Color Palette (cells) -->
+                        <div class="color-palette">
+                            <div class="color-cell" data-color-index="0"></div>
+                            <div class="color-cell" data-color-index="1"></div>
+                            <div class="color-cell" data-color-index="2"></div>
+                            <div class="color-cell" data-color-index="3"></div>
+                            <div class="color-cell" data-color-index="4"></div>
+                            <div class="color-cell" data-color-index="5"></div>
+                            <div class="color-cell" data-color-index="6"></div>
+                            <div class="color-cell" data-color-index="7"></div>
+                            <div class="color-cell" data-color-index="8"></div>
+                            <div class="color-cell" data-color-index="9"></div>
+                            <div class="color-cell" data-color-index="10"></div>
+                            <div class="color-cell" data-color-index="11"></div>
+                            <div class="color-cell" data-color-index="12"></div>
+                            <div class="color-cell" data-color-index="13"></div>
+                            <div class="color-cell" data-color-index="14"></div>
+                            <div class="color-cell" data-color-index="15"></div>
+                            <div class="color-cell" data-color-index="16"></div>
+                            <div class="color-cell" data-color-index="17"></div>
+                            <div class="color-cell" data-color-index="18"></div>
+                            <div class="color-cell" data-color-index="19"></div>
+                            <div class="color-cell" data-color-index="20"></div>
+                            <div class="color-cell" data-color-index="21"></div>
+                            <div class="color-cell" data-color-index="22"></div>
+                            <div class="color-cell" data-color-index="23"></div>
+                            <div class="color-cell" data-color-index="24"></div>
+                            <div class="color-cell" data-color-index="25"></div>
+                            <div class="color-cell" data-color-index="26"></div>
+                            <div class="color-cell" data-color-index="27"></div>
+                            <div class="color-cell" data-color-index="28"></div>
+                            <div class="color-cell" data-color-index="29"></div>
+                            <div class="color-cell" data-color-index="30"></div>
+                            <div class="color-cell" data-color-index="31"></div>
+                            <div class="color-cell" data-color-index="32"></div>
+                            <div class="color-cell" data-color-index="33"></div>
+                            <div class="color-cell" data-color-index="34"></div>
+                            <div class="color-cell" data-color-index="35"></div>
+                            <div class="color-cell" data-color-index="36"></div>
+                            <div class="color-cell" data-color-index="37"></div>
+                            <div class="color-cell" data-color-index="38"></div>
+                            <div class="color-cell" data-color-index="39"></div>
+                            <div class="color-cell" data-color-index="40"></div>
+                            <div class="color-cell" data-color-index="41"></div>
+                            <div class="color-cell" data-color-index="42"></div>
+                            <div class="color-cell" data-color-index="43"></div>
+                            <div class="color-cell" data-color-index="44"></div>
+                        </div>
                     </div>
                 </div>
-            </div>
-    
-            <div class="tool-settings-bar">
-                <div class="tool-info">
-                    <span>Tool:</span>
-                    <span id="selected-tool"></span>
-                </div>
-                <div class="slider-group">
-                    <span>Pixel Size:</span>
-                    <div class="slider-container">
-                        <input type="range" id="pixel-size" min="1" max="12" value="1" step="1">
-                        <span id="pixel-size-value">1</span>
-                    </div>
-                </div>
-                <div class="slider-group">
-                    <span>Pixel Strength:</span>
-                    <div class="slider-container">
-                        <input type="range" id="pixel-strength" min="0" max="1" value="1" step="0.01">
-                        <span id="pixel-strength-value">1</span>
-                    </div>
-                </div>
-            </div>    
-        </div>
-        
-        <div class="mobile-bar">
-        </div>
 
-        <div class="background-overlay"> <!-- Glassmorphism background overlay  -->
+                <div class="tool-settings-bar">
+                    <div class="tool-info">
+                        <span>Tool:</span>
+                        <span id="selected-tool"></span>
+                    </div>
+                    <div class="slider-group">
+                        <label for="pixel-size-slider">Pixel Size: <span id="pixel-size-value">1</span></label>
+                        <input type="range" id="pixel-size-slider" min="1" max="4" value="1" step="1">
+                    </div>
+                    <div class="slider-group">
+                        <label for="opacitySlider">Opacity:</label>
+                        <input type="range" id="opacitySlider" min="0" max="1" step="0.1" value="1">
+                        <span id="opacityValue">1.0</span> 
+                    </div>                            
+                </div>  
+            </div>
+
             <div class="canvas-wrapper"> 
                 <div class="canvas-container">
-                    <canvas id="pixelCanvas"></canvas>
-                    <div class="overlay-grid"></div> 
-                </div>
-                <div class="coordinate-display">
-                    X: <span id="x-coordinate"></span>, Y: <span id="y-coordinate"></span>
-                </div>
-                <div class="dimensions-display">
-                    Width: <span id="canvas-width"></span><br>
-                    Height: <span id="canvas-height"></span>
-                </div>    
-            </div>
-        </div>
+                    <canvas id="checkerboardCanvas"></canvas>
+                    <canvas id="hoverCanvas"></canvas>
+                    <canvas id="drawCanvas"></canvas>
 
-        <script src="js/menus.js"></script>
-        <script src="js/rgbPicker.js"></script>
-        <script src="js/canvas.js"></script>
-        <script src="js/toolbar.js"></script>
-    </body>
+                    <div class="coordinate-display">
+                        X: <span id="x-coordinate"></span>, Y: <span id="y-coordinate"></span>
+                    </div>
+
+                    <div class="dimensions-display">
+                        Width: <span id="canvas-width"></span><br>
+                        Height: <span id="canvas-height"></span>
+                    </div>  
+                </div>
+            </div>
+
+            <script src="js/canvas.js"></script>
+            <script src="js/menu.js"></script>
+            <script src="js/rgbPicker.js"></script>
+        </body>
 </html>
