@@ -154,6 +154,9 @@ window.onload = function() {
         const cellY = Math.floor(y / cellSize);
         const size = cellSize * pixelSize;
 
+        // Undo/Redo - Save the current state before applying new changes
+        saveState();
+
         if (selectedTool === 'pencil') {
             drawContext.globalAlpha = opacity;
             drawContext.fillStyle = document.querySelector('.color-indicator').style.backgroundColor; // Use the selected color

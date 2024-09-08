@@ -602,3 +602,61 @@ document.addEventListener('DOMContentLoaded', () => {
         backgroundPopup.classList.add('hidden');
     });
 });
+
+/* =========================================================================================================================================== */
+/*                                            Section 6: PixelLab - Undo - Redo                                                                */
+/* =========================================================================================================================================== */
+
+const undoStack = [];
+const redoStack = [];
+const maxHistorySize = 50; // Limit the number of states stored in history
+
+const drawCanvas = document.getElementById('drawCanvas');
+const drawContext = drawCanvas.getContext('2d');
+
+function saveState() {
+    // Ensure canvas dimensions are correct
+    if (drawCanvas.width === 0 || drawCanvas.height === 0) {
+        console.error("Canvas dimensions are invalid.");
+        return;
+    }
+    
+    if (undoStack.length >= maxHistorySize) {
+        undoStack.shift(); // Remove oldest state if limit is reached
+    }
+    const state = drawContext.getImageData(0, 0, drawCanvas.width, drawCanvas.height);
+    undoStack.push(state);
+    redoStack.length = 0; // Clear redo stack when a new action is performed
+    console.log("State saved.");
+}
+
+function undo() {
+    if (undoStack.length > 0) {
+        redoStack.push(drawContext.getImageData(0, 0, drawCanvas.width, drawCanvas.height));
+        const previousState = undoStack.pop();
+        drawContext.putImageData(previousState, 0, 0);
+        console.log("Undo performed.");
+    } else {
+        console.log("No states to undo.");
+    }
+}
+
+function redo() {
+    if (redoStack.length > 0) {
+        undoStack.push(drawContext.getImageData(0, 0, drawCanvas.width, drawCanvas.height));
+        const nextState = redoStack.pop();
+        drawContext.putImageData(nextState, 0, 0);
+        console.log("Redo performed.");
+    } else {
+        console.log("No states to redo.");
+    }
+}
+
+// Add event listeners to the buttons
+document.querySelector('.undo-button').addEventListener('click', function() {
+    undo();
+});
+
+document.querySelector('.redo-button').addEventListener('click', function() {
+    redo();
+});
