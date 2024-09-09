@@ -31,19 +31,14 @@
                             Resize Canvas
                         </div>
                         <div class="dropdown-divider"></div>
-                        <div class="dropdown-item">
+                        <div class="dropdown-item" id="openButton">
                             <img src="img/Icons/open-icon.png" alt="Open Icon" class="dropdown-icon">
                             Open
                         </div>
-                        <div class="dropdown-item">
+                        <div class="dropdown-item" id="saveButton">
                             <img src="img/Icons/save-icon.png" alt="Save Icon" class="dropdown-icon">
                             Save
-                        </div>
-                        <div class="dropdown-divider"></div>
-                        <div class="dropdown-item">
-                            <img src="img/Icons/download-icon.png" alt="Download Icon" class="dropdown-icon">
-                            Download
-                        </div>               
+                        </div>          
                     </div>                    
                     <div id="resizePopup" class="resize-popup hidden"> <!-- Resize Canvas Pop-Up Box -->
                         <button class="close-btn" onclick="closeResizePopup()">&times;</button>
@@ -278,11 +273,6 @@
                         <span class="select-text">Select</span>
                     </button>
                     <div class="dropdown-select hidden">  <!-- Select Button - Dropdown Menu -->
-                        <div class="dropdown-item">
-                            <img src="img/Icons/font-icon.png" alt="Font Icon" class="dropdown-icon">
-                            Font
-                        </div>
-                        <div class="dropdown-divider"></div>
                         <div class="dropdown-item"> 
                             <img src="img/Icons/copy-icon.png" alt="Copy Icon" class="dropdown-icon">
                             Copy (ctrl + c)
