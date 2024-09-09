@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 /* =========================================================================================================================================== */
-/*                                            Section 1: PixelLab - Dropdown/up Functions                                                      */
+/*                                            Section 0.1: PixelLab - Dropdown/up Functions                                                      */
 /* =========================================================================================================================================== */
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -168,15 +168,51 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 /* =========================================================================================================================================== */
-/*                                            Section 2: PixelLab - File Button Menu                                                           */
+/*                                            Section 1.1: PixelLab - File Dropdown - New Button                                                 */
+/* =========================================================================================================================================== */
+// Ensure this section is in the appropriate place in your script
+document.getElementById('newButton').addEventListener('click', function(e) {
+    // Ensure the click is the left mouse button (button === 0)
+    if (e.button === 0) {
+        resetToDefaults(); // Call the function to reset everything
+    }
+});
+
+function resetToDefaults() {
+    
+}
+
+/* =========================================================================================================================================== */
+/*                                            Section 1.2: PixelLab - File Dropdown - Clear Button                                             */
+/* =========================================================================================================================================== */
+document.getElementById('clearButton').addEventListener('click', function(e) {
+    // Ensure the click is the left mouse button (button === 0)
+    if (e.button === 0) {
+        resetCanvas(); // This is a placeholder for whatever action you want
+    }
+});
+
+function resetCanvas() {
+    // Example function to reset the canvas, if that's the desired action
+    const drawCanvas = document.getElementById('drawCanvas');
+    const drawContext = drawCanvas.getContext('2d');
+    drawContext.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
+}
+
+/* =========================================================================================================================================== */
+/*                                            Section 1.3: PixelLab - File Dropdown - Open Button                                              */
 /* =========================================================================================================================================== */
 
-
-
-
+/* =========================================================================================================================================== */
+/*                                            Section 1.4: PixelLab - File Dropdown - Save Button                                              */
+/* =========================================================================================================================================== */
 
 /* =========================================================================================================================================== */
-/*                                            Section 3: PixelLab - Palettes Button Menu                                                       */
+/*                                            Section 1.5: PixelLab - File Dropdown - Download Button                                          */
+/* =========================================================================================================================================== */
+
+/* =========================================================================================================================================== */
+/*                                            Section 2: PixelLab - Palettes Button Menu                                                       */
 /* =========================================================================================================================================== */
 
 // Palettes for creating pixel art
@@ -507,11 +543,11 @@ document.querySelectorAll('.dropdown-palettes').forEach(item => {
 });
 
 /* =========================================================================================================================================== */
-/*                                            Section 4: PixelLab - Select Button Menu                                                         */
+/*                                            Section 3: PixelLab - Select Button Menu                                                         */
 /* =========================================================================================================================================== */
 
 /* =========================================================================================================================================== */
-/*                                            Section 5: PixelLab - Settings - Full Screen                                                     */
+/*                                            Section 4: PixelLab - Settings - Full Screen                                                     */
 /* =========================================================================================================================================== */
 
 document.getElementById('fullscreen-toggle').addEventListener('click', toggleFullscreen);
@@ -543,7 +579,7 @@ function toggleFullscreen() {
 }
 
 /* =========================================================================================================================================== */
-/*                                            Section 5.1: PixelLab - Settings - Background                                                    */
+/*                                            Section 5: PixelLab - Settings - Background                                                    */
 /* =========================================================================================================================================== */
 
 // JavaScript to handle background color changes
