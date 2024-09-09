@@ -14,12 +14,22 @@ window.onload = function() {
     const defaultPortraitHeight = 640; // Default height for portrait
     const defaultLandscapeWidth = 1080; // Default width for landscape
     const defaultLandscapeHeight = 720; // Default height for landscape
+
+    const toolbarButtons = document.querySelectorAll('.toolbar-button, .rgb-button'); // Tooltips
+    const timeouts = new Map(); 
+    const backgroundPopup = document.getElementById('backgroundPopup'); // Const background change
+    const closeBackgroundPopup = document.getElementById('closeBackgroundPopup');
+    const backgroundButtons = document.querySelectorAll('.background-btn');
+    const undoStack = []; // Undo Save State
+    const redoStack = []; // Redo Save State
+    const maxHistorySize = 50; // Limit the number of states stored in history
     
     let numCells = 64; // Default number of cells per row/column (64x64)
     let cellSize = defaultPortraitWidth / numCells; // Initial cell size based on portrait orientation
     let width = defaultPortraitWidth;
     let height = defaultPortraitHeight;
     let selectedOrientation = 'portrait'; // Default orientation is portrait
+    let selectedSize = 64; // Default size is 64x64
 
     let pixelSize = 1; // Default pixel size value (1x1 cells)
     let selectedTool = 'none'; // Variable to keep track of the selected tool
@@ -352,9 +362,6 @@ window.onload = function() {
     /* =========================================================================================================================================== */
     /*                                            Section 11.1: PixelLab - Tooltips                                                                */
     /* =========================================================================================================================================== */
-
-    const toolbarButtons = document.querySelectorAll('.toolbar-button, .rgb-button');
-        const timeouts = new Map();
     
         toolbarButtons.forEach(button => {
             timeouts.set(button, null);
@@ -546,8 +553,6 @@ window.onload = function() {
     /* =========================================================================================================================================== */
     /*                                            Section 12.3: File Dropdown - Resizing Button                                                    */
     /* =========================================================================================================================================== */
-    // Variables to track selected size and orientation
-    let selectedSize = 64; // Default size is 64x64
     
     // Function to apply canvas resizing based on size and orientation
     function resizeCanvas() {
@@ -603,7 +608,71 @@ window.onload = function() {
     /* =========================================================================================================================================== */
     /*                                            Section 12.5: File Dropdown - Save Button                                                        */
     /* =========================================================================================================================================== */
-
+    document.getElementById('saveButton').addEventListener('click', function() {
+        if ('showSaveFilePicker' in window) {
+            // File System Access API is supported
+            saveCanvasAsPNG();
+        } else {
+            // Fallback method for browsers that don't support File System Access API
+            saveCanvasFallback();
+        }
+    });
+    
+    async function saveCanvasAsPNG() {
+        const drawCanvas = document.getElementById('drawCanvas');
+        const drawCanvasDataURL = drawCanvas.toDataURL('image/png');
+        const blob = await fetch(drawCanvasDataURL).then(res => res.blob());
+        
+        try {
+            // Prompt the user to select a file save location
+            const fileHandle = await window.showSaveFilePicker({
+                suggestedName: `canvas-image.png`, // Default file name with extension
+                types: [
+                    { 
+                        description: 'PNG Image', 
+                        accept: { 'image/png': ['.png'] } 
+                    },
+                    { 
+                        description: 'JPEG Image', 
+                        accept: { 'image/jpeg': ['.jpg', '.jpeg'] } 
+                    },
+                    { 
+                        description: 'GIF Image', 
+                        accept: { 'image/gif': ['.gif'] } 
+                    }
+                ]
+            });
+        
+            const writableStream = await fileHandle.createWritable();
+            await writableStream.write(blob);
+            await writableStream.close();
+        } catch (error) {
+            console.error('Error saving file:', error);
+        }
+    }
+    
+    function saveCanvasFallback() {
+        const drawCanvas = document.getElementById('drawCanvas');
+        const drawCanvasDataURL = drawCanvas.toDataURL('image/png');
+        
+        // Prompt the user for a file name
+        const fileName = prompt('Enter file name (without extension):', 'canvas-image');
+        
+        if (fileName) {
+            // Create a temporary link element
+            const link = document.createElement('a');
+            link.href = drawCanvasDataURL;
+            link.download = `${fileName}.png`; // Use the user-provided name with .png extension
+            
+            // Append the link to the body and trigger a click
+            document.body.appendChild(link);
+            link.click();
+            
+            // Remove the link from the document
+            document.body.removeChild(link);
+        }
+    }
+    
     /* =========================================================================================================================================== */
     /*                                            Section 13: Palettes Dropdown - Palette Selection                                                */
     /* =========================================================================================================================================== */
@@ -982,12 +1051,6 @@ window.onload = function() {
     /*                                            Section 15.2: Settings Dropdown - Background Button                                              */
     /* =========================================================================================================================================== */
 
-    document.addEventListener('DOMContentLoaded', () => {
-        const backgroundPopup = document.getElementById('backgroundPopup');
-        const closeBackgroundPopup = document.getElementById('closeBackgroundPopup');
-        const backgroundButtons = document.querySelectorAll('.background-btn');
-
-        // Define background color styles
         const backgroundColors = {
             default: `
                 radial-gradient(circle at top left, 
@@ -1036,15 +1099,10 @@ window.onload = function() {
         closeBackgroundPopup.addEventListener('click', () => {
             backgroundPopup.classList.add('hidden');
         });
-    });
 
     /* =========================================================================================================================================== */
     /*                                            Section 16: Undo - Redo Buttons                                                                  */
     /* =========================================================================================================================================== */
-
-    const undoStack = [];
-    const redoStack = [];
-    const maxHistorySize = 50; // Limit the number of states stored in history
 
     function saveState() {
         // Ensure canvas dimensions are correct
