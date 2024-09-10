@@ -132,6 +132,8 @@ window.onload = function() {
             drawContext.fillStyle = document.querySelector('.color-indicator').style.backgroundColor; // Use the selected color
             drawBrushPattern(cellY, cellX); // Use updated brush size and opacity
         } else if (selectedTool === 'bucket') {
+            drawContext.globalAlpha = opacity;
+            drawContext.fillStyle = document.querySelector('.color-indicator').style.backgroundColor; // Use the selected color
             floodFill(cellX, cellY);
         }
     }
@@ -308,15 +310,16 @@ window.onload = function() {
     function floodFill(x, y) {
         const targetColor = getPixelColor(x, y);
         const fillColor = document.querySelector('.color-indicator').style.backgroundColor; // Use the selected color
+        const fillColorWithAlpha = getColorWithAlpha(fillColor, drawContext.globalAlpha); // Apply the current opacity
     
-        if (colorsMatch(targetColor, fillColor)) return;
+        if (colorsMatch(targetColor, fillColorWithAlpha)) return;
     
         const stack = [[x, y]];
     
         while (stack.length > 0) {
             const [cx, cy] = stack.pop();
             if (getPixelColor(cx, cy) === targetColor) {
-                drawContext.fillStyle = fillColor;
+                drawContext.fillStyle = fillColorWithAlpha;
                 drawContext.fillRect(cx * cellSize, cy * cellSize, cellSize, cellSize);
     
                 if (cx > 0) stack.push([cx - 1, cy]);
@@ -333,9 +336,14 @@ window.onload = function() {
         return `rgba(${r}, ${g}, ${b}, ${a / 255})`;
     }
     
+    function getColorWithAlpha(color, alpha) {
+        const [r, g, b] = color.match(/\d+/g).map(Number);
+        return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+    }
+    
     function colorsMatch(color1, color2) {
         return color1 === color2;
-    }
+    }    
 
     /* =========================================================================================================================================== */
     /*                                            Section 8: Line Tool Functionality                                                               */
@@ -604,6 +612,82 @@ window.onload = function() {
     /* =========================================================================================================================================== */
     /*                                            Section 12.4: File Dropdown - Open Button                                                        */
     /* =========================================================================================================================================== */
+
+    document.getElementById('openButton').addEventListener('click', function() {
+        if ('showOpenFilePicker' in window) {
+            // File System Access API is supported
+            openFileFromPicker();
+        } else {
+            // Fallback method for browsers that don't support File System Access API
+            openFileFallback();
+        }
+    });
+    
+    // For modern browsers with File System Access API
+    async function openFileFromPicker() {
+        try {
+            // Show file picker to select a file
+            const [fileHandle] = await window.showOpenFilePicker({
+                types: [
+                    {
+                        description: 'Images',
+                        accept: {
+                            'image/*': ['.png', '.jpg', '.jpeg', '.gif']
+                        }
+                    }
+                ],
+                multiple: false // Ensure only one file is selected
+            });
+    
+            const file = await fileHandle.getFile();
+            const imageURL = URL.createObjectURL(file);
+            
+            // Display the image on the canvas
+            drawImageOnCanvas(imageURL);
+        } catch (error) {
+            console.error('Error opening file:', error);
+        }
+    }
+    
+    // Fallback method using traditional input
+    function openFileFallback() {
+        // Create a hidden file input element
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'image/*'; // Accept all image file types
+        input.style.display = 'none';
+    
+        // Listen for when the user selects a file
+        input.addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const imageURL = URL.createObjectURL(file);
+                
+                // Display the image on the canvas
+                drawImageOnCanvas(imageURL);
+            }
+        });
+    
+        // Trigger the file input dialog
+        input.click();
+    }
+    
+    // Function to draw the selected image onto the canvas
+    function drawImageOnCanvas(imageURL) {
+        const drawCanvas = document.getElementById('drawCanvas');
+        const ctx = drawCanvas.getContext('2d');
+        
+        const image = new Image();
+        image.src = imageURL;
+        
+        image.onload = function() {
+            // Clear the canvas before drawing
+            ctx.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
+            
+            // Draw the image onto the canvas
+            ctx.drawImage(image, 0, 0, drawCanvas.width, drawCanvas.height);
+        };
+    }
 
     /* =========================================================================================================================================== */
     /*                                            Section 12.5: File Dropdown - Save Button                                                        */
