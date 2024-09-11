@@ -49,9 +49,6 @@ document.addEventListener('DOMContentLoaded', function() {
         colorCircle.style.left = `${x}px`;
         colorCircle.style.top = `${y}px`;
 
-        // Update inputs
-        hexInput.value = hex;
-
         if (shouldUpdateHistory) {
             addColorToHistory(hex);
         }
@@ -213,20 +210,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
         document.addEventListener('mousemove', mouseMoveHandler);
         document.addEventListener('mouseup', mouseUpHandler);
-    });
-
-    hexInput.addEventListener('input', function() {
-        const hex = hexInput.value;
-        const rgb = hexToRgb(hex);
-
-        if (rgb) {
-            const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
-            currentHue = hsl.h;
-            currentSaturation = hsl.s;
-            currentBrightness = hsl.l;
-
-            updateColorFromPosition(colorCircle.offsetLeft, colorCircle.offsetTop, true);
-        }
     });
 
     rgbButton.addEventListener('click', function() {

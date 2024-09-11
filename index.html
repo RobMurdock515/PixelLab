@@ -416,54 +416,50 @@
                         <img src="img/Icons/select2-icon.png" alt="Select Tool">
                         <span class="tooltip-down">Select Tool</span>
                     </button>
-                    <button class="toolbar-button" data-tool="move">
-                        <img src="img/Icons/move-icon.png" alt="Move Tool">
-                        <span class="tooltip-down">Move Tool</span>
-                    </button>
-                    <button class="rgb-button"> <!-- RGB Color Picker Button -->
-                        <img src="img/Icons/color-icon.png" alt="RGB Tool">
-                        <span class="tooltip-right">RGB Color Picker</span>
-                    </button>
-
-                    <div class="rgb-dropup hidden"> <!-- RGB Button - Dropup Menu -->
-                        <div class="color-picker-container">
-                            <div class="color-display" id="colorDisplay"></div>
-                            <div class="color-codes">
-                                <div class="color-code">
-                                    HEX: <span id="hexValue">#000000</span>
-                                </div>
-                                <div class="color-code">
-                                    RGB: <span id="rgbValue">0, 0, 0</span>
-                                </div>
-                                <div class="color-code">
-                                    HSL: <span id="hslValue">0, 0%, 0%</span>
-                                </div>
-                            </div>
-                            <div class="color-selector">
-                                <div class="color-box">
-                                    <div class="color-saturation">
-                                        <div class="color-circle"></div>
+                
+                    <div class="color-display-container">
+                        <button class="rgb-button"> <!-- RGB Color Picker Button -->
+                            <img src="img/Icons/color-icon.png" alt="RGB Tool">
+                            <span class="tooltip-right">RGB Color Picker</span>
+                        </button>
+    
+                        <div class="rgb-dropup hidden"> <!-- RGB Button - Dropup Menu -->
+                            <div class="color-picker-container">
+                                <div class="color-display" id="colorDisplay"></div>
+                                <div class="color-codes">
+                                    <div class="color-code">
+                                        HEX: <span id="hexValue">#000000</span>
+                                    </div>
+                                    <div class="color-code">
+                                        RGB: <span id="rgbValue">0, 0, 0</span>
+                                    </div>
+                                    <div class="color-code">
+                                        HSL: <span id="hslValue">0, 0%, 0%</span>
                                     </div>
                                 </div>
-                                <div class="color-spectrum">
-                                    <div class="spectrum-thumb"></div>
+                                <div class="color-selector">
+                                    <div class="color-box">
+                                        <div class="color-saturation">
+                                            <div class="color-circle"></div>
+                                        </div>
+                                    </div>
+                                    <div class="color-spectrum">
+                                        <div class="spectrum-thumb"></div>
+                                    </div>
+                                </div>
+                                <div class="color-history">
+                                    <div class="rgb-cell" id="rgbCell1"></div>
+                                    <div class="rgb-cell" id="rgbCell2"></div>
+                                    <div class="rgb-cell" id="rgbCell3"></div>
+                                    <div class="rgb-cell" id="rgbCell4"></div>
+                                    <div class="rgb-cell" id="rgbCell5"></div>
                                 </div>
                             </div>
-                            <div class="color-inputs">
-                                <input type="text" id="hexInput" placeholder="HEX" maxlength="7">
-                            </div>
-                            <div class="color-history">
-                                <div class="rgb-cell" id="rgbCell1"></div>
-                                <div class="rgb-cell" id="rgbCell2"></div>
-                                <div class="rgb-cell" id="rgbCell3"></div>
-                                <div class="rgb-cell" id="rgbCell4"></div>
-                                <div class="rgb-cell" id="rgbCell5"></div>
-                            </div>
                         </div>
-                    </div>
-        
-                    <div class="color-indicator"> <!-- Shows Current Selected Color -->
-                        <span class="color-text"></span> <!-- Hex value will be displayed here -->
+            
+                        <div class="color-indicator"> <!-- Shows Current Selected Color -->
+                            <span class="color-text"></span> <!-- Hex value will be displayed here -->
+                        </div>
                     </div>
             
                     <div class="color-palette-container"> <!-- Color Palette (cells) -->
@@ -552,7 +548,6 @@
             </div>
 
             <script src="js/canvas.js"></script>
-            <script src="js/menu.js"></script>
             <script src="js/rgbPicker.js"></script>
         </body>
 </html>

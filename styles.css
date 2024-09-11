@@ -563,7 +563,7 @@ html, body {
     margin: 0;
     position: fixed;
     bottom: 260px;
-    left: 25px;
+    left: 20px;
     cursor: pointer;
 
     img { /* nested */
@@ -584,7 +584,7 @@ html, body {
     min-height: 260px;
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.055);
     z-index: 1000;
-    bottom: 260px;
+    bottom: -10px;
     left: 60px;
     border-radius: 10px;
 }
@@ -728,6 +728,12 @@ html, body {
     color: #ffffff; /* Text color */
     font-size: 12px; /* Font size */
     display: block; /* Ensure the text is visible */
+}
+
+.color-display-container {
+    position: absolute;
+    bottom: 265px;
+    left: 0px;
 }
 
 .color-palette-container {

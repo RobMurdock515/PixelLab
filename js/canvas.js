@@ -3,41 +3,52 @@
     /* =========================================================================================================================================== */
 
 window.onload = function() {
+    // Canvas and Contexts
     const checkerboardCanvas = document.getElementById('checkerboardCanvas');
     const checkerboardContext = checkerboardCanvas.getContext('2d');
     const drawCanvas = document.getElementById('drawCanvas');
     const drawContext = drawCanvas.getContext('2d');
     const hoverCanvas = document.getElementById('hoverCanvas');
     const hoverContext = hoverCanvas.getContext('2d');
-    
-    const defaultPortraitWidth = 640; // Default width for portrait
-    const defaultPortraitHeight = 640; // Default height for portrait
-    const defaultLandscapeWidth = 1080; // Default width for landscape
-    const defaultLandscapeHeight = 720; // Default height for landscape
 
-    const toolbarButtons = document.querySelectorAll('.toolbar-button, .rgb-button'); // Tooltips
-    const timeouts = new Map(); 
-    const backgroundPopup = document.getElementById('backgroundPopup'); // Const background change
+    // Default Dimensions
+    const defaultPortraitWidth = 640; 
+    const defaultPortraitHeight = 640; 
+    const defaultLandscapeWidth = 1080;
+    const defaultLandscapeHeight = 720;
+
+    // Tooltips and Background Popup
+    const toolbarButtons = document.querySelectorAll('.toolbar-button, .rgb-button');
+    const timeouts = new Map();
+    const backgroundPopup = document.getElementById('backgroundPopup');
     const closeBackgroundPopup = document.getElementById('closeBackgroundPopup');
     const backgroundButtons = document.querySelectorAll('.background-btn');
-    const undoStack = []; // Undo Save State
-    const redoStack = []; // Redo Save State
-    const maxHistorySize = 50; // Limit the number of states stored in history
-    
-    let numCells = 64; // Default number of cells per row/column (64x64)
-    let cellSize = defaultPortraitWidth / numCells; // Initial cell size based on portrait orientation
+
+    // Undo/Redo State
+    let undoStack = [];
+    let redoStack = [];
+    const maxHistorySize = 50;
+
+    // Variables for Canvas Setup and Drawing Tools
+    let numCells = 64;
+    let cellSize = defaultPortraitWidth / numCells;
     let width = defaultPortraitWidth;
     let height = defaultPortraitHeight;
-    let selectedOrientation = 'portrait'; // Default orientation is portrait
-    let selectedSize = 64; // Default size is 64x64
+    let selectedOrientation = 'portrait';
+    let selectedSize = 64;
 
-    let pixelSize = 1; // Default pixel size value (1x1 cells)
-    let selectedTool = 'none'; // Variable to keep track of the selected tool
-    let isDrawing = false; // Flag to indicate if drawing is in progress
-    let opacity = 1; // Default opacity value (100%)
+    let pixelSize = 1;
+    let selectedTool = 'none';
+    let isDrawing = false;
+    let opacity = 1;
 
-    let lineStartX = null; // Start X coordinate for line tool
-    let lineStartY = null; // Start Y coordinate for line tool
+    let lineStartX = null;
+    let lineStartY = null;
+
+    let selectionStart = null;
+    let selectionEnd = null;
+    let selectedCells = []; 
+    let isSelecting = false;
     
     /* =========================================================================================================================================== */
     /*                                            Section 1: Checkerboard Canvas Layer - Generates Default Cells (x/y)                             */
@@ -155,6 +166,8 @@ window.onload = function() {
                 isDrawing = false;
                 lineStartX = null; // Reset line start position
                 lineStartY = null; // Reset line start position
+                isSelecting = false; // End selection mode
+                hoverContext.clearRect(0, 0, hoverCanvas.width, hoverCanvas.height); // Clear selection rectangle
             } else {
                 document.querySelectorAll('.toolbar-button').forEach(btn => btn.classList.remove('selected'));
                 this.classList.add('selected');
@@ -162,7 +175,7 @@ window.onload = function() {
                 isDrawing = tool === 'pencil' || tool === 'eraser' || tool === 'spray' || tool === 'brush' || tool === 'bucket' || tool === 'line';
             }
         });
-    });
+    });    
 
     /* =========================================================================================================================================== */
     /*                                            Section 4: Mouse Event Handling                                                                  */
@@ -174,14 +187,18 @@ window.onload = function() {
             const rect = drawCanvas.getBoundingClientRect();
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
-    
+        
             if (selectedTool === 'line') {
                 lineStartX = x;
                 lineStartY = y;
+            } else if (selectedTool === 'select') {
+                isSelecting = true;
+                // Record the starting point of the selection
+                selectionStart = getCellCoordinatesFromMouse(e);
             } else {
                 applyAction(x, y);
                 isDrawing = true;
-    
+        
                 const moveAction = function(e) {
                     if (isDrawing) {
                         const x = e.clientX - rect.left;
@@ -189,9 +206,9 @@ window.onload = function() {
                         applyAction(x, y);
                     }
                 };
-    
+        
                 drawCanvas.addEventListener('mousemove', moveAction);
-    
+        
                 drawCanvas.addEventListener('mouseup', function() {
                     isDrawing = false;
                     drawCanvas.removeEventListener('mousemove', moveAction);
@@ -199,19 +216,23 @@ window.onload = function() {
             }
         }
     });
-    
+
     drawCanvas.addEventListener('mouseup', function(e) {
         if (selectedTool === 'line' && lineStartX !== null && lineStartY !== null) {
             const rect = drawCanvas.getBoundingClientRect();
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
-    
+        
             drawLine(lineStartX, lineStartY, x, y); // Draw the line
             lineStartX = null; // Reset line start position
             lineStartY = null; // Reset line start position
+        } else if (selectedTool === 'select') {
+            isSelecting = false;
+            // Finalize the selection area
+            selectionEnd = getCellCoordinatesFromMouse(e);
+            selectedCells = getSelectedCells(selectionStart, selectionEnd);
         }
     });
-    
 
     // Highlight cell and display coordinates on mouse move
     drawCanvas.addEventListener('mousemove', function(e) {
@@ -219,26 +240,37 @@ window.onload = function() {
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
 
-        highlightCellAndDisplayCoordinates(x, y);
+        if (selectedTool === 'select' && isSelecting) {
+            // Clear any previous hover or selection indicators
+            clearHoverCanvas();
+            
+            // Record the current mouse position for the selection end
+            selectionEnd = getCellCoordinatesFromMouse(e);
+            
+            // Draw the selection rectangle on hoverCanvas
+            drawSelectionRectangle(selectionStart, selectionEnd);
+        } else {
+            highlightCellAndDisplayCoordinates(x, y);
+        }
     });
 
     // Clear hover effect and reset coordinates when mouse leaves the canvas
     drawCanvas.addEventListener('mouseleave', function() {
         hoverContext.clearRect(0, 0, hoverCanvas.width, hoverCanvas.height);
         resetCoordinates();
-    });    
+    }); 
 
     /* =========================================================================================================================================== */
     /*                                            Section 5: Spray Pattern Functionality                                                           */
     /* =========================================================================================================================================== */
-
+    
     function drawSprayPattern(row, col, brushSize, pressure, angle) {
         const brushPattern = [];
         const radius = brushSize / 2;
         const minAlpha = 0.2; // Minimum alpha to ensure particles are visible
-        
+            
         const densityFactor = pixelSize === 1 ? 2 : 1; // Increase density for pixel size 1
-    
+        
         for (let i = 0; i < Math.floor(brushSize * brushSize * pressure * densityFactor); i++) {
             const randAngle = Math.random() * Math.PI * 2;
             const distance = Math.random() * radius;
@@ -246,25 +278,25 @@ window.onload = function() {
             const dy = Math.sin(randAngle) * distance;
             brushPattern.push([dx, dy]);
         }
-    
+        
         brushPattern.forEach(([dx, dy]) => {
             const x = col * cellSize + dx * cellSize * Math.cos(angle) - dy * cellSize * Math.sin(angle);
             const y = row * cellSize + dx * cellSize * Math.sin(angle) + dy * cellSize * Math.cos(angle);
-    
+        
             const distanceToCenter = Math.sqrt(dx * dx + dy * dy);
             const alpha = Math.max(minAlpha, pressure * (1 - distanceToCenter / radius) * 0.8); // Ensure minimum alpha
-    
+        
             drawContext.globalAlpha = alpha * opacity; // Apply opacity scaling
             drawContext.fillRect(x, y, cellSize, cellSize);
         });
-    
+        
         drawContext.globalAlpha = 1; // Reset global alpha
     }
-    
+        
     /* =========================================================================================================================================== */
     /*                                            Section 6: Brush Pattern Functionality                                                           */
     /* =========================================================================================================================================== */
-
+    
     function drawBrushPattern(row, col) {
         const brushPattern = [
             // Central core (very dense)
@@ -273,55 +305,55 @@ window.onload = function() {
             [1, 0], [-1, 0], [0, 1], [0, -1],
             [1, 0.5], [-1, -0.5], [0.5, 1], [-0.5, -1],
             [1, 1], [-1, -1], [1, -1], [-1, 1],
-  
+      
             // Intermediate scattering (medium dense)
             [1.5, 0], [-1.5, 0], [0, 1.5], [0, -1.5],
             [1.5, 0.5], [-1.5, -0.5], [0.5, 1.5], [-0.5, -1.5],
             [1.5, 1], [-1.5, -1], [1, 1.5], [-1, -1.5],
-  
+      
             // Outer scattering (low density)
             [2, 0], [-2, 0], [0, 2], [0, -2],
             [2, 0.5], [-2, -0.5], [0.5, 2], [-0.5, -2],
             [2, 1], [-2, -1], [1, 2], [-1, -2],
             [2, 1.5], [-2, -1.5], [1.5, 2], [-1.5, -2],
         ];
-    
+        
         const size = cellSize * pixelSize;
         const minAlpha = 0.; // Increased minimum alpha to enhance visibility
-    
+        
         brushPattern.forEach(([dx, dy], index) => {
             const x = col * cellSize + dx * size;
             const y = row * cellSize + dy * size;
-    
+        
             const distanceToCenter = Math.sqrt(dx * dx + dy * dy);
             const alpha = Math.max(minAlpha, opacity * (1 - distanceToCenter / (size / 2)) * 0.7); // Increased opacity scaling factor
-    
+        
             drawContext.globalAlpha = alpha; // Apply opacity scaling
             drawContext.fillRect(x, y, size, size);
         });
-    
+        
         drawContext.globalAlpha = 1; // Reset global alpha
     }
-
+    
     /* =========================================================================================================================================== */
     /*                                            Section 7: Bucket Functionality                                                                  */
     /* =========================================================================================================================================== */
-
+    
     function floodFill(x, y) {
         const targetColor = getPixelColor(x, y);
         const fillColor = document.querySelector('.color-indicator').style.backgroundColor; // Use the selected color
         const fillColorWithAlpha = getColorWithAlpha(fillColor, drawContext.globalAlpha); // Apply the current opacity
-    
+        
         if (colorsMatch(targetColor, fillColorWithAlpha)) return;
-    
+        
         const stack = [[x, y]];
-    
+        
         while (stack.length > 0) {
             const [cx, cy] = stack.pop();
             if (getPixelColor(cx, cy) === targetColor) {
                 drawContext.fillStyle = fillColorWithAlpha;
                 drawContext.fillRect(cx * cellSize, cy * cellSize, cellSize, cellSize);
-    
+        
                 if (cx > 0) stack.push([cx - 1, cy]);
                 if (cx < numCells - 1) stack.push([cx + 1, cy]);
                 if (cy > 0) stack.push([cx, cy - 1]);
@@ -329,26 +361,26 @@ window.onload = function() {
             }
         }
     }
-    
+        
     function getPixelColor(x, y) {
         const imageData = drawContext.getImageData(x * cellSize, y * cellSize, cellSize, cellSize);
         const [r, g, b, a] = imageData.data;
         return `rgba(${r}, ${g}, ${b}, ${a / 255})`;
     }
-    
+        
     function getColorWithAlpha(color, alpha) {
         const [r, g, b] = color.match(/\d+/g).map(Number);
         return `rgba(${r}, ${g}, ${b}, ${alpha})`;
     }
-    
+        
     function colorsMatch(color1, color2) {
         return color1 === color2;
     }    
-
+    
     /* =========================================================================================================================================== */
     /*                                            Section 8: Line Tool Functionality                                                               */
     /* =========================================================================================================================================== */
-
+    
     function drawLine(x1, y1, x2, y2, preview = false) {
         drawContext.globalAlpha = opacity;
         drawContext.strokeStyle = document.querySelector('.color-indicator').style.backgroundColor; // Use the selected color
@@ -363,10 +395,71 @@ window.onload = function() {
     /*                                            Section 9: Select Tool Functionality                                                             */
     /* =========================================================================================================================================== */
 
+    // Function to draw the selection rectangle
+    function drawSelectionRectangle(start, end) {
+        const rectX = Math.min(start.x, end.x) * cellSize;
+        const rectY = Math.min(start.y, end.y) * cellSize;
+        const rectWidth = (Math.abs(end.x - start.x) + 1) * cellSize;
+        const rectHeight = (Math.abs(end.y - start.y) + 1) * cellSize;
+    
+        // Adjust rectangle coordinates to ensure alignment with cell edges
+        hoverContext.clearRect(0, 0, hoverCanvas.width, hoverCanvas.height); // Clear previous rectangles
+        hoverContext.fillStyle = 'rgba(255, 255, 255, 0.3)'; // Semi-transparent white
+        hoverContext.strokeStyle = 'rgba(0, 0, 0, 0.5)'; // Slightly dark border for better visibility
+        
+    
+        // Draw rectangle starting from cell boundaries
+        hoverContext.fillRect(Math.floor(rectX), Math.floor(rectY), Math.ceil(rectWidth), Math.ceil(rectHeight));
+        hoverContext.strokeRect(Math.floor(rectX), Math.floor(rectY), Math.ceil(rectWidth), Math.ceil(rectHeight));
+    }    
+      
+    function getCellCoordinatesFromMouse(event) {
+        const rect = drawCanvas.getBoundingClientRect();
+        const x = Math.floor((event.clientX - rect.left) / cellSize);
+        const y = Math.floor((event.clientY - rect.top) / cellSize);
+        return { x, y };
+    }    
+
+    // Function to get all cells inside the selection rectangle
+    function getSelectedCells(start, end) {
+        const cells = [];
+        const startX = Math.min(start.x, end.x);
+        const endX = Math.max(start.x, end.x);
+        const startY = Math.min(start.y, end.y);
+        const endY = Math.max(start.y, end.y);
+
+        for (let x = startX; x <= endX; x++) {
+            for (let y = startY; y <= endY; y++) {
+                cells.push({ x, y, color: getCellColor(x, y) }); // Capture cell color
+            }
+        }
+
+        return cells;
+    }
+
+    // Utility to clear hover canvas
+    function clearHoverCanvas() {
+        hoverContext.clearRect(0, 0, hoverCanvas.width, hoverCanvas.height);
+    }
+
+    // Utility to get the color of a specific cell (assumed you have a method for this)
+    function getCellColor(x, y) {
+        // Add logic to retrieve the color of the specific cell
+        return drawContext.getImageData(x * cellSize, y * cellSize, cellSize, cellSize);
+    }
+
+
+    /* =========================================================================================================================================== */
+    /*                                            Section 9.1: Move Tool - Copy/Paste                                                              */
+    /* =========================================================================================================================================== */
+
+
+
+
     /* =========================================================================================================================================== */
     /*                                            Section 10: Move Tool Functionality                                                              */
     /* =========================================================================================================================================== */
-
+    
     /* =========================================================================================================================================== */
     /*                                            Section 11.1: PixelLab - Tooltips                                                                */
     /* =========================================================================================================================================== */
