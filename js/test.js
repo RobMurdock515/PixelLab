@@ -41,14 +41,6 @@
         let selectedTool = 'none';
         let isDrawing = false;
         let opacity = 1;
-    
-        let lineStartX = null;
-        let lineStartY = null;
-    
-        let selectionStart = null;
-        let selectionEnd = null;
-        let selectedCells = []; 
-        let isSelecting = false;
         
         /* =========================================================================================================================================== */
         /*                                            Section 1: Checkerboard Canvas Layer - Generates Default Cells (x/y)                             */
@@ -164,9 +156,6 @@
                     this.classList.remove('selected');
                     selectedTool = 'none';
                     isDrawing = false;
-                    lineStartX = null; // Reset line start position
-                    lineStartY = null; // Reset line start position
-                    isSelecting = false; // End selection mode
                     hoverContext.clearRect(0, 0, hoverCanvas.width, hoverCanvas.height); // Clear selection rectangle
                 } else {
                     document.querySelectorAll('.toolbar-button').forEach(btn => btn.classList.remove('selected'));
@@ -187,18 +176,12 @@
                 const rect = drawCanvas.getBoundingClientRect();
                 const x = e.clientX - rect.left;
                 const y = e.clientY - rect.top;
-            
-                if (selectedTool === 'line') {
-                    lineStartX = x;
-                    lineStartY = y;
-                } else if (selectedTool === 'select') {
-                    isSelecting = true;
-                    // Record the starting point of the selection
-                    selectionStart = getCellCoordinatesFromMouse(e);
-                } else {
+    
+                // Apply action for the selected tool
+                if (selectedTool !== 'none') {
                     applyAction(x, y);
                     isDrawing = true;
-            
+    
                     const moveAction = function(e) {
                         if (isDrawing) {
                             const x = e.clientX - rect.left;
@@ -206,9 +189,9 @@
                             applyAction(x, y);
                         }
                     };
-            
+    
                     drawCanvas.addEventListener('mousemove', moveAction);
-            
+    
                     drawCanvas.addEventListener('mouseup', function() {
                         isDrawing = false;
                         drawCanvas.removeEventListener('mousemove', moveAction);
@@ -217,48 +200,164 @@
             }
         });
     
-        drawCanvas.addEventListener('mouseup', function(e) {
-            if (selectedTool === 'line' && lineStartX !== null && lineStartY !== null) {
-                const rect = drawCanvas.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-            
-                drawLine(lineStartX, lineStartY, x, y); // Draw the line
-                lineStartX = null; // Reset line start position
-                lineStartY = null; // Reset line start position
-            } else if (selectedTool === 'select') {
-                isSelecting = false;
-                // Finalize the selection area
-                selectionEnd = getCellCoordinatesFromMouse(e);
-                selectedCells = getSelectedCells(selectionStart, selectionEnd);
-            }
-        });
-    
-        // Highlight cell and display coordinates on mouse move
         drawCanvas.addEventListener('mousemove', function(e) {
             const rect = drawCanvas.getBoundingClientRect();
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
     
-            if (selectedTool === 'select' && isSelecting) {
-                // Clear any previous hover or selection indicators
-                clearHoverCanvas();
-                
-                // Record the current mouse position for the selection end
-                selectionEnd = getCellCoordinatesFromMouse(e);
-                
-                // Draw the selection rectangle on hoverCanvas
-                drawSelectionRectangle(selectionStart, selectionEnd);
-            } else {
-                highlightCellAndDisplayCoordinates(x, y);
-            }
+            highlightCellAndDisplayCoordinates(x, y);
         });
     
         // Clear hover effect and reset coordinates when mouse leaves the canvas
         drawCanvas.addEventListener('mouseleave', function() {
             hoverContext.clearRect(0, 0, hoverCanvas.width, hoverCanvas.height);
             resetCoordinates();
-        }); 
+        });
+        
+        /* =========================================================================================================================================== */
+        /*                                            Section 5: Select Tool Functionality                                                             */
+        /* =========================================================================================================================================== */
+        
+        
+        let selectionBox = null;  // Holds the current selection box
+        let isSelecting = false;  // Tracks if the user is selecting
+        let isDragging = false;   // Tracks if the user is dragging the selection
+        let startX, startY;       // Starting coordinates for the selection
+        let selectedCells = [];   // Stores the selected cells
+        let offsetX, offsetY;     // Offset for dragging
+        
+        // Function to draw the selection box, snapping to the grid
+        function drawSelectionBox(x, y, width, height) {
+            hoverContext.clearRect(0, 0, hoverCanvas.width, hoverCanvas.height); // Clear previous drawing
+    
+            // Optional: Add a semi-transparent overlay to the selected area
+            hoverContext.fillStyle = 'rgba(0, 128, 255, 0.2)';  // Light blue overlay
+            hoverContext.fillRect(x, y, width, height);  // Fill the selection area
+    
+            // Dashed outline
+            hoverContext.strokeStyle = 'rgba(0, 128, 255, 0.7)'; // Light blue outline
+            hoverContext.lineWidth = 2;
+            hoverContext.setLineDash([6]); // Dashed line
+            hoverContext.strokeRect(x, y, width, height); // Draw the selection box
+        }
+    
+        // Function to capture colored cells inside the selection box
+        function captureSelectedCells(box) {
+            selectedCells = []; // Reset selected cells
+    
+            const { startX, startY, width, height } = box;
+            const startCellX = Math.floor(startX / cellSize);
+            const startCellY = Math.floor(startY / cellSize);
+            const endCellX = Math.floor((startX + width) / cellSize);
+            const endCellY = Math.floor((startY + height) / cellSize);
+    
+            for (let row = startCellY; row <= endCellY; row++) {
+                for (let col = startCellX; col <= endCellX; col++) {
+                    const imageData = drawContext.getImageData(col * cellSize, row * cellSize, cellSize, cellSize);
+                    if (hasColor(imageData)) {
+                        selectedCells.push({ x: col, y: row, imageData });
+                    }
+                }
+            }
+        }
+    
+        // Function to check if a cell has color (not transparent)
+        function hasColor(imageData) {
+            for (let i = 0; i < imageData.data.length; i += 4) {
+                if (imageData.data[i + 3] !== 0) { // Check if alpha is not 0 (non-transparent)
+                    return true;
+                }
+            }
+            return false;
+        }
+    
+        // Function to clear the selection box
+        function clearSelectionBox() {
+            hoverContext.clearRect(0, 0, hoverCanvas.width, hoverCanvas.height); // Clear hover canvas
+            selectionBox = null;
+        }
+    
+        // Function to move selected cells and drop them at the new location
+        function moveAndDropSelectedCells(newX, newY) {
+            const startCellX = Math.floor(newX / cellSize);
+            const startCellY = Math.floor(newY / cellSize);
+    
+            selectedCells.forEach(cell => {
+                drawContext.clearRect(cell.x * cellSize, cell.y * cellSize, cellSize, cellSize); // Clear original cell
+                drawContext.putImageData(cell.imageData, (startCellX + cell.x) * cellSize, (startCellY + cell.y) * cellSize); // Draw in new location
+            });
+    
+            // Clear selection box after dropping cells
+            clearSelectionBox();
+        }
+    
+        // Mouse down event to start selecting or dragging
+        drawCanvas.addEventListener('mousedown', function (e) {
+            const rect = drawCanvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+    
+            if (selectedTool === 'select') {
+                if (selectionBox) {
+                    // Check if clicking inside the selection box to start dragging
+                    if (x >= selectionBox.startX && x <= selectionBox.startX + selectionBox.width &&
+                        y >= selectionBox.startY && y <= selectionBox.startY + selectionBox.height) {
+                        isDragging = true;
+                        offsetX = x - selectionBox.startX;
+                        offsetY = y - selectionBox.startY;
+                    } else {
+                        // Clicked outside the box, clear selection
+                        clearSelectionBox();
+                    }
+                } else {
+                    // Start new selection
+                    isSelecting = true;
+                    startX = Math.floor(x / cellSize) * cellSize; // Snap to grid
+                    startY = Math.floor(y / cellSize) * cellSize; // Snap to grid
+                    selectionBox = null; // Reset previous selection box
+                }
+            }
+        });
+    
+        // Mouse move event to update selection box or drag it
+        drawCanvas.addEventListener('mousemove', function (e) {
+            const rect = drawCanvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+    
+            if (isSelecting) {
+                const currentX = Math.floor(x / cellSize) * cellSize; // Snap to grid
+                const currentY = Math.floor(y / cellSize) * cellSize; // Snap to grid
+                const width = currentX - startX;
+                const height = currentY - startY;
+    
+                drawSelectionBox(startX, startY, width, height);
+    
+                selectionBox = { startX, startY, width, height };
+            } else if (isDragging) {
+                // Calculate the new position of the selection box while dragging
+                const newX = x - offsetX;
+                const newY = y - offsetY;
+    
+                hoverContext.clearRect(0, 0, hoverCanvas.width, hoverCanvas.height); // Clear previous hover canvas
+                drawSelectionBox(newX, newY, selectionBox.width, selectionBox.height); // Redraw the selection box at new position
+            }
+        });
+    
+        // Mouse up event to finalize selection or drop cells after dragging
+        drawCanvas.addEventListener('mouseup', function (e) {
+            const rect = drawCanvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+    
+            if (isSelecting && selectionBox) {
+                isSelecting = false;
+                captureSelectedCells(selectionBox); // Capture the selected cells when mouse is released
+            } else if (isDragging) {
+                isDragging = false;
+                moveAndDropSelectedCells(x - offsetX, y - offsetY); // Move and drop selected cells at new location
+            }
+        });
     
         /* =========================================================================================================================================== */
         /*                                            Section 5: Spray Pattern Functionality                                                           */
@@ -376,89 +475,6 @@
         function colorsMatch(color1, color2) {
             return color1 === color2;
         }    
-        
-        /* =========================================================================================================================================== */
-        /*                                            Section 8: Line Tool Functionality                                                               */
-        /* =========================================================================================================================================== */
-        
-        function drawLine(x1, y1, x2, y2, preview = false) {
-            drawContext.globalAlpha = opacity;
-            drawContext.strokeStyle = document.querySelector('.color-indicator').style.backgroundColor; // Use the selected color
-            drawContext.lineWidth = pixelSize * cellSize; // Adjust line width based on pixel size
-            drawContext.beginPath();
-            drawContext.moveTo(x1, y1);
-            drawContext.lineTo(x2, y2);
-            drawContext.stroke();
-        }    
-    
-        /* =========================================================================================================================================== */
-        /*                                            Section 9: Select Tool Functionality                                                             */
-        /* =========================================================================================================================================== */
-    
-        // Function to draw the selection rectangle
-        function drawSelectionRectangle(start, end) {
-            const rectX = Math.min(start.x, end.x) * cellSize;
-            const rectY = Math.min(start.y, end.y) * cellSize;
-            const rectWidth = (Math.abs(end.x - start.x) + 1) * cellSize;
-            const rectHeight = (Math.abs(end.y - start.y) + 1) * cellSize;
-        
-            // Adjust rectangle coordinates to ensure alignment with cell edges
-            hoverContext.clearRect(0, 0, hoverCanvas.width, hoverCanvas.height); // Clear previous rectangles
-            hoverContext.fillStyle = 'rgba(255, 255, 255, 0.3)'; // Semi-transparent white
-            hoverContext.strokeStyle = 'rgba(0, 0, 0, 0.5)'; // Slightly dark border for better visibility
-            
-        
-            // Draw rectangle starting from cell boundaries
-            hoverContext.fillRect(Math.floor(rectX), Math.floor(rectY), Math.ceil(rectWidth), Math.ceil(rectHeight));
-            hoverContext.strokeRect(Math.floor(rectX), Math.floor(rectY), Math.ceil(rectWidth), Math.ceil(rectHeight));
-        }    
-          
-        function getCellCoordinatesFromMouse(event) {
-            const rect = drawCanvas.getBoundingClientRect();
-            const x = Math.floor((event.clientX - rect.left) / cellSize);
-            const y = Math.floor((event.clientY - rect.top) / cellSize);
-            return { x, y };
-        }    
-    
-        // Function to get all cells inside the selection rectangle
-        function getSelectedCells(start, end) {
-            const cells = [];
-            const startX = Math.min(start.x, end.x);
-            const endX = Math.max(start.x, end.x);
-            const startY = Math.min(start.y, end.y);
-            const endY = Math.max(start.y, end.y);
-    
-            for (let x = startX; x <= endX; x++) {
-                for (let y = startY; y <= endY; y++) {
-                    cells.push({ x, y, color: getCellColor(x, y) }); // Capture cell color
-                }
-            }
-    
-            return cells;
-        }
-    
-        // Utility to clear hover canvas
-        function clearHoverCanvas() {
-            hoverContext.clearRect(0, 0, hoverCanvas.width, hoverCanvas.height);
-        }
-    
-        // Utility to get the color of a specific cell (assumed you have a method for this)
-        function getCellColor(x, y) {
-            // Add logic to retrieve the color of the specific cell
-            return drawContext.getImageData(x * cellSize, y * cellSize, cellSize, cellSize);
-        }
-    
-    
-        /* =========================================================================================================================================== */
-        /*                                            Section 9.1: Move Tool - Copy/Paste                                                              */
-        /* =========================================================================================================================================== */
-    
-    
-    
-    
-        /* =========================================================================================================================================== */
-        /*                                            Section 10: Move Tool Functionality                                                              */
-        /* =========================================================================================================================================== */
         
         /* =========================================================================================================================================== */
         /*                                            Section 11.1: PixelLab - Tooltips                                                                */
