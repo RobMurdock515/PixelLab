@@ -266,9 +266,15 @@ window.onload = function() {
         }
     });
 
-    // Clear hover effect and reset coordinates when mouse leaves the canvas
+    // Clear hover effect but keep the selection box visible when mouse leaves the canvas
     drawCanvas.addEventListener('mouseleave', function() {
-        hoverContext.clearRect(0, 0, hoverCanvas.width, hoverCanvas.height);
+        hoverContext.clearRect(0, 0, hoverCanvas.width, hoverCanvas.height); // Clear hover effects
+
+        // If a selection box exists, redraw it to keep it visible
+        if (selectionBox) {
+            drawSelectionBox(selectionBox.startX, selectionBox.startY, selectionBox.width, selectionBox.height);
+        }
+
         resetCoordinates();
     });
 
@@ -381,7 +387,67 @@ window.onload = function() {
     /* =========================================================================================================================================== */
     /*                                            Section 8.1: Select Tool - Copy/Paste                                                            */
     /* =========================================================================================================================================== */
+
+    let clipboard = null;  // Holds the copied selectionBox and its cells
+
+    // Function to handle copy action
+    document.getElementById('copy-button').addEventListener('click', function() {
+        if (selectionBox && selectedCells.length > 0) {
+            clipboard = {
+                selectionBox: { ...selectionBox },  // Copy the selection box dimensions and position
+                cells: selectedCells.map(cell => ({
+                    x: cell.x,
+                    y: cell.y,
+                    imageData: drawContext.getImageData(cell.x * cellSize, cell.y * cellSize, cellSize, cellSize)  // Save the color data for each cell
+                }))
+            };
+            console.log("Copied selection:", clipboard);
+        } else {
+            console.log("No selection to copy.");
+        }
+    });
+
+    // Function to handle paste action
+    document.getElementById('paste-button').addEventListener('click', function() {
+        if (clipboard) {
+            // Clear the current selectionBox
+            clearSelectionBox();
+
+            // Restore the copied selectionBox and cells
+            const { selectionBox: copiedSelectionBox, cells: copiedCells } = clipboard;
+
+            // Set the current selection box to the pasted selection
+            selectionBox = { ...copiedSelectionBox };
+
+            // Clear any previous drawn area and redraw the pasted selection box
+            drawSelectionBox(selectionBox.startX, selectionBox.startY, selectionBox.width, selectionBox.height);
+
+            // Paste the colored cells in their original positions relative to the selectionBox
+            copiedCells.forEach(cell => {
+                drawContext.putImageData(cell.imageData, cell.x * cellSize, cell.y * cellSize);
+            });
+
+            // Enable dragging the pasted selection
+            selectedCells = copiedCells.map(cell => ({
+                ...cell,
+                imageData: drawContext.getImageData(cell.x * cellSize, cell.y * cellSize, cellSize, cellSize)
+            }));
+
+            console.log("Pasted selection:", clipboard);
+        } else {
+            console.log("No copied selection to paste.");
+        }
+    });
+
+    /* =========================================================================================================================================== */
+    /*                                            Section 8.2: Select Tool - Rotate Left/Right                                                     */
+    /* =========================================================================================================================================== */
+
     
+    /* =========================================================================================================================================== */
+    /*                                            Section 8.3: Select Tool - Flip Horizontal/Vertical                                              */
+    /* =========================================================================================================================================== */
+
     /* =========================================================================================================================================== */
     /*                                            Section 5: Spray Pattern Functionality                                                           */
     /* =========================================================================================================================================== */
@@ -741,6 +807,11 @@ window.onload = function() {
         document.getElementById('resizePopup').classList.add('hidden');
     }
 
+    window.addEventListener('load', function() {
+        document.querySelector('input[name="orientation"][value="portrait"]').checked = true;
+        selectedOrientation = 'portrait'; // Ensure initial state is correctly set
+    });
+    
     /* =========================================================================================================================================== */
     /*                                            Section 10.4: File Dropdown - Open Button                                                        */
     /* =========================================================================================================================================== */
