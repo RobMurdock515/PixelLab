@@ -41,6 +41,13 @@ window.onload = function() {
     let selectedTool = 'none';
     let isDrawing = false;
     let opacity = 1;
+
+    let selectionBox = null;  // Holds the current selection box
+    let isSelecting = false;  // Tracks if the user is selecting
+    let isDragging = false;   // Tracks if the user is dragging the selection
+    let startX, startY;       // Starting coordinates for the selection
+    let selectedCells = [];   // Stores the selected cells
+    let offsetX, offsetY;     // Offset for dragging
     
     /* =========================================================================================================================================== */
     /*                                            Section 1: Checkerboard Canvas Layer - Generates Default Cells (x/y)                             */
@@ -170,132 +177,12 @@ window.onload = function() {
     /*                                            Section 4: Mouse Event Handling                                                                  */
     /* =========================================================================================================================================== */
 
-    // Event listeners for drawing/erasing
-    drawCanvas.addEventListener('mousedown', function(e) {
-        if (selectedTool !== 'none') {
-            const rect = drawCanvas.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-
-            // Apply action for the selected tool
-            if (selectedTool !== 'none') {
-                applyAction(x, y);
-                isDrawing = true;
-
-                const moveAction = function(e) {
-                    if (isDrawing) {
-                        const x = e.clientX - rect.left;
-                        const y = e.clientY - rect.top;
-                        applyAction(x, y);
-                    }
-                };
-
-                drawCanvas.addEventListener('mousemove', moveAction);
-
-                drawCanvas.addEventListener('mouseup', function() {
-                    isDrawing = false;
-                    drawCanvas.removeEventListener('mousemove', moveAction);
-                });
-            }
-        }
-    });
-
-    drawCanvas.addEventListener('mousemove', function(e) {
-        const rect = drawCanvas.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-
-        highlightCellAndDisplayCoordinates(x, y);
-    });
-
-    // Clear hover effect and reset coordinates when mouse leaves the canvas
-    drawCanvas.addEventListener('mouseleave', function() {
-        hoverContext.clearRect(0, 0, hoverCanvas.width, hoverCanvas.height);
-        resetCoordinates();
-    });
-
-    /* =========================================================================================================================================== */
-    /*                                            Section 5: Select Tool Functionality                                                             */
-    /* =========================================================================================================================================== */
-
-    let selectionBox = null;  // Holds the current selection box
-    let isSelecting = false;  // Tracks if the user is selecting
-    let isDragging = false;   // Tracks if the user is dragging the selection
-    let startX, startY;       // Starting coordinates for the selection
-    let selectedCells = [];   // Stores the selected cells
-    let offsetX, offsetY;     // Offset for dragging
-
-    // Function to draw the selection box, snapping to the grid
-    function drawSelectionBox(x, y, width, height) {
-        hoverContext.clearRect(0, 0, hoverCanvas.width, hoverCanvas.height); // Clear previous drawing
-
-        // Optional: Add a semi-transparent overlay to the selected area
-        hoverContext.fillStyle = 'rgba(255, 255, 255, 0.1)';
-        hoverContext.fillRect(x, y, width, height);  // Fill the selection area
-
-        // Dashed outline
-        hoverContext.strokeStyle = 'rgba(255, 255, 255, 0.3)';
-        hoverContext.lineWidth = 2;
-        hoverContext.setLineDash([6]); // Dashed line
-        hoverContext.strokeRect(x, y, width, height); // Draw the selection box
-    }
-
-    // Function to capture colored cells inside the selection box
-    function captureSelectedCells(box) {
-        selectedCells = []; // Reset selected cells
-
-        const { startX, startY, width, height } = box;
-        const startCellX = Math.floor(startX / cellSize);
-        const startCellY = Math.floor(startY / cellSize);
-        const endCellX = Math.floor((startX + width) / cellSize);
-        const endCellY = Math.floor((startY + height) / cellSize);
-
-        for (let row = startCellY; row <= endCellY; row++) {
-            for (let col = startCellX; col <= endCellX; col++) {
-                const imageData = drawContext.getImageData(col * cellSize, row * cellSize, cellSize, cellSize);
-                if (hasColor(imageData)) {
-                    selectedCells.push({ x: col, y: row, imageData });
-                }
-            }
-        }
-    }
-
-    // Function to check if a cell has color (not transparent)
-    function hasColor(imageData) {
-        for (let i = 0; i < imageData.data.length; i += 4) {
-            if (imageData.data[i + 3] !== 0) { // Check if alpha is not 0 (non-transparent)
-                return true;
-            }
-        }
-        return false;
-    }
-
-    // Function to clear the selection box
-    function clearSelectionBox() {
-        hoverContext.clearRect(0, 0, hoverCanvas.width, hoverCanvas.height); // Clear hover canvas
-        selectionBox = null;
-    }
-
-    // Function to move selected cells and drop them at the new location
-    function moveAndDropSelectedCells(newX, newY) {
-        const startCellX = Math.floor(newX / cellSize);
-        const startCellY = Math.floor(newY / cellSize);
-
-        selectedCells.forEach(cell => {
-            drawContext.clearRect(cell.x * cellSize, cell.y * cellSize, cellSize, cellSize); // Clear original cell
-            drawContext.putImageData(cell.imageData, (startCellX + (cell.x - selectionBox.startX / cellSize)) * cellSize, (startCellY + (cell.y - selectionBox.startY / cellSize)) * cellSize); // Draw in new location
-        });
-
-        // Clear selection box after dropping cells
-        clearSelectionBox();
-    }
-
     // Mouse down event to start selecting or dragging
     drawCanvas.addEventListener('mousedown', function (e) {
         const rect = drawCanvas.getBoundingClientRect();
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
-
+        
         if (selectedTool === 'select') {
             if (selectionBox) {
                 // Check if clicking inside the selection box to start dragging
@@ -305,8 +192,10 @@ window.onload = function() {
                     offsetX = x - selectionBox.startX;
                     offsetY = y - selectionBox.startY;
                 } else {
-                    // Clicked outside the box, clear selection
-                    clearSelectionBox();
+                    // Clicked outside the box, clear selection if not dragging
+                    if (!isDragging) {
+                        clearSelectionBox();
+                    }
                 }
             } else {
                 // Start new selection
@@ -315,14 +204,36 @@ window.onload = function() {
                 startY = Math.floor(y / cellSize) * cellSize; // Snap to grid
                 selectionBox = null; // Reset previous selection box
             }
+        } else if (selectedTool !== 'none') {
+            // Apply action for the selected tool
+            applyAction(x, y);
+            isDrawing = true;
+    
+            const moveAction = function(e) {
+                if (isDrawing) {
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    applyAction(x, y);
+                }
+            };
+    
+            drawCanvas.addEventListener('mousemove', moveAction);
+    
+            drawCanvas.addEventListener('mouseup', function() {
+                isDrawing = false;
+                drawCanvas.removeEventListener('mousemove', moveAction);
+            });
         }
-    });
+    });    
 
-    // Mouse move event to update selection box or drag it
+    // Mouse move event to update selection box, drag it, and highlight cells
     drawCanvas.addEventListener('mousemove', function (e) {
         const rect = drawCanvas.getBoundingClientRect();
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
+
+        // Highlight the cell and display coordinates
+        highlightCellAndDisplayCoordinates(x, y);
 
         if (isSelecting) {
             const currentX = Math.floor(x / cellSize) * cellSize; // Snap to grid
@@ -330,16 +241,35 @@ window.onload = function() {
             const width = currentX - startX;
             const height = currentY - startY;
 
-            drawSelectionBox(startX, startY, width, height);
+            // Ensure selection box does not go beyond canvas bounds
+            const maxWidth = Math.min(width, hoverCanvas.width - startX);
+            const maxHeight = Math.min(height, hoverCanvas.height - startY);
 
-            selectionBox = { startX, startY, width, height };
+            drawSelectionBox(startX, startY, maxWidth, maxHeight);
+
+            selectionBox = { startX, startY, width: maxWidth, height: maxHeight };
         } else if (isDragging) {
             // Calculate the new position of the selection box while dragging
             const newX = x - offsetX;
             const newY = y - offsetY;
 
-            drawSelectionBox(newX, newY, selectionBox.width, selectionBox.height); // Redraw the selection box at new position
+            // Ensure dragging does not move the selection box out of canvas bounds
+            const maxX = Math.min(newX, hoverCanvas.width - selectionBox.width);
+            const maxY = Math.min(newY, hoverCanvas.height - selectionBox.height);
+
+            drawSelectionBox(maxX, maxY, selectionBox.width, selectionBox.height); // Redraw the selection box at new position
+        } else {
+            // Redraw the selection box in its last position if not selecting or dragging
+            if (selectionBox) {
+                drawSelectionBox(selectionBox.startX, selectionBox.startY, selectionBox.width, selectionBox.height);
+            }
         }
+    });
+
+    // Clear hover effect and reset coordinates when mouse leaves the canvas
+    drawCanvas.addEventListener('mouseleave', function() {
+        hoverContext.clearRect(0, 0, hoverCanvas.width, hoverCanvas.height);
+        resetCoordinates();
     });
 
     // Mouse up event to finalize selection or drop cells after dragging
@@ -350,14 +280,108 @@ window.onload = function() {
 
         if (isSelecting && selectionBox) {
             isSelecting = false;
-            captureSelectedCells(selectionBox); // Capture the selected cells when mouse is released
-            drawSelectionBox(selectionBox.startX, selectionBox.startY, selectionBox.width, selectionBox.height); // Ensure the selection box stays visible
+
+            // Ensure selection box does not go beyond canvas bounds
+            const { startX, startY, width, height } = selectionBox;
+            const maxWidth = Math.min(width, hoverCanvas.width - startX);
+            const maxHeight = Math.min(height, hoverCanvas.height - startY);
+    
+            captureSelectedCells({ startX, startY, width: maxWidth, height: maxHeight }); // Capture the selected cells when mouse is released
+            drawSelectionBox(startX, startY, maxWidth, maxHeight); // Ensure the selection box stays visible
         } else if (isDragging) {
             isDragging = false;
-            moveAndDropSelectedCells(x - offsetX, y - offsetY); // Move and drop selected cells at new location
+
+            // Ensure dropped cells stay within canvas bounds
+            const newX = Math.min(x - offsetX, hoverCanvas.width - selectionBox.width);
+            const newY = Math.min(y - offsetY, hoverCanvas.height - selectionBox.height);
+    
+            moveAndDropSelectedCells(newX, newY); // Move and drop selected cells at new location
         }
     });
+    
+    /* =========================================================================================================================================== */
+    /*                                            Section 8: Select Tool Functionality                                                             */
+    /* =========================================================================================================================================== */
+    
+    // Function to draw the selection box, snapping to the grid
+    function drawSelectionBox(x, y, width, height) {
+        hoverContext.clearRect(0, 0, hoverCanvas.width, hoverCanvas.height); // Clear previous drawing
+    
+        // Enforce canvas boundaries
+        const maxX = Math.min(x + width, hoverCanvas.width);
+        const maxY = Math.min(y + height, hoverCanvas.height);
+        const clippedWidth = maxX - x;
+        const clippedHeight = maxY - y;
+    
+        // Optional: Add a semi-transparent overlay to the selected area
+        hoverContext.fillStyle = 'rgba(255, 255, 255, 0.1)';
+        hoverContext.fillRect(x, y, clippedWidth, clippedHeight);  // Fill the selection area
+    
+        // Dashed outline
+        hoverContext.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+        hoverContext.lineWidth = 2;
+        hoverContext.setLineDash([6]); // Dashed line
+        hoverContext.strokeRect(x, y, clippedWidth, clippedHeight); // Draw the selection box
+    }
+    
+    // Function to capture colored cells inside the selection box
+    function captureSelectedCells(box) {
+        selectedCells = []; // Reset selected cells
+    
+        const { startX, startY, width, height } = box;
+        const startCellX = Math.floor(startX / cellSize);
+        const startCellY = Math.floor(startY / cellSize);
+        const endCellX = Math.floor((startX + width) / cellSize);
+        const endCellY = Math.floor((startY + height) / cellSize);
+    
+        // Enforce canvas boundaries for cells
+        const maxCellX = Math.floor(hoverCanvas.width / cellSize);
+        const maxCellY = Math.floor(hoverCanvas.height / cellSize);
+    
+        for (let row = Math.max(startCellY, 0); row <= Math.min(endCellY, maxCellY - 1); row++) {
+            for (let col = Math.max(startCellX, 0); col <= Math.min(endCellX, maxCellX - 1); col++) {
+                const imageData = drawContext.getImageData(col * cellSize, row * cellSize, cellSize, cellSize);
+                if (hasColor(imageData)) {
+                    selectedCells.push({ x: col, y: row, imageData });
+                }
+            }
+        }
+    }
+    
+    // Function to check if a cell has color (not transparent)
+    function hasColor(imageData) {
+        for (let i = 0; i < imageData.data.length; i += 4) {
+            if (imageData.data[i + 3] !== 0) { // Check if alpha is not 0 (non-transparent)
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    // Function to clear the selection box
+    function clearSelectionBox() {
+        hoverContext.clearRect(0, 0, hoverCanvas.width, hoverCanvas.height); // Clear hover canvas
+        selectionBox = null;
+    }
+    
+    // Function to move selected cells and drop them at the new location
+    function moveAndDropSelectedCells(newX, newY) {
+        const startCellX = Math.floor(newX / cellSize);
+        const startCellY = Math.floor(newY / cellSize);
+    
+        selectedCells.forEach(cell => {
+            drawContext.clearRect(cell.x * cellSize, cell.y * cellSize, cellSize, cellSize); // Clear original cell
+            drawContext.putImageData(cell.imageData, (startCellX + (cell.x - selectionBox.startX / cellSize)) * cellSize, (startCellY + (cell.y - selectionBox.startY / cellSize)) * cellSize); // Draw in new location
+        });
+    
+        // Clear selection box after dropping cells
+        clearSelectionBox();
+    }
 
+    /* =========================================================================================================================================== */
+    /*                                            Section 8.1: Select Tool - Copy/Paste                                                            */
+    /* =========================================================================================================================================== */
+    
     /* =========================================================================================================================================== */
     /*                                            Section 5: Spray Pattern Functionality                                                           */
     /* =========================================================================================================================================== */
@@ -476,7 +500,7 @@ window.onload = function() {
     }    
     
     /* =========================================================================================================================================== */
-    /*                                            Section 11.1: PixelLab - Tooltips                                                                */
+    /*                                            Section 9.1: PixelLab - Tooltips                                                                */
     /* =========================================================================================================================================== */
     
         toolbarButtons.forEach(button => {
@@ -508,7 +532,7 @@ window.onload = function() {
         });
         
     /* =========================================================================================================================================== */
-    /*                                            Section 11.2: PixelLab - Dropdown/up Functions                                                   */
+    /*                                            Section 9.2: PixelLab - Dropdown/up Functions                                                   */
     /* =========================================================================================================================================== */
 
         let timeoutId = null;
@@ -627,7 +651,7 @@ window.onload = function() {
         };
     
     /* =========================================================================================================================================== */
-    /*                                            Section 12.1: File Dropdown - New Button                                                         */
+    /*                                            Section 10.1: File Dropdown - New Button                                                         */
     /* =========================================================================================================================================== */
     
     // Event listener for the new button
@@ -649,7 +673,7 @@ window.onload = function() {
     }
 
     /* =========================================================================================================================================== */
-    /*                                            Section 12.2: File Dropdown - Clear Button                                                       */
+    /*                                            Section 10.2: File Dropdown - Clear Button                                                       */
     /* =========================================================================================================================================== */
 
     document.getElementById('clearButton').addEventListener('click', function(e) {
@@ -667,7 +691,7 @@ window.onload = function() {
     }
     
     /* =========================================================================================================================================== */
-    /*                                            Section 12.3: File Dropdown - Resizing Button                                                    */
+    /*                                            Section 10.3: File Dropdown - Resizing Button                                                    */
     /* =========================================================================================================================================== */
     
     // Function to apply canvas resizing based on size and orientation
@@ -718,7 +742,7 @@ window.onload = function() {
     }
 
     /* =========================================================================================================================================== */
-    /*                                            Section 12.4: File Dropdown - Open Button                                                        */
+    /*                                            Section 10.4: File Dropdown - Open Button                                                        */
     /* =========================================================================================================================================== */
 
     document.getElementById('openButton').addEventListener('click', function() {
@@ -798,7 +822,7 @@ window.onload = function() {
     }
 
     /* =========================================================================================================================================== */
-    /*                                            Section 12.5: File Dropdown - Save Button                                                        */
+    /*                                            Section 10.5: File Dropdown - Save Button                                                        */
     /* =========================================================================================================================================== */
     document.getElementById('saveButton').addEventListener('click', function() {
         if ('showSaveFilePicker' in window) {
@@ -866,7 +890,7 @@ window.onload = function() {
     }
     
     /* =========================================================================================================================================== */
-    /*                                            Section 13: Palettes Dropdown - Palette Selection                                                */
+    /*                                            Section 11: Palettes Dropdown - Palette Selection                                                */
     /* =========================================================================================================================================== */
 
     const palettes = {
@@ -1196,19 +1220,19 @@ window.onload = function() {
     });
 
     /* =========================================================================================================================================== */
-    /*                                            Section 14.1: Select Dropdown - Copy/Paste Buttons                                               */
+    /*                                            Section 12.1: Select Dropdown - Copy/Paste Buttons                                               */
     /* =========================================================================================================================================== */
 
     /* =========================================================================================================================================== */
-    /*                                            Section 14.1: Select Dropdown - Rotate Right/Left Buttons                                        */
+    /*                                            Section 12.2: Select Dropdown - Rotate Right/Left Buttons                                        */
     /* =========================================================================================================================================== */
 
     /* =========================================================================================================================================== */
-    /*                                            Section 14.3: Select Dropdown - Flip Horizontal/Vertical Buttons                                 */
+    /*                                            Section 12.3: Select Dropdown - Flip Horizontal/Vertical Buttons                                 */
     /* =========================================================================================================================================== */
 
     /* =========================================================================================================================================== */
-    /*                                            Section 15.1: Settings Dropdown - Fullscreen Button                                              */
+    /*                                            Section 13.1: Settings Dropdown - Fullscreen Button                                              */
     /* =========================================================================================================================================== */
 
     document.getElementById('fullscreen-toggle').addEventListener('click', toggleFullscreen);
@@ -1240,7 +1264,7 @@ window.onload = function() {
     }
 
     /* =========================================================================================================================================== */
-    /*                                            Section 15.2: Settings Dropdown - Background Button                                              */
+    /*                                            Section 13.2: Settings Dropdown - Background Button                                              */
     /* =========================================================================================================================================== */
 
         const backgroundColors = {
@@ -1293,7 +1317,7 @@ window.onload = function() {
         });
 
     /* =========================================================================================================================================== */
-    /*                                            Section 16: Undo - Redo Buttons                                                                  */
+    /*                                            Section 14: Undo - Redo Buttons                                                                  */
     /* =========================================================================================================================================== */
 
     function saveState() {
