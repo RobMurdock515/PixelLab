@@ -174,6 +174,94 @@ window.onload = function() {
     });    
 
     /* =========================================================================================================================================== */
+    /*                                            Section 10.3: File Dropdown - Resizing Button                                                    */
+    /* =========================================================================================================================================== */
+    
+    // Function to apply canvas resizing based on size and orientation
+    function resizeCanvas() {
+        // Update number of cells based on selected size
+        numCells = selectedSize;
+            
+        // Update cell size based on canvas size and number of cells
+        cellSize = (selectedOrientation === 'portrait' ? defaultPortraitWidth : defaultLandscapeWidth) / numCells;
+            
+        // Set canvas dimensions based on orientation
+        width = selectedOrientation === 'portrait' ? defaultPortraitWidth : defaultLandscapeWidth;
+        height = selectedOrientation === 'portrait' ? defaultPortraitHeight : defaultLandscapeHeight;
+            
+        // Redraw the checkerboard with updated cell size
+        drawCheckerboard();
+    }
+    
+    // Event listener for size buttons in the resizePopup
+    document.querySelectorAll('.size-options button').forEach(button => {
+        button.addEventListener('click', function() {
+            // Update selected size
+            selectedSize = parseInt(this.textContent);
+                
+            // Remove 'active-button' class from other buttons
+            document.querySelectorAll('.size-options button').forEach(btn => btn.classList.remove('active-button'));
+            // Add 'active-button' class to clicked button
+            this.classList.add('active-button');
+        });
+    });
+    
+    // Event listener for orientation radio buttons
+    document.querySelectorAll('input[name="orientation"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            selectedOrientation = this.value; // Update selected orientation
+        });
+    });
+    
+    // Apply button event listener to resize the canvas
+    document.querySelector('.apply-btn').addEventListener('click', function() {
+        resizeCanvas(); // Resize canvas when apply is clicked
+        closeResizePopup(); // Close the resize popup after applying changes
+    });
+    
+    // Function to close the resize popup
+    function closeResizePopup() {
+        document.getElementById('resizePopup').classList.add('hidden');
+    }
+
+    window.addEventListener('load', function() {
+        document.querySelector('input[name="orientation"][value="portrait"]').checked = true;
+        selectedOrientation = 'portrait'; // Ensure initial state is correctly set
+    });
+    
+    /* =========================================================================================================================================== */
+    /*                                            Section 13.1: Settings Dropdown - Fullscreen Button                                              */
+    /* =========================================================================================================================================== */
+
+    document.getElementById('fullscreen-toggle').addEventListener('click', toggleFullscreen);
+
+    function toggleFullscreen() {
+        if (!document.fullscreenElement) {
+            // Request fullscreen mode
+            if (document.documentElement.requestFullscreen) {
+                document.documentElement.requestFullscreen();
+            } else if (document.documentElement.mozRequestFullScreen) { // Firefox
+                document.documentElement.mozRequestFullScreen();
+            } else if (document.documentElement.webkitRequestFullscreen) { // Chrome, Safari, Opera
+                document.documentElement.webkitRequestFullscreen();
+            } else if (document.documentElement.msRequestFullscreen) { // IE/Edge
+                document.documentElement.msRequestFullscreen();
+            }
+        } else {
+            // Exit fullscreen mode
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.mozCancelFullScreen) { // Firefox
+                document.mozCancelFullScreen();
+            } else if (document.webkitExitFullscreen) { // Chrome, Safari, Opera
+                document.webkitExitFullscreen();
+            } else if (document.msExitFullscreen) { // IE/Edge
+                document.msExitFullscreen();
+            }
+        }
+    }
+
+    /* =========================================================================================================================================== */
     /*                                            Section 4: Mouse Event Handling                                                                  */
     /* =========================================================================================================================================== */
 
@@ -443,10 +531,314 @@ window.onload = function() {
     /*                                            Section 8.2: Select Tool - Rotate Left/Right                                                     */
     /* =========================================================================================================================================== */
 
-    
+    // Function to rotate the selection
+    function rotateSelection(direction) {
+        if (!selectionBox || selectedCells.length === 0) {
+            console.log("No selection to rotate.");
+            return;
+        }
+
+        const { startX, startY, width, height } = selectionBox;
+
+        // Create an off-screen canvas
+        const tempCanvas = document.createElement('canvas');
+        const tempContext = tempCanvas.getContext('2d');
+
+        // Set the size of the temp canvas to match the selection box
+        tempCanvas.width = width;
+        tempCanvas.height = height;
+
+        // Extract the selected area onto the off-screen canvas
+        tempContext.drawImage(
+            drawCanvas,
+            startX, startY, width, height,  // Source rectangle
+            0, 0, width, height             // Destination rectangle
+        );
+
+        // Clear the selected area on the main canvas (inside selection box only)
+        drawContext.save();
+        drawContext.globalCompositeOperation = 'destination-out';
+        drawContext.fillRect(startX, startY, width, height);
+        drawContext.restore();
+
+        // Rotate the off-screen canvas
+        const rotatedCanvas = document.createElement('canvas');
+        const rotatedContext = rotatedCanvas.getContext('2d');
+
+        // Determine new width and height after rotation
+        const rotatedWidth = height;
+        const rotatedHeight = width;
+
+        rotatedCanvas.width = rotatedWidth;
+        rotatedCanvas.height = rotatedHeight;
+
+        // Apply rotation based on the direction
+        if (direction === 'left') {
+            // Rotate 90 degrees to the left (counter-clockwise)
+            rotatedContext.translate(0, rotatedHeight);
+            rotatedContext.rotate(-Math.PI / 2);
+        } else if (direction === 'right') {
+            // Rotate 90 degrees to the right (clockwise)
+            rotatedContext.translate(rotatedWidth, 0);
+            rotatedContext.rotate(Math.PI / 2);
+        }
+
+        // Draw the extracted selection area onto the rotated canvas
+        rotatedContext.drawImage(tempCanvas, 0, 0);
+
+        // Draw the rotated image back onto the main canvas at the original position
+        drawContext.drawImage(rotatedCanvas, startX, startY, rotatedWidth, rotatedHeight);
+
+        // Update selectionBox dimensions
+        selectionBox.width = rotatedWidth;
+        selectionBox.height = rotatedHeight;
+
+        // Update selectedCells positions without expanding outside the initial selection
+        updateSelectedCellsAfterRotation(direction);
+
+        // Redraw the selection box with the updated dimensions
+        drawSelectionBox(selectionBox.startX, selectionBox.startY, selectionBox.width, selectionBox.height);
+    }
+
+    // Helper function to update selectedCells after rotation
+    function updateSelectedCellsAfterRotation(direction) {
+        const { startX, startY, width, height } = selectionBox;
+
+        // Create a 2D array to represent the selection grid
+        const grid = [];
+        for (let y = 0; y < height / cellSize; y++) {
+            grid[y] = [];
+            for (let x = 0; x < width / cellSize; x++) {
+                grid[y][x] = null;
+            }
+        }
+
+        // Populate the grid with the colors from selectedCells
+        selectedCells.forEach(cell => {
+            const x = (cell.x * cellSize - startX) / cellSize;
+            const y = (cell.y * cellSize - startY) / cellSize;
+            grid[y][x] = cell.imageData;
+        });
+
+        // Rotate the grid
+        let rotatedGrid;
+        if (direction === 'left') {
+            rotatedGrid = rotateGridLeft(grid);
+        } else if (direction === 'right') {
+            rotatedGrid = rotateGridRight(grid);
+        }
+
+        // Clear selectedCells and update with new positions and imageData
+        selectedCells = [];
+        for (let y = 0; y < rotatedGrid.length; y++) {
+            for (let x = 0; x < rotatedGrid[0].length; x++) {
+                const imageData = rotatedGrid[y][x];
+                if (imageData) {
+                    const cellX = startX / cellSize + x;
+                    const cellY = startY / cellSize + y;
+                    selectedCells.push({
+                        x: cellX,
+                        y: cellY,
+                        imageData: imageData
+                    });
+                }
+            }
+        }
+    }
+
+    // Functions to rotate the grid (unchanged)
+    function rotateGridLeft(grid) {
+        const rows = grid.length;
+        const cols = grid[0].length;
+        const newGrid = [];
+
+        for (let x = cols - 1; x >= 0; x--) {
+            const newRow = [];
+            for (let y = 0; y < rows; y++) {
+                newRow.push(grid[y][x]);
+            }
+            newGrid.push(newRow);
+        }
+
+        return newGrid;
+    }
+
+    function rotateGridRight(grid) {
+        const rows = grid.length;
+        const cols = grid[0].length;
+        const newGrid = [];
+
+        for (let x = 0; x < cols; x++) {
+            const newRow = [];
+            for (let y = rows - 1; y >= 0; y--) {
+                newRow.push(grid[y][x]);
+            }
+            newGrid.push(newRow);
+        }
+
+        return newGrid;
+    }
+
+    // Event listeners for Rotate Left and Right buttons (unchanged)
+    document.getElementById('rotateLeft-button').addEventListener('click', function () {
+        rotateSelection('left');
+    });
+
+    document.getElementById('rotateRight-button').addEventListener('click', function () {
+        rotateSelection('right');
+    });
+
     /* =========================================================================================================================================== */
     /*                                            Section 8.3: Select Tool - Flip Horizontal/Vertical                                              */
     /* =========================================================================================================================================== */
+
+    // Function to flip the selection
+    function flipSelection(direction) {
+        if (!selectionBox || selectedCells.length === 0) {
+            console.log("No selection to flip.");
+            return;
+        }
+
+        const { startX, startY, width, height } = selectionBox;
+
+        // Create an off-screen canvas
+        const tempCanvas = document.createElement('canvas');
+        const tempContext = tempCanvas.getContext('2d');
+
+        // Set the size of the temp canvas to match the selection box
+        tempCanvas.width = width;
+        tempCanvas.height = height;
+
+        // Extract the selected area onto the off-screen canvas
+        tempContext.drawImage(
+            drawCanvas,
+            startX, startY, width, height,  // Source rectangle
+            0, 0, width, height             // Destination rectangle
+        );
+
+        // Clear the selected area on the main canvas (inside selection box only)
+        drawContext.save();
+        drawContext.globalCompositeOperation = 'destination-out';
+        drawContext.fillRect(startX, startY, width, height);
+        drawContext.restore();
+
+        // Flip the off-screen canvas
+        const flippedCanvas = document.createElement('canvas');
+        const flippedContext = flippedCanvas.getContext('2d');
+
+        // Set canvas size for flipping
+        flippedCanvas.width = width;
+        flippedCanvas.height = height;
+
+        // Apply flip based on the direction
+        if (direction === 'horizontal') {
+            // Flip horizontally
+            flippedContext.translate(width, 0);
+            flippedContext.scale(-1, 1);
+        } else if (direction === 'vertical') {
+            // Flip vertically
+            flippedContext.translate(0, height);
+            flippedContext.scale(1, -1);
+        }
+
+        // Draw the extracted selection area onto the flipped canvas
+        flippedContext.drawImage(tempCanvas, 0, 0);
+
+        // Draw the flipped image back onto the main canvas at the original position
+        drawContext.drawImage(flippedCanvas, startX, startY, width, height);
+
+        // Update selectedCells positions without expanding outside the initial selection
+        updateSelectedCellsAfterFlip(direction);
+
+        // Redraw the selection box with the same dimensions
+        drawSelectionBox(selectionBox.startX, selectionBox.startY, selectionBox.width, selectionBox.height);
+    }
+
+    // Helper function to update selectedCells after flipping
+    function updateSelectedCellsAfterFlip(direction) {
+        const { startX, startY, width, height } = selectionBox;
+
+        // Create a 2D array to represent the selection grid
+        const grid = [];
+        for (let y = 0; y < height / cellSize; y++) {
+            grid[y] = [];
+            for (let x = 0; x < width / cellSize; x++) {
+                grid[y][x] = null;
+            }
+        }
+
+        // Populate the grid with the colors from selectedCells
+        selectedCells.forEach(cell => {
+            const x = (cell.x * cellSize - startX) / cellSize;
+            const y = (cell.y * cellSize - startY) / cellSize;
+            grid[y][x] = cell.imageData;
+        });
+
+        // Flip the grid horizontally or vertically
+        let flippedGrid;
+        if (direction === 'horizontal') {
+            flippedGrid = flipGridHorizontal(grid);
+        } else if (direction === 'vertical') {
+            flippedGrid = flipGridVertical(grid);
+        }
+
+        // Clear selectedCells and update with new positions and imageData
+        selectedCells = [];
+        for (let y = 0; y < flippedGrid.length; y++) {
+            for (let x = 0; x < flippedGrid[0].length; x++) {
+                const imageData = flippedGrid[y][x];
+                if (imageData) {
+                    const cellX = startX / cellSize + x;
+                    const cellY = startY / cellSize + y;
+                    selectedCells.push({
+                        x: cellX,
+                        y: cellY,
+                        imageData: imageData
+                    });
+                }
+            }
+        }
+    }
+
+    // Function to flip the grid horizontally
+    function flipGridHorizontal(grid) {
+        const rows = grid.length;
+        const cols = grid[0].length;
+        const newGrid = [];
+
+        for (let y = 0; y < rows; y++) {
+            const newRow = [];
+            for (let x = cols - 1; x >= 0; x--) {
+                newRow.push(grid[y][x]);
+            }
+            newGrid.push(newRow);
+        }
+
+        return newGrid;
+    }
+
+    // Function to flip the grid vertically
+    function flipGridVertical(grid) {
+        const rows = grid.length;
+        const cols = grid[0].length;
+        const newGrid = [];
+
+        for (let y = rows - 1; y >= 0; y--) {
+            newGrid.push([...grid[y]]);
+        }
+
+        return newGrid;
+    }
+
+    // Event listener for Flip Horizontal button
+    document.getElementById('flipHorizontal-button').addEventListener('click', function () {
+        flipSelection('horizontal');
+    });
+
+    // Event listener for Flip Vertical button
+    document.getElementById('flipVertical-button').addEventListener('click', function () {
+        flipSelection('vertical');
+    });
 
     /* =========================================================================================================================================== */
     /*                                            Section 5: Spray Pattern Functionality                                                           */
@@ -756,61 +1148,7 @@ window.onload = function() {
         drawContext.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
     }
     
-    /* =========================================================================================================================================== */
-    /*                                            Section 10.3: File Dropdown - Resizing Button                                                    */
-    /* =========================================================================================================================================== */
     
-    // Function to apply canvas resizing based on size and orientation
-    function resizeCanvas() {
-        // Update number of cells based on selected size
-        numCells = selectedSize;
-            
-        // Update cell size based on canvas size and number of cells
-        cellSize = (selectedOrientation === 'portrait' ? defaultPortraitWidth : defaultLandscapeWidth) / numCells;
-            
-        // Set canvas dimensions based on orientation
-        width = selectedOrientation === 'portrait' ? defaultPortraitWidth : defaultLandscapeWidth;
-        height = selectedOrientation === 'portrait' ? defaultPortraitHeight : defaultLandscapeHeight;
-            
-        // Redraw the checkerboard with updated cell size
-        drawCheckerboard();
-    }
-    
-    // Event listener for size buttons in the resizePopup
-    document.querySelectorAll('.size-options button').forEach(button => {
-        button.addEventListener('click', function() {
-            // Update selected size
-            selectedSize = parseInt(this.textContent);
-                
-            // Remove 'active-button' class from other buttons
-            document.querySelectorAll('.size-options button').forEach(btn => btn.classList.remove('active-button'));
-            // Add 'active-button' class to clicked button
-            this.classList.add('active-button');
-        });
-    });
-    
-    // Event listener for orientation radio buttons
-    document.querySelectorAll('input[name="orientation"]').forEach(radio => {
-        radio.addEventListener('change', function() {
-            selectedOrientation = this.value; // Update selected orientation
-        });
-    });
-    
-    // Apply button event listener to resize the canvas
-    document.querySelector('.apply-btn').addEventListener('click', function() {
-        resizeCanvas(); // Resize canvas when apply is clicked
-        closeResizePopup(); // Close the resize popup after applying changes
-    });
-    
-    // Function to close the resize popup
-    function closeResizePopup() {
-        document.getElementById('resizePopup').classList.add('hidden');
-    }
-
-    window.addEventListener('load', function() {
-        document.querySelector('input[name="orientation"][value="portrait"]').checked = true;
-        selectedOrientation = 'portrait'; // Ensure initial state is correctly set
-    });
     
     /* =========================================================================================================================================== */
     /*                                            Section 10.4: File Dropdown - Open Button                                                        */
@@ -1305,34 +1643,6 @@ window.onload = function() {
     /* =========================================================================================================================================== */
     /*                                            Section 13.1: Settings Dropdown - Fullscreen Button                                              */
     /* =========================================================================================================================================== */
-
-    document.getElementById('fullscreen-toggle').addEventListener('click', toggleFullscreen);
-
-    function toggleFullscreen() {
-        if (!document.fullscreenElement) {
-            // Request fullscreen mode
-            if (document.documentElement.requestFullscreen) {
-                document.documentElement.requestFullscreen();
-            } else if (document.documentElement.mozRequestFullScreen) { // Firefox
-                document.documentElement.mozRequestFullScreen();
-            } else if (document.documentElement.webkitRequestFullscreen) { // Chrome, Safari, Opera
-                document.documentElement.webkitRequestFullscreen();
-            } else if (document.documentElement.msRequestFullscreen) { // IE/Edge
-                document.documentElement.msRequestFullscreen();
-            }
-        } else {
-            // Exit fullscreen mode
-            if (document.exitFullscreen) {
-                document.exitFullscreen();
-            } else if (document.mozCancelFullScreen) { // Firefox
-                document.mozCancelFullScreen();
-            } else if (document.webkitExitFullscreen) { // Chrome, Safari, Opera
-                document.webkitExitFullscreen();
-            } else if (document.msExitFullscreen) { // IE/Edge
-                document.msExitFullscreen();
-            }
-        }
-    }
 
     /* =========================================================================================================================================== */
     /*                                            Section 13.2: Settings Dropdown - Background Button                                              */
