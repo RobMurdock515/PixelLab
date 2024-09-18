@@ -177,6 +177,8 @@ window.onload = function() {
     /*                                            Section 10.3: File Dropdown - Resizing Button                                                    */
     /* =========================================================================================================================================== */
     
+    let scaleFactor = 1; // 1 for portrait (no scaling), 0.80 for landscape scaling
+
     // Function to apply canvas resizing based on size and orientation
     function resizeCanvas() {
         // Update number of cells based on selected size
@@ -188,11 +190,34 @@ window.onload = function() {
         // Set canvas dimensions based on orientation
         width = selectedOrientation === 'portrait' ? defaultPortraitWidth : defaultLandscapeWidth;
         height = selectedOrientation === 'portrait' ? defaultPortraitHeight : defaultLandscapeHeight;
-            
+        
+        // Adjust scale factor for landscape mode
+        if (selectedOrientation === 'landscape') {
+            scaleFactor = 0.80; // Scale down by 0.80
+            checkerboardCanvas.style.transform = `translate(-150px, 20px)`;
+            drawCanvas.style.transform = `translate(-150px, 20px)`;
+            hoverCanvas.style.transform = `translate(-150px, 20px)`;    
+        } else {
+            scaleFactor = 1; // No scaling for portrait
+            checkerboardCanvas.style.transform = `translate(0, 0)`;
+            drawCanvas.style.transform = `translate(0, 0)`;
+            hoverCanvas.style.transform = `translate(0, 0)`;
+        }
+
+        // Apply scaled dimensions to canvas element (display size, not actual resolution)
+        checkerboardCanvas.style.width = `${width * scaleFactor}px`;
+        checkerboardCanvas.style.height = `${height * scaleFactor}px`;
+        
+        drawCanvas.style.width = `${width * scaleFactor}px`;
+        drawCanvas.style.height = `${height * scaleFactor}px`;
+        
+        hoverCanvas.style.width = `${width * scaleFactor}px`;
+        hoverCanvas.style.height = `${height * scaleFactor}px`;
+        
         // Redraw the checkerboard with updated cell size
         drawCheckerboard();
     }
-    
+
     // Event listener for size buttons in the resizePopup
     document.querySelectorAll('.size-options button').forEach(button => {
         button.addEventListener('click', function() {
@@ -268,8 +293,8 @@ window.onload = function() {
     // Mouse down event to start selecting or dragging
     drawCanvas.addEventListener('mousedown', function (e) {
         const rect = drawCanvas.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
+        const x = (e.clientX - rect.left) / scaleFactor;
+        const y = (e.clientY - rect.top) / scaleFactor;
         
         if (selectedTool === 'select') {
             if (selectionBox) {
@@ -296,17 +321,17 @@ window.onload = function() {
             // Apply action for the selected tool
             applyAction(x, y);
             isDrawing = true;
-    
+
             const moveAction = function(e) {
                 if (isDrawing) {
-                    const x = e.clientX - rect.left;
-                    const y = e.clientY - rect.top;
+                    const x = (e.clientX - rect.left) / scaleFactor;
+                    const y = (e.clientY - rect.top) / scaleFactor;
                     applyAction(x, y);
                 }
             };
-    
+
             drawCanvas.addEventListener('mousemove', moveAction);
-    
+
             drawCanvas.addEventListener('mouseup', function() {
                 isDrawing = false;
                 drawCanvas.removeEventListener('mousemove', moveAction);
@@ -317,8 +342,8 @@ window.onload = function() {
     // Mouse move event to update selection box, drag it, and highlight cells
     drawCanvas.addEventListener('mousemove', function (e) {
         const rect = drawCanvas.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
+        const x = (e.clientX - rect.left) / scaleFactor;
+        const y = (e.clientY - rect.top) / scaleFactor;
 
         // Highlight the cell and display coordinates
         highlightCellAndDisplayCoordinates(x, y);
@@ -369,8 +394,8 @@ window.onload = function() {
     // Mouse up event to finalize selection or drop cells after dragging
     drawCanvas.addEventListener('mouseup', function (e) {
         const rect = drawCanvas.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
+        const x = (e.clientX - rect.left) / scaleFactor;
+        const y = (e.clientY - rect.top) / scaleFactor;
 
         if (isSelecting && selectionBox) {
             isSelecting = false;
@@ -379,7 +404,7 @@ window.onload = function() {
             const { startX, startY, width, height } = selectionBox;
             const maxWidth = Math.min(width, hoverCanvas.width - startX);
             const maxHeight = Math.min(height, hoverCanvas.height - startY);
-    
+
             captureSelectedCells({ startX, startY, width: maxWidth, height: maxHeight }); // Capture the selected cells when mouse is released
             drawSelectionBox(startX, startY, maxWidth, maxHeight); // Ensure the selection box stays visible
         } else if (isDragging) {
@@ -388,11 +413,11 @@ window.onload = function() {
             // Ensure dropped cells stay within canvas bounds
             const newX = Math.min(x - offsetX, hoverCanvas.width - selectionBox.width);
             const newY = Math.min(y - offsetY, hoverCanvas.height - selectionBox.height);
-    
+
             moveAndDropSelectedCells(newX, newY); // Move and drop selected cells at new location
         }
     });
-    
+
     /* =========================================================================================================================================== */
     /*                                            Section 8: Select Tool Functionality                                                             */
     /* =========================================================================================================================================== */
