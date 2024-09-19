@@ -183,13 +183,17 @@ window.onload = function() {
     function resizeCanvas() {
         // Update number of cells based on selected size
         numCells = selectedSize;
-            
-        // Update cell size based on canvas size and number of cells
-        cellSize = (selectedOrientation === 'portrait' ? defaultPortraitWidth : defaultLandscapeWidth) / numCells;
-            
-        // Set canvas dimensions based on orientation
-        width = selectedOrientation === 'portrait' ? defaultPortraitWidth : defaultLandscapeWidth;
-        height = selectedOrientation === 'portrait' ? defaultPortraitHeight : defaultLandscapeHeight;
+
+        // Calculate initial cell size based on canvas width
+        const baseWidth = selectedOrientation === 'portrait' ? defaultPortraitWidth : defaultLandscapeWidth;
+        const baseHeight = selectedOrientation === 'portrait' ? defaultPortraitHeight : defaultLandscapeHeight;
+        
+        // Round the cell size down to ensure whole cells
+        cellSize = Math.floor(baseWidth / numCells);
+        
+        // Adjust canvas width and height to fit whole cells
+        width = cellSize * numCells;
+        height = Math.floor(baseHeight / cellSize) * cellSize; // Ensure the height also fits whole cells
         
         // Adjust scale factor for landscape mode
         if (selectedOrientation === 'landscape') {
@@ -207,13 +211,13 @@ window.onload = function() {
         // Apply scaled dimensions to canvas element (display size, not actual resolution)
         checkerboardCanvas.style.width = `${width * scaleFactor}px`;
         checkerboardCanvas.style.height = `${height * scaleFactor}px`;
-        
+
         drawCanvas.style.width = `${width * scaleFactor}px`;
         drawCanvas.style.height = `${height * scaleFactor}px`;
-        
+
         hoverCanvas.style.width = `${width * scaleFactor}px`;
         hoverCanvas.style.height = `${height * scaleFactor}px`;
-        
+
         // Redraw the checkerboard with updated cell size
         drawCheckerboard();
     }
@@ -943,45 +947,72 @@ window.onload = function() {
     /* =========================================================================================================================================== */
     /*                                            Section 7: Bucket Functionality                                                                  */
     /* =========================================================================================================================================== */
+
+    function floodFill(startX, startY) {
+        // Adjust the starting coordinates to account for the scale factor
+        startX = Math.floor(startX / scaleFactor);
+        startY = Math.floor(startY / scaleFactor);
     
-    function floodFill(x, y) {
-        const targetColor = getPixelColor(x, y);
+        const targetColor = getPixelColor(startX, startY);
         const fillColor = document.querySelector('.color-indicator').style.backgroundColor; // Use the selected color
         const fillColorWithAlpha = getColorWithAlpha(fillColor, drawContext.globalAlpha); // Apply the current opacity
-        
+    
         if (colorsMatch(targetColor, fillColorWithAlpha)) return;
-        
-        const stack = [[x, y]];
-        
+    
+        const stack = [[startX, startY]];
+    
         while (stack.length > 0) {
-            const [cx, cy] = stack.pop();
-            if (getPixelColor(cx, cy) === targetColor) {
+            const [x, y] = stack.pop();
+    
+            // Check if the current pixel is within bounds, considering the scaling factor
+            if (x < 0 || x >= numCells || y < 0 || y >= Math.floor(height / cellSize)) continue;
+    
+            const currentColor = getPixelColor(x, y);
+            
+            // If the current pixel matches the target color, we can fill it
+            if (colorsMatch(currentColor, targetColor)) {
                 drawContext.fillStyle = fillColorWithAlpha;
-                drawContext.fillRect(cx * cellSize, cy * cellSize, cellSize, cellSize);
-        
-                if (cx > 0) stack.push([cx - 1, cy]);
-                if (cx < numCells - 1) stack.push([cx + 1, cy]);
-                if (cy > 0) stack.push([cx, cy - 1]);
-                if (cy < numCells - 1) stack.push([cx, cy + 1]);
+                drawContext.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
+    
+                // Push neighboring cells onto the stack for further processing
+                stack.push([x - 1, y]); // Left
+                stack.push([x + 1, y]); // Right
+                stack.push([x, y - 1]); // Up
+                stack.push([x, y + 1]); // Down
             }
         }
-    }
-        
-    function getPixelColor(x, y) {
-        const imageData = drawContext.getImageData(x * cellSize, y * cellSize, cellSize, cellSize);
-        const [r, g, b, a] = imageData.data;
-        return `rgba(${r}, ${g}, ${b}, ${a / 255})`;
-    }
-        
-    function getColorWithAlpha(color, alpha) {
-        const [r, g, b] = color.match(/\d+/g).map(Number);
-        return `rgba(${r}, ${g}, ${b}, ${alpha})`;
-    }
-        
-    function colorsMatch(color1, color2) {
-        return color1 === color2;
     }    
-    
+
+    function getPixelColor(x, y) {
+        // Retrieve color for a single pixel
+        const imageData = drawContext.getImageData(x * cellSize, y * cellSize, 1, 1); 
+        const [r, g, b, a] = imageData.data; // Extract RGBA components
+
+        // Return color as rgba string, normalizing alpha to a 0-1 range
+        return a === 0 ? 'transparent' : `rgba(${r}, ${g}, ${b}, ${a / 255})`;
+    }
+
+    function getColorWithAlpha(color, alpha) {
+        const [r, g, b] = color.match(/\d+/g).map(Number); // Extract RGB values
+        return `rgba(${r}, ${g}, ${b}, ${alpha})`; // Return color with adjusted alpha
+    }
+
+    function colorsMatch(color1, color2) {
+        if (color1 === 'transparent' || color2 === 'transparent') {
+            return color1 === color2; // Treat transparent areas as distinct
+        }
+
+        const rgba1 = color1.match(/\d+(\.\d+)?/g).map(Number);
+        const rgba2 = color2.match(/\d+(\.\d+)?/g).map(Number);
+
+        // Compare RGBA values with tolerance to handle small rounding errors
+        const tolerance = 1; // You can adjust tolerance if needed
+        return Math.abs(rgba1[0] - rgba2[0]) <= tolerance &&
+            Math.abs(rgba1[1] - rgba2[1]) <= tolerance &&
+            Math.abs(rgba1[2] - rgba2[2]) <= tolerance &&
+            Math.abs(rgba1[3] - rgba2[3]) <= tolerance;
+    } 
+        
     /* =========================================================================================================================================== */
     /*                                            Section 9.1: PixelLab - Tooltips                                                                */
     /* =========================================================================================================================================== */
