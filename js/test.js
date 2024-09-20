@@ -176,74 +176,112 @@ window.onload = function() {
     /* =========================================================================================================================================== */
     /*                                            Section 10.3: File Dropdown - Resizing Button                                                    */
     /* =========================================================================================================================================== */
-    
-    let scaleFactor = 1; // 1 for portrait (no scaling), 0.80 for landscape scaling
 
-    // Function to apply canvas resizing based on size and orientation
+    let scaleFactor = 1; // Default scaling, 1 for portrait (no scaling), 0.80 for landscape
+    let offscreenCanvas = document.createElement('canvas');
+    let offscreenCtx = offscreenCanvas.getContext('2d');
+
     function resizeCanvas() {
+        // Save the current drawing to the offscreen canvas before resizing
+        saveDrawing();
+    
         // Update number of cells based on selected size
         numCells = selectedSize;
-            
-        // Update cell size based on canvas size and number of cells
-        cellSize = (selectedOrientation === 'portrait' ? defaultPortraitWidth : defaultLandscapeWidth) / numCells;
-            
-        // Set canvas dimensions based on orientation
-        width = selectedOrientation === 'portrait' ? defaultPortraitWidth : defaultLandscapeWidth;
-        height = selectedOrientation === 'portrait' ? defaultPortraitHeight : defaultLandscapeHeight;
-        
-        // Adjust scale factor for landscape mode
-        if (selectedOrientation === 'landscape') {
-            scaleFactor = 0.80; // Scale down by 0.80
-            checkerboardCanvas.style.transform = `translate(-150px, 20px)`;
-            drawCanvas.style.transform = `translate(-150px, 20px)`;
-            hoverCanvas.style.transform = `translate(-150px, 20px)`;    
+    
+        // Calculate initial cell size based on canvas width
+        const baseWidth = selectedOrientation === 'portrait' ? defaultPortraitWidth : defaultLandscapeWidth;
+        const baseHeight = selectedOrientation === 'portrait' ? defaultPortraitHeight : defaultLandscapeHeight;
+    
+        // Round the cell size down to ensure whole cells
+        cellSize = Math.floor(baseWidth / numCells);
+    
+        // Adjust canvas width and height to fit whole cells
+        width = cellSize * numCells;
+        height = Math.floor(baseHeight / cellSize) * cellSize; // Ensure the height also fits whole cells
+    
+        // Adjust scale factor based on fullscreen status and orientation
+        if (document.fullscreenElement) {
+            if (selectedOrientation === 'portrait') {
+                scaleFactor = 1.20; // Fullscreen portrait scaling
+            } else {
+                scaleFactor = 1.00; // Fullscreen landscape scaling
+            }
         } else {
-            scaleFactor = 1; // No scaling for portrait
-            checkerboardCanvas.style.transform = `translate(0, 0)`;
-            drawCanvas.style.transform = `translate(0, 0)`;
-            hoverCanvas.style.transform = `translate(0, 0)`;
+            if (selectedOrientation === 'landscape') {
+                scaleFactor = 0.80; // Normal landscape scaling
+            } else {
+                scaleFactor = 1.00; // Normal portrait scaling
+            }
         }
-
+    
         // Apply scaled dimensions to canvas element (display size, not actual resolution)
         checkerboardCanvas.style.width = `${width * scaleFactor}px`;
         checkerboardCanvas.style.height = `${height * scaleFactor}px`;
-        
+    
         drawCanvas.style.width = `${width * scaleFactor}px`;
         drawCanvas.style.height = `${height * scaleFactor}px`;
-        
+    
         hoverCanvas.style.width = `${width * scaleFactor}px`;
         hoverCanvas.style.height = `${height * scaleFactor}px`;
-        
+    
+        // Center the canvases
+        const translateX = selectedOrientation === 'portrait' ? 0 : -150; // Adjust based on orientation
+        const translateY = selectedOrientation === 'portrait' ? 0 : 20; // Adjust based on orientation
+    
+        checkerboardCanvas.style.transform = `translate(${translateX}px, ${translateY}px)`;
+        drawCanvas.style.transform = `translate(${translateX}px, ${translateY}px)`;
+        hoverCanvas.style.transform = `translate(${translateX}px, ${translateY}px)`;
+    
         // Redraw the checkerboard with updated cell size
         drawCheckerboard();
+    
+        // Restore the drawing after resizing
+        restoreDrawing();
+    }    
+
+    function saveDrawing() {
+        // Set offscreen canvas size to match the original canvas
+        offscreenCanvas.width = drawCanvas.width;
+        offscreenCanvas.height = drawCanvas.height;
+
+        // Copy the current drawing to the offscreen canvas
+        offscreenCtx.drawImage(drawCanvas, 0, 0);
+    }
+
+    function restoreDrawing() {
+        // Restore the drawing from the offscreen canvas to the main canvas
+        const ctx = drawCanvas.getContext('2d');
+        ctx.clearRect(0, 0, drawCanvas.width, drawCanvas.height); // Clear the canvas
+        ctx.drawImage(offscreenCanvas, 0, 0); // Draw the saved content back
     }
 
     // Event listener for size buttons in the resizePopup
     document.querySelectorAll('.size-options button').forEach(button => {
         button.addEventListener('click', function() {
-            // Update selected size
             selectedSize = parseInt(this.textContent);
-                
-            // Remove 'active-button' class from other buttons
             document.querySelectorAll('.size-options button').forEach(btn => btn.classList.remove('active-button'));
-            // Add 'active-button' class to clicked button
             this.classList.add('active-button');
         });
     });
-    
+
     // Event listener for orientation radio buttons
     document.querySelectorAll('input[name="orientation"]').forEach(radio => {
         radio.addEventListener('change', function() {
             selectedOrientation = this.value; // Update selected orientation
         });
     });
-    
+
     // Apply button event listener to resize the canvas
     document.querySelector('.apply-btn').addEventListener('click', function() {
+        // Clear the drawCanvas before resizing
+        const ctx = drawCanvas.getContext('2d');
+        ctx.clearRect(0, 0, drawCanvas.width, drawCanvas.height); // Clear the canvas
+
         resizeCanvas(); // Resize canvas when apply is clicked
         closeResizePopup(); // Close the resize popup after applying changes
     });
-    
+
+
     // Function to close the resize popup
     function closeResizePopup() {
         document.getElementById('resizePopup').classList.add('hidden');
@@ -253,7 +291,7 @@ window.onload = function() {
         document.querySelector('input[name="orientation"][value="portrait"]').checked = true;
         selectedOrientation = 'portrait'; // Ensure initial state is correctly set
     });
-    
+
     /* =========================================================================================================================================== */
     /*                                            Section 13.1: Settings Dropdown - Fullscreen Button                                              */
     /* =========================================================================================================================================== */
@@ -264,26 +302,46 @@ window.onload = function() {
         if (!document.fullscreenElement) {
             // Request fullscreen mode
             if (document.documentElement.requestFullscreen) {
-                document.documentElement.requestFullscreen();
+                document.documentElement.requestFullscreen().then(applyFullscreenScaling);
             } else if (document.documentElement.mozRequestFullScreen) { // Firefox
-                document.documentElement.mozRequestFullScreen();
+                document.documentElement.mozRequestFullScreen().then(applyFullscreenScaling);
             } else if (document.documentElement.webkitRequestFullscreen) { // Chrome, Safari, Opera
-                document.documentElement.webkitRequestFullscreen();
+                document.documentElement.webkitRequestFullscreen().then(applyFullscreenScaling);
             } else if (document.documentElement.msRequestFullscreen) { // IE/Edge
-                document.documentElement.msRequestFullscreen();
+                document.documentElement.msRequestFullscreen().then(applyFullscreenScaling);
             }
         } else {
             // Exit fullscreen mode
             if (document.exitFullscreen) {
-                document.exitFullscreen();
+                document.exitFullscreen().then(resetScaling);
             } else if (document.mozCancelFullScreen) { // Firefox
-                document.mozCancelFullScreen();
+                document.mozCancelFullScreen().then(resetScaling);
             } else if (document.webkitExitFullscreen) { // Chrome, Safari, Opera
-                document.webkitExitFullscreen();
+                document.webkitExitFullscreen().then(resetScaling);
             } else if (document.msExitFullscreen) { // IE/Edge
-                document.msExitFullscreen();
+                document.msExitFullscreen().then(resetScaling);
             }
         }
+    }
+
+    // Function to apply scaling for fullscreen mode
+    function applyFullscreenScaling() {
+        if (selectedOrientation === 'portrait') {
+            scaleFactor = 1.20; // Scale portrait to 1.20 in fullscreen
+        } else {
+            scaleFactor = 1.00; // Scale landscape to 1.00 in fullscreen
+        }
+        resizeCanvas(); // Apply scaling when entering fullscreen
+    }
+
+    // Function to reset scaling when exiting fullscreen mode
+    function resetScaling() {
+        if (selectedOrientation === 'portrait') {
+            scaleFactor = 1.00; // Reset portrait to 1.00 when exiting fullscreen
+        } else {
+            scaleFactor = 0.80; // Reset landscape to 0.80 when exiting fullscreen
+        }
+        resizeCanvas(); // Reset scaling after exiting fullscreen
     }
 
     /* =========================================================================================================================================== */
@@ -943,45 +1001,72 @@ window.onload = function() {
     /* =========================================================================================================================================== */
     /*                                            Section 7: Bucket Functionality                                                                  */
     /* =========================================================================================================================================== */
+
+    function floodFill(startX, startY) {
+        // Adjust the starting coordinates to account for the scale factor
+        startX = Math.floor(startX / scaleFactor);
+        startY = Math.floor(startY / scaleFactor);
     
-    function floodFill(x, y) {
-        const targetColor = getPixelColor(x, y);
+        const targetColor = getPixelColor(startX, startY);
         const fillColor = document.querySelector('.color-indicator').style.backgroundColor; // Use the selected color
         const fillColorWithAlpha = getColorWithAlpha(fillColor, drawContext.globalAlpha); // Apply the current opacity
-        
+    
         if (colorsMatch(targetColor, fillColorWithAlpha)) return;
-        
-        const stack = [[x, y]];
-        
+    
+        const stack = [[startX, startY]];
+    
         while (stack.length > 0) {
-            const [cx, cy] = stack.pop();
-            if (getPixelColor(cx, cy) === targetColor) {
+            const [x, y] = stack.pop();
+    
+            // Check if the current pixel is within bounds, considering the scaling factor
+            if (x < 0 || x >= numCells || y < 0 || y >= Math.floor(height / cellSize)) continue;
+    
+            const currentColor = getPixelColor(x, y);
+            
+            // If the current pixel matches the target color, we can fill it
+            if (colorsMatch(currentColor, targetColor)) {
                 drawContext.fillStyle = fillColorWithAlpha;
-                drawContext.fillRect(cx * cellSize, cy * cellSize, cellSize, cellSize);
-        
-                if (cx > 0) stack.push([cx - 1, cy]);
-                if (cx < numCells - 1) stack.push([cx + 1, cy]);
-                if (cy > 0) stack.push([cx, cy - 1]);
-                if (cy < numCells - 1) stack.push([cx, cy + 1]);
+                drawContext.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
+    
+                // Push neighboring cells onto the stack for further processing
+                stack.push([x - 1, y]); // Left
+                stack.push([x + 1, y]); // Right
+                stack.push([x, y - 1]); // Up
+                stack.push([x, y + 1]); // Down
             }
         }
-    }
-        
-    function getPixelColor(x, y) {
-        const imageData = drawContext.getImageData(x * cellSize, y * cellSize, cellSize, cellSize);
-        const [r, g, b, a] = imageData.data;
-        return `rgba(${r}, ${g}, ${b}, ${a / 255})`;
-    }
-        
-    function getColorWithAlpha(color, alpha) {
-        const [r, g, b] = color.match(/\d+/g).map(Number);
-        return `rgba(${r}, ${g}, ${b}, ${alpha})`;
-    }
-        
-    function colorsMatch(color1, color2) {
-        return color1 === color2;
     }    
-    
+
+    function getPixelColor(x, y) {
+        // Retrieve color for a single pixel
+        const imageData = drawContext.getImageData(x * cellSize, y * cellSize, 1, 1); 
+        const [r, g, b, a] = imageData.data; // Extract RGBA components
+
+        // Return color as rgba string, normalizing alpha to a 0-1 range
+        return a === 0 ? 'transparent' : `rgba(${r}, ${g}, ${b}, ${a / 255})`;
+    }
+
+    function getColorWithAlpha(color, alpha) {
+        const [r, g, b] = color.match(/\d+/g).map(Number); // Extract RGB values
+        return `rgba(${r}, ${g}, ${b}, ${alpha})`; // Return color with adjusted alpha
+    }
+
+    function colorsMatch(color1, color2) {
+        if (color1 === 'transparent' || color2 === 'transparent') {
+            return color1 === color2; // Treat transparent areas as distinct
+        }
+
+        const rgba1 = color1.match(/\d+(\.\d+)?/g).map(Number);
+        const rgba2 = color2.match(/\d+(\.\d+)?/g).map(Number);
+
+        // Compare RGBA values with tolerance to handle small rounding errors
+        const tolerance = 1; // You can adjust tolerance if needed
+        return Math.abs(rgba1[0] - rgba2[0]) <= tolerance &&
+            Math.abs(rgba1[1] - rgba2[1]) <= tolerance &&
+            Math.abs(rgba1[2] - rgba2[2]) <= tolerance &&
+            Math.abs(rgba1[3] - rgba2[3]) <= tolerance;
+    } 
+        
     /* =========================================================================================================================================== */
     /*                                            Section 9.1: PixelLab - Tooltips                                                                */
     /* =========================================================================================================================================== */
