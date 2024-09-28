@@ -10,13 +10,16 @@
         <body>
             <div class="menu-bar">
                 <div class="menu-bar-container">
-                    <img src="img/Icons/tools-icon.png" alt="Tools Icon" class="tools-icon"> <!-- Tools icon -->
+                    <!-- Tools icon -->
+                    <img src="img/Icons/tools-icon.png" alt="Tools Icon" class="tools-icon">
                 <span class="tools-text">Tools</span>
                 <div class="menu-bar-container">
+                    <!-- File button -->
                     <button class="file-button">
                         <img src="img/Icons/new-icon.png" alt="File Icon" class="file-icon">
                         <span class="file-text">File</span>
                     </button>
+                    <!-- File button dropdown -->
                     <div class="dropdown-file hidden">
                         <div class="dropdown-item" id="newButton">
                             <img src="img/Icons/new-icon.png" alt="New Icon" class="dropdown-icon">
@@ -39,20 +42,23 @@
                             <img src="img/Icons/save-icon.png" alt="Save Icon" class="dropdown-icon">
                             Save
                         </div>          
-                    </div>                    
-                    <div id="resizePopup" class="resize-popup hidden"> <!-- Resize Canvas Pop-Up Box -->
+                    </div>   
+                    <!-- Resize canvas button - Pop-up box -->                 
+                    <div id="resizePopup" class="resize-popup hidden">
                         <button class="close-btn" onclick="closeResizePopup()">&times;</button>
                         <h2>Resize Canvas</h2>
                         <div class="size-options">
                             <button>16x16</button>
                             <button>32x32</button>
-                            <button class="active-button">64x64</button> <!-- Set active class by default -->
+                            <!-- Sets active button by default -->
+                            <button class="active-button">64x64</button> 
                             <button>128x128</button>
                         </div>
                         <div class="popup-footer">
                             <button class="apply-btn">Apply</button>
                             <div class="orientation-options">
                                 <label>
+                                     <!-- Sets default orientation -->
                                     <input type="radio" name="orientation" value="portrait" checked> 
                                     <span>Portrait (1:1 Ratio - Square)</span>
                                 </label>
@@ -64,13 +70,16 @@
                         </div>
                     </div>      
                 </div>
-                
-                <div class="menu-bar-container"> <!-- Palettes Button Dropdown -->
-                    <button class="palettes-button"> <!-- Palettes Button -->
+
+                <!-- Palettes button dropdown -->
+                <div class="menu-bar-container">
+                    <!-- Palettes button -->
+                    <button class="palettes-button">
                         <img src="img/Icons/palettes-icon.png" alt="Palettes Icon" class="palettes-icon">
                         <span class="palettes-text">Palettes</span>
                     </button>
-                    <div class="dropdown-palettes-scroll hidden"> <!-- Colors Button - Dropdown Menu -->
+                    <!-- Palettes button - Dropdown menu -->
+                    <div class="dropdown-palettes-scroll hidden">
                         <div class="dropdown-palettes" data-palette="defaultPalette">
                             <div class="dropdown-palette">
                                 <span class="palette-text">Default Palette</span>
@@ -266,20 +275,21 @@
                     </div>
                 </div>
                 
-                <!-- Select Button -->
+                <!-- Select button -->
                 <div class="menu-bar-container">
                     <button class="select-button">
                         <img src="img/Icons/select-icon.png" alt="Select Icon" class="select-icon">
                         <span class="select-text">Select</span>
                     </button>
-                    <div class="dropdown-select hidden">  <!-- Select Button - Dropdown Menu -->
+                    <!-- Select button - Dropdown menu -->
+                    <div class="dropdown-select hidden"> 
                         <div class="dropdown-item" id="copy-button"> 
                             <img src="img/Icons/copy-icon.png" alt="Copy Icon" class="dropdown-icon">
-                            Copy (ctrl + c)
+                            Copy
                         </div>
                         <div class="dropdown-item" id="paste-button">
                             <img src="img/Icons/paste-icon.png" alt="Paste Icon" class="dropdown-icon">
-                            Paste (ctrl + v)
+                            Paste
                         </div>
                         <div class="dropdown-divider"></div>
                         <div class="dropdown-item" id="rotateLeft-button">
@@ -303,13 +313,14 @@
                     </div>
                 </div>
 
-                <!-- Settings Button -->
+                <!-- Settings button -->
                 <div class="menu-bar-container">
                     <button class="settings-button">
                         <img src="img/Icons/settings-icon.png" alt="Settings Icon" class="settings-icon">
                         <span class="settings-text">Settings</span>
                     </button>
-                    <div class="dropdown-settings hidden"> <!-- Settings Button - Dropdown Menu -->
+                    <!-- Settings button - Dropdown menu -->
+                    <div class="dropdown-settings hidden">
                         <div class="dropdown-item" id="fullscreen-toggle">
                             <img src="img/Icons/fullscreen-icon.png" alt="Fullscreen Icon" class="dropdown-icon">
                             Fullscreen
@@ -326,9 +337,9 @@
                         </div>
                     </div>
                 </div>
-                <!-- Background Settings Popup -->
+                <!-- Background settings popup -->
                 <div id="backgroundPopup" class="background-popup hidden">
-                    <!-- Content for Background Popup -->
+                    <!-- Content for background popup -->
                     <div class="popup-header">
                         <h2>Background Settings</h2><br>
                         <button id="closeBackgroundPopup" class="popup-close">X</button>
@@ -342,9 +353,9 @@
                         <br><button class="background-btn darkmode" data-color="darkmode">Dark Mode</button>
                     </div>
                 </div>
-                <!-- About PixelLab Popup -->
+                <!-- About PixelLab popup -->
                 <div id="aboutPixelLabPopup" class="about-popup hidden">
-                    <!-- Content for About PixelLab Popup -->
+                    <!-- Content for about PixelLab popup -->
                     <div class="popup-header">
                         <h2>About PixelLab</h2>
                         <button id="closeAboutPixelLabPopup" class="popup-close">X</button>
@@ -372,21 +383,24 @@
                     </div>
                 </div>
 
+                <!-- Undo Button -->
                 <div class="menu-bar-container">
-                    <button class="undo-button"> <!-- Undo Button -->
+                    <button class="undo-button"> 
                         <img src="img/Icons/undo-icon.png" alt="Undo Icon" class="undo-icon">
                         <span class="undo-text">Undo</span>
                     </button>
                 </div>
 
+                <!-- Redo Button -->
                 <div class="menu-bar-container">
-                    <button class="redo-button"> <!-- Redo Button -->
+                    <button class="redo-button"> 
                         <img src="img/Icons/redo-icon.png" alt="Redo Icon" class="redo-icon">
                         <span class="redo-text">Redo</span>
                     </button>
                 </div>
             </div>
 
+                <!-- Tool bar - Drawing tools -->
                 <div class="tool-bar">
                     <button class="toolbar-button" data-tool="pencil">
                         <img src="img/Icons/pencil-icon.png" alt="Pencil Tool">
@@ -412,14 +426,16 @@
                         <img src="img/Icons/select2-icon.png" alt="Select Tool">
                         <span class="tooltip-down">Select Tool</span>
                     </button>
-                
+                    
+                    <!-- RGB color picker button -->
                     <div class="color-display-container">
-                        <button class="rgb-button"> <!-- RGB Color Picker Button -->
+                        <button class="rgb-button"> 
                             <img src="img/Icons/color-icon.png" alt="RGB Tool">
                             <span class="tooltip-right">RGB Color Picker</span>
                         </button>
-    
-                        <div class="rgb-dropup hidden"> <!-- RGB Button - Dropup Menu -->
+                        
+                        <!-- RGB button - Dropup menu -->
+                        <div class="rgb-dropup hidden">
                             <div class="color-picker-container">
                                 <div class="color-display" id="colorDisplay"></div>
                                 <div class="color-codes">
@@ -452,13 +468,16 @@
                                 </div>
                             </div>
                         </div>
-            
-                        <div class="color-indicator"> <!-- Shows Current Selected Color -->
-                            <span class="color-text"></span> <!-- Hex value will be displayed here -->
+                        
+                        <!-- Shows current selected color -->
+                        <div class="color-indicator">
+                            <!-- Hex value display -->
+                            <span class="color-text"></span> 
                         </div>
                     </div>
-            
-                    <div class="color-palette-container"> <!-- Color Palette (cells) -->
+                    
+                    <!-- Color palette (cells) -->
+                    <div class="color-palette-container"> 
                         <div class="color-palette">
                             <div class="color-cell" data-color-index="0"></div>
                             <div class="color-cell" data-color-index="1"></div>
@@ -471,61 +490,30 @@
                             <div class="color-cell" data-color-index="8"></div>
                             <div class="color-cell" data-color-index="9"></div>
                             <div class="color-cell" data-color-index="10"></div>
-                            <div class="color-cell" data-color-index="11"></div>
-                            <div class="color-cell" data-color-index="12"></div>
-                            <div class="color-cell" data-color-index="13"></div>
-                            <div class="color-cell" data-color-index="14"></div>
-                            <div class="color-cell" data-color-index="15"></div>
-                            <div class="color-cell" data-color-index="16"></div>
-                            <div class="color-cell" data-color-index="17"></div>
-                            <div class="color-cell" data-color-index="18"></div>
-                            <div class="color-cell" data-color-index="19"></div>
-                            <div class="color-cell" data-color-index="20"></div>
-                            <div class="color-cell" data-color-index="21"></div>
-                            <div class="color-cell" data-color-index="22"></div>
-                            <div class="color-cell" data-color-index="23"></div>
-                            <div class="color-cell" data-color-index="24"></div>
-                            <div class="color-cell" data-color-index="25"></div>
-                            <div class="color-cell" data-color-index="26"></div>
-                            <div class="color-cell" data-color-index="27"></div>
-                            <div class="color-cell" data-color-index="28"></div>
-                            <div class="color-cell" data-color-index="29"></div>
-                            <div class="color-cell" data-color-index="30"></div>
-                            <div class="color-cell" data-color-index="31"></div>
-                            <div class="color-cell" data-color-index="32"></div>
-                            <div class="color-cell" data-color-index="33"></div>
-                            <div class="color-cell" data-color-index="34"></div>
-                            <div class="color-cell" data-color-index="35"></div>
-                            <div class="color-cell" data-color-index="36"></div>
-                            <div class="color-cell" data-color-index="37"></div>
-                            <div class="color-cell" data-color-index="38"></div>
-                            <div class="color-cell" data-color-index="39"></div>
-                            <div class="color-cell" data-color-index="40"></div>
-                            <div class="color-cell" data-color-index="41"></div>
-                            <div class="color-cell" data-color-index="42"></div>
-                            <div class="color-cell" data-color-index="43"></div>
-                            <div class="color-cell" data-color-index="44"></div>
                         </div>
                     </div>
                 </div>
 
+                <!-- Tool settings bar - Pixel size/opacity -->
                 <div class="tool-settings-bar">
                     <div class="tool-info">
                         <span>Tool:</span>
                         <span id="selected-tool"></span>
                     </div>
                     <div class="slider-group">
-                        <label for="pixel-size-slider">Pixel Size: <span id="pixel-size-value">1</span></label>
+                        <label for="pixel-size-slider">Pixel Size:</label>
                         <input type="range" id="pixel-size-slider" min="1" max="4" value="1" step="1">
+                        <span id="pixel-size-value">1</span>
                     </div>
                     <div class="slider-group">
                         <label for="opacitySlider">Opacity:</label>
                         <input type="range" id="opacitySlider" min="0" max="1" step="0.1" value="1">
                         <span id="opacityValue">1.0</span> 
                     </div>                            
-                </div>  
-            </div>
+                </div> 
+            </div>           
 
+            <!-- Canvases (Coordinate/dimensions display) -->
             <div class="canvas-wrapper"> 
                 <div class="canvas-container">
                     <canvas id="checkerboardCanvas"></canvas>
@@ -543,7 +531,6 @@
                 </div>
             </div>
 
-            <script src="js/canvas.js"></script>
-            <script src="js/rgbPicker.js"></script>
+            <script src="pixellab.js"></script>
         </body>
 </html>

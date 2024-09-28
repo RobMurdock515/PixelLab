@@ -345,11 +345,7 @@ html, body {
 }
 
 /* =========================================================================================================================================== */
-/*                                            Section 1.3: PixelLab - Menubar/Select                                                           */
-/* =========================================================================================================================================== */
-/*#checkerboardCanvas, #hoverCanvas, #drawCanvas
-/* =========================================================================================================================================== */
-/*                                            Section 1.4: PixelLab - Menubar/Settings                                                         */
+/*                                            Section 1.3: PixelLab - Menubar/Settings                                                         */
 /* =========================================================================================================================================== */
 
 /* Styles for fullscreen mode */
@@ -898,5 +894,153 @@ html, body {
 }
 
 /* =========================================================================================================================================== */
-/*                                            Section 5: PixelLab - Responsive                                                                 */
+/*                                            Section 5: PixelLab - Mobile-bar                                                                 */
 /* =========================================================================================================================================== */
+
+/* Initially hide the mobile bar */
+.mobile-bar {
+    display: none;
+    background-color: rgba(255, 255, 255, 0.1); /* Transparent white for glass effect */
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    border-radius: 6px; /* Rounded corners for a modern look */
+    border: 1px solid rgba(255, 255, 255, 0.2); /* Light border for the glass effect */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Slightly stronger shadow */
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    color: #fff;
+    position: fixed; /* Make it fixed at the bottom for mobile layout */
+    bottom: 0;
+    height: 200px;
+    width: 100%; /* Full width for mobile */
+    z-index: 1000; /* Ensure it’s on top */
+}
+
+/* =========================================================================================================================================== */
+/*                                            Section 6: PixelLab - Responsive                                                                 */
+/* =========================================================================================================================================== */
+
+@media (min-width: 320px) and (max-width: 1024px) {
+
+    /* ------------------------------------- */
+    /* Adjusts scale for all three menu bars */
+    /* ------------------------------------- */
+    .menu-bar, .tool-bar {
+        transform: scale(0.80);
+        transform-origin: top left; 
+    }
+
+    /* -------------------- */
+    /* Menu-bar adjustments */
+    /* -------------------- */
+    .menu-bar {
+        width: 130%;
+    }
+
+    .file-button, .select-button, .palettes-button, .settings-button, .undo-button, .redo-button {
+        margin: 10px; 
+    }
+
+    .tools-icon, .file-icon, .select-icon, .palettes-icon, .settings-icon, .undo-icon, .redo-icon {
+        height: 16px;
+        margin-right: 2px; /* Space between the icon and the text */
+    }
+    
+    .tools-text, .file-text, .select-text, .palettes-text, .settings-text, .undo-text, .redo-text {
+        color: white;
+        font-size: 10px;
+        font-family: 'Roboto', sans-serif;
+    }
+    
+    .dropdown-file {
+        scale: 0.80;
+        top: 12px;
+        left: -10px;
+    }
+
+    .dropdown-select {
+        scale: 0.80;
+        top: 4px;
+        left: -10px;
+    }
+
+    .dropdown-settings {
+        scale: 0.80;
+        top: 20px;
+        left: -10px;
+    }
+
+    .dropdown-palettes-scroll {
+        scale: 0.80;
+        top: 12px;
+        left: -70px;
+    }
+
+    .resize-popup {
+        scale: 0.80;
+        left: -70px;
+        top: 100px;
+    }
+
+    .background-popup {
+        scale: 0.60;
+        top: 100px;
+        left: 120px;
+    }
+
+    .about-popup {
+        scale: 0.60;
+        left: 120px;
+    }
+
+    /* -------------------- */
+    /* Tool-bar adjustments */
+    /* -------------------- */
+    .tool-bar {
+        height: 700px;
+    }   
+    
+    /* ----------------------------- */
+    /* Tool-settings-bar adjustments */
+    /* ----------------------------- */
+    .tool-settings-bar {
+        left: 0px;
+        width: 130%;
+        font-size: 12px;
+    }
+
+    .tool-settings-bar .tool-info {
+        margin-right: 50px;
+        width: 80px;
+    }
+
+    .tool-settings-bar .tool-info span:first-child {
+        margin: 0 10px 0 5px;
+    }
+
+    .tool-settings-bar .slider-group {
+        margin-right: 50px;
+        width: 125px;
+    }
+
+    .tool-settings-bar .slider-group span {
+        margin-right: 0px;
+    }
+
+    .slider-group {
+        margin-bottom: 5px; 
+    }
+
+    .slider-group label, .slider-group span {
+        white-space: nowrap; /* Prevents the text from wrapping */
+        display: inline-block; /* Ensures it takes only the necessary space */
+        font-size: 12px; /* Adjust as needed */
+    }
+    
+    /* Optional: If you want to target the input elements directly */
+    .slider-group input[type="range"] {
+        width: 100%; /* Adjust width if necessary */
+        margin-top: 2px; /* Space above the slider */
+    }
+    
+}
