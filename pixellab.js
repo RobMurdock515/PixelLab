@@ -188,88 +188,76 @@ window.onload = function() {
     });  
     
     /* =========================================================================================================================================== */
-    /*                                            Section x: Responsiveness - Canvas Scale and Resize Handling                                      */
+    /*                                            Section 4: Responsiveness - Canvas Scaling and Resize Handling                                   */
     /* =========================================================================================================================================== */
-    
+
     function adjustCanvasScale() {
         const width = window.innerWidth;
-        const isLandscape = window.innerHeight < window.innerWidth; // Determine orientation
     
-        // Set scale factors and translations based on device width and orientation
+        // Set scale factors and translations based on device width for both orientations
         let scaleFactor;
         let translateX;
-        
-        // first number = landscape - second number = portrait
-        if (width <= 320) { // Extra small devices (iPhone 5, iPod Touch, etc.)
-            scaleFactor = isLandscape ? 0.32 : 0.4; 
-            translateX = isLandscape ? '-50px' : '-65px'; 
     
-        } else if (width > 320 && width <= 375) { // Small (iPhone SE, Samsung Galaxy S7, S8, S9, etc.)
-            scaleFactor = isLandscape ? 0.40 : 0.50; 
-            translateX = isLandscape ? '-65px' : '-88px'; 
+        // Define scale factors for portrait
+        const portraitScaleFactors = [
+            { maxWidth: 320, scale: 0.4, translateX: '-65px' },
+            { maxWidth: 375, scale: 0.50, translateX: '-88px' },
+            { maxWidth: 384, scale: 0.55, translateX: '-98px' },
+            { maxWidth: 390, scale: 0.58, translateX: '-105px' },
+            { maxWidth: 412, scale: 0.55, translateX: '-95px' },
+            { maxWidth: 414, scale: 0.60, translateX: '-107px' },
+            { maxWidth: 430, scale: 0.60, translateX: '-107px' },
+            { maxWidth: 479, scale: 0.60, translateX: '-100px' },
+            { maxWidth: 540, scale: 0.65, translateX: '-100px' },
+            { maxWidth: 600, scale: 0.75, translateX: '-120px' },
+            { maxWidth: 768, scale: 1.00, translateX: '-177px' },
+            { maxWidth: 820, scale: 1.05, translateX: '-170px' },
+            { maxWidth: 900, scale: 1.10, translateX: '-180px' },
+            { maxWidth: 1024, scale: 1.40, translateX: '-240px'}
+        ];
     
-        } else if (width > 375 && width <= 384) { // Small (Nexus 4)
-            scaleFactor = isLandscape ? 0.42 : 0.55; 
-            translateX = isLandscape ? '-75px' : '-98px'; 
+        // Define scale factors for landscape
+        const landscapeScaleFactors = [
+            { maxWidth: 320, scale: 0.30, translateX: '-88px' },
+            { maxWidth: 375, scale: 0.33, translateX: '-97.5px' },
+            { maxWidth: 384, scale: 0.35, translateX: '-100px' },
+            { maxWidth: 390, scale: 0.35, translateX: '-100px' },
+            { maxWidth: 412, scale: 0.38, translateX: '-111px' }, 
+            { maxWidth: 414, scale: 0.38, translateX: '-111px' }, 
+            { maxWidth: 430, scale: 0.40, translateX: '-116px' }, 
+            { maxWidth: 479, scale: 0.40, translateX: '-112px' }, 
+            { maxWidth: 540, scale: 0.45, translateX: '-125px' }, 
+            { maxWidth: 600, scale: 0.50, translateX: '-132px' }, 
+            { maxWidth: 768, scale: 0.60, translateX: '-168px' }, 
+            { maxWidth: 820, scale: 0.70, translateX: '-195px' }, 
+            { maxWidth: 900, scale: 0.80, translateX: '-225px' }, 
+            { maxWidth: 1024, scale: 0.90, translateX: '-260px'}
+        ];
     
-        } else if (width > 384 && width <= 390) { // Small/Medium (iPhone X, 6/6S, 7, 8, etc.)
-            scaleFactor = isLandscape ? 0.46 : 0.58; 
-            translateX = isLandscape ? '-80px' : '-105px'; 
+        // Choose scale factors based on the selected orientation
+        const scaleFactors = selectedOrientation === 'portrait' ? portraitScaleFactors : landscapeScaleFactors;
     
-        } else if (width > 390 && width <= 412) { // Medium (Google Pixel 3 Series, etc.)
-            scaleFactor = isLandscape ? 0.45 : 0.55; 
-            translateX = isLandscape ? '-75px' : '-95px'; 
-    
-        } else if (width > 412 && width <= 414) { // Medium (iPhone 7/8 Plus, Nexus 6P/5X, Google Pixel 2/4 (XL), Samsung Galaxy Note 10/+)
-            scaleFactor = isLandscape ? 0.48 : 0.60; 
-            translateX = isLandscape ? '-80px' : '-107px';
-    
-        } else if (width > 414 && width <= 430) { // Large (iPhone XR/iPhone 14 Max)
-            scaleFactor = isLandscape ? 0.48 : 0.60; 
-            translateX = isLandscape ? '-80px' : '-107px';
-    
-        } else if (width > 430 && width <= 479) { // Large (Samsung Galaxy Note 5, LG G5, One Plus 3)
-            scaleFactor = isLandscape ? 0.48 : 0.60; 
-            translateX = isLandscape ? '-80px' : '-105px'; 
-    
-        } else if (width > 479 && width <= 540) { // Larger (Surface Duo)
-            scaleFactor = isLandscape ? 0.52 : 0.65; 
-            translateX = isLandscape ? '-90px' : '-100px'; 
-    
-        } else if (width > 540 && width <= 600) { // Tablets (Nexus 7)
-            scaleFactor = isLandscape ? 0.60 : 0.75; 
-            translateX = isLandscape ? '-110px' : '-120px'; 
-    
-        } else if (width > 600 && width <= 768) { // Tablets (iPad Minis, Nexus 9, etc.)
-            scaleFactor = isLandscape ? 0.80 : 1.00; 
-            translateX = isLandscape ? '-130px' : '-165px'; 
-    
-        } else if (width > 768 && width <= 820) { // Tablets (iPad Air, Samsung Galaxy Tab 10)
-            scaleFactor = isLandscape ? 0.84 : 1.05; 
-            translateX = isLandscape ? '-140px' : '-170px'; 
-    
-        } else if (width > 820 && width <= 900) { // Tablets (Pixel C, Asus Zenbook Fold)
-            scaleFactor = isLandscape ? 0.88 : 1.10; 
-            translateX = isLandscape ? '-150px' : '-180px';
-    
-        } else if (width > 900 && width <= 1024) { // Tablets (iPad, iPad Pro)
-            scaleFactor = isLandscape ? 0.96 : 1.20; 
-            translateX = isLandscape ? '-190px' : '-190px'; // Adjust accordingly
+        for (const factor of scaleFactors) {
+            if (width <= factor.maxWidth) {
+                scaleFactor = factor.scale;
+                translateX = factor.translateX;
+                break;
+            }
         }
     
         applyCanvasScaling(scaleFactor, translateX);
-    }    
+    }
     
     function applyCanvasScaling(scaleFactor, translateX) {
         const baseWidth = selectedOrientation === 'portrait' ? defaultPortraitWidth : defaultLandscapeWidth;
         const baseHeight = selectedOrientation === 'portrait' ? defaultPortraitHeight : defaultLandscapeHeight;
-
+    
         const numCells = selectedSize; // Get the user-defined number of cells
         const cellSize = Math.floor(baseWidth / numCells); // Cell size based on user selection
-
+    
         const widthCanvas = cellSize * numCells;
         const heightCanvas = Math.floor(baseHeight / cellSize) * cellSize; // Height to fit whole cells
-
+    
         // Scale and resize the canvas elements based on both screen size and user preferences
         checkerboardCanvas.style.width = `${widthCanvas * scaleFactor}px`;
         checkerboardCanvas.style.height = `${heightCanvas * scaleFactor}px`;
@@ -279,7 +267,7 @@ window.onload = function() {
         
         hoverCanvas.style.width = `${widthCanvas * scaleFactor}px`;
         hoverCanvas.style.height = `${heightCanvas * scaleFactor}px`;
-
+    
         // Apply individual translations for each canvas
         checkerboardCanvas.style.transform = `translate(${translateX}, 0)`;
         drawCanvas.style.transform = `translate(${translateX}, 0)`;
@@ -287,192 +275,7 @@ window.onload = function() {
     }
 
     /* =========================================================================================================================================== */
-    /*                                            Section 10.3: File Dropdown - Resizing Button                                                    */
-    /* =========================================================================================================================================== */
-
-    function resizeCanvas() {
-        // Save the current drawing to the offscreen canvas before resizing
-        saveDrawing();
-    
-        // Update number of cells based on selected size
-        numCells = selectedSize;
-    
-        // Calculate initial cell size based on canvas width
-        const baseWidth = selectedOrientation === 'portrait' ? defaultPortraitWidth : defaultLandscapeWidth;
-        const baseHeight = selectedOrientation === 'portrait' ? defaultPortraitHeight : defaultLandscapeHeight;
-    
-        // Round the cell size down to ensure whole cells
-        cellSize = Math.floor(baseWidth / numCells);
-    
-        // Adjust canvas width and height to fit whole cells
-        width = cellSize * numCells;
-        height = Math.floor(baseHeight / cellSize) * cellSize; // Ensure the height also fits whole cells
-    
-        // Adjust scale factor based on fullscreen status and orientation
-        if (document.fullscreenElement) {
-            scaleFactor = selectedOrientation === 'portrait' ? 1.20 : 1.00; // Fullscreen scaling
-        } else {
-            scaleFactor = selectedOrientation === 'landscape' ? 0.80 : 1.00; // Normal scaling
-        }
-    
-        // Apply scaled dimensions to canvas element (display size, not actual resolution)
-        checkerboardCanvas.style.width = `${width * scaleFactor}px`;
-        checkerboardCanvas.style.height = `${height * scaleFactor}px`;
-    
-        drawCanvas.style.width = `${width * scaleFactor}px`;
-        drawCanvas.style.height = `${height * scaleFactor}px`;
-    
-        hoverCanvas.style.width = `${width * scaleFactor}px`;
-        hoverCanvas.style.height = `${height * scaleFactor}px`;
-    
-        // Center the canvases
-        const translateX = selectedOrientation === 'portrait' ? 0 : -150; // Adjust based on orientation
-        const translateY = selectedOrientation === 'portrait' ? 0 : 20; // Adjust based on orientation
-    
-        // Apply translations for centering
-        checkerboardCanvas.style.transform = `translate(${translateX}px, ${translateY}px)`;
-        drawCanvas.style.transform = `translate(${translateX}px, ${translateY}px)`;
-        hoverCanvas.style.transform = `translate(${translateX}px, ${translateY}px)`;
-    
-        // Call adjustCanvasScale to ensure scaling and positioning remain effective
-        adjustCanvasScale();
-    
-        // Redraw the checkerboard with updated cell size
-        drawCheckerboard();
-    
-        // Restore the drawing after resizing
-        restoreDrawing();
-    }       
-
-    function saveDrawing() {
-        // Set offscreen canvas size to match the original canvas
-        offscreenCanvas.width = drawCanvas.width;
-        offscreenCanvas.height = drawCanvas.height;
-
-        // Copy the current drawing to the offscreen canvas
-        offscreenCtx.drawImage(drawCanvas, 0, 0);
-    }
-
-    function restoreDrawing() {
-        // Restore the drawing from the offscreen canvas to the main canvas
-        const ctx = drawCanvas.getContext('2d');
-        ctx.clearRect(0, 0, drawCanvas.width, drawCanvas.height); // Clear the canvas
-        ctx.drawImage(offscreenCanvas, 0, 0); // Draw the saved content back
-    }
-
-    // Event listener for size buttons in the resizePopup
-    document.querySelectorAll('.size-options button').forEach(button => {
-        button.addEventListener('click', function() {
-            selectedSize = parseInt(this.textContent);
-            document.querySelectorAll('.size-options button').forEach(btn => btn.classList.remove('active-button'));
-            this.classList.add('active-button');
-        });
-    });
-
-    // Event listener for orientation radio buttons
-    document.querySelectorAll('input[name="orientation"]').forEach(radio => {
-        radio.addEventListener('change', function() {
-            selectedOrientation = this.value; // Update selected orientation
-        });
-    });
-
-    // Apply button event listener to resize the canvas
-    document.querySelector('.apply-btn').addEventListener('click', function() {
-        // Clear the drawCanvas before resizing
-        const ctx = drawCanvas.getContext('2d');
-        ctx.clearRect(0, 0, drawCanvas.width, drawCanvas.height); // Clear the canvas
-
-        resizeCanvas(); // Resize canvas when apply is clicked
-        closeResizePopup(); // Close the resize popup after applying changes
-    });
-
-
-    // Function to close the resize popup
-    function closeResizePopup() {
-        document.getElementById('resizePopup').classList.add('hidden');
-    }
-
-    window.addEventListener('load', function() {
-        document.querySelector('input[name="orientation"][value="portrait"]').checked = true;
-        selectedOrientation = 'portrait'; // Ensure initial state is correctly set
-    });
-
-    // Call adjustCanvasScale during window resize and on initial load
-    window.addEventListener('resize', adjustCanvasScale);
-    window.addEventListener('load', function() {
-        adjustCanvasScale(); // Call this here to set initial scale
-    }); 
-
-    /* =========================================================================================================================================== */
-    /*                                            Section 13.1: Settings Dropdown - Fullscreen Button                                              */
-    /* =========================================================================================================================================== */
-
-    // Add event listener for fullscreen change
-    document.addEventListener('fullscreenchange', handleFullscreenChange);
-    document.addEventListener('mozfullscreenchange', handleFullscreenChange); // Firefox
-    document.addEventListener('webkitfullscreenchange', handleFullscreenChange); // Chrome, Safari, Opera
-    document.addEventListener('msfullscreenchange', handleFullscreenChange); // IE/Edge
-
-    function handleFullscreenChange() {
-        if (!document.fullscreenElement) {
-            // Call resetScaling when exiting fullscreen
-            resetScaling();
-        } else {
-            // Optionally, you can call applyFullscreenScaling if needed
-            applyFullscreenScaling();
-        }
-    }
-
-    document.getElementById('fullscreen-toggle').addEventListener('click', toggleFullscreen);
-
-    function toggleFullscreen() {
-        if (!document.fullscreenElement) {
-            // Request fullscreen mode
-            if (document.documentElement.requestFullscreen) {
-                document.documentElement.requestFullscreen().then(applyFullscreenScaling);
-            } else if (document.documentElement.mozRequestFullScreen) { // Firefox
-                document.documentElement.mozRequestFullScreen().then(applyFullscreenScaling);
-            } else if (document.documentElement.webkitRequestFullscreen) { // Chrome, Safari, Opera
-                document.documentElement.webkitRequestFullscreen().then(applyFullscreenScaling);
-            } else if (document.documentElement.msRequestFullscreen) { // IE/Edge
-                document.documentElement.msRequestFullscreen().then(applyFullscreenScaling);
-            }
-        } else {
-            // Exit fullscreen mode
-            if (document.exitFullscreen) {
-                document.exitFullscreen();
-            } else if (document.mozCancelFullScreen) { // Firefox
-                document.mozCancelFullScreen();
-            } else if (document.webkitExitFullscreen) { // Chrome, Safari, Opera
-                document.webkitExitFullscreen();
-            } else if (document.msExitFullscreen) { // IE/Edge
-                document.msExitFullscreen();
-            }
-        }
-    }
-
-    // Function to apply scaling for fullscreen mode
-    function applyFullscreenScaling() {
-        if (selectedOrientation === 'portrait') {
-            scaleFactor = 1.20; // Scale portrait to 1.20 in fullscreen
-        } else {
-            scaleFactor = 1.00; // Scale landscape to 1.00 in fullscreen
-        }
-        resizeCanvas(); // Apply scaling when entering fullscreen
-    }
-
-    // Function to reset scaling when exiting fullscreen mode
-    function resetScaling() {
-        if (selectedOrientation === 'portrait') {
-            scaleFactor = 1.00; // Reset portrait to 1.00 when exiting fullscreen
-        } else {
-            scaleFactor = 0.80; // Reset landscape to 0.80 when exiting fullscreen
-        }
-        resizeCanvas(); // Reset scaling after exiting fullscreen
-    }
-
-    /* =========================================================================================================================================== */
-    /*                                            Section 4: Mouse Event Handling                                                                  */
+    /*                                            Section 5.1: Mouse Event Handling                                                                  */
     /* =========================================================================================================================================== */
 
     // Mouse down event to start selecting or dragging
@@ -604,7 +407,7 @@ window.onload = function() {
     });
 
     /* =========================================================================================================================================== */
-    /*                                            Section 4.1: Touch Event Handling (Mobile)                                                      */
+    /*                                            Section 5.2: Touch Event Handling (Mobile)                                                      */
     /* =========================================================================================================================================== */
 
     // Touch start event
@@ -724,7 +527,7 @@ window.onload = function() {
     });
 
     /* =========================================================================================================================================== */
-    /*                                            Section 5: Spray Pattern Functionality                                                           */
+    /*                                            Section 6: Spray Pattern Functionality                                                           */
     /* =========================================================================================================================================== */
     
     function drawSprayPattern(row, col, brushSize, pressure, angle) {
@@ -757,7 +560,7 @@ window.onload = function() {
     }
         
     /* =========================================================================================================================================== */
-    /*                                            Section 6: Brush Pattern Functionality                                                           */
+    /*                                            Section 7: Brush Pattern Functionality                                                           */
     /* =========================================================================================================================================== */
     
     function drawBrushPattern(row, col) {
@@ -799,7 +602,7 @@ window.onload = function() {
     }
     
     /* =========================================================================================================================================== */
-    /*                                            Section 7: Bucket Functionality                                                                  */
+    /*                                            Section 8: Bucket Functionality                                                                  */
     /* =========================================================================================================================================== */
 
     function floodFill(startX, startY) {
@@ -868,7 +671,7 @@ window.onload = function() {
     } 
 
     /* =========================================================================================================================================== */
-    /*                                            Section 8: Select Tool Functionality                                                             */
+    /*                                            Section 9: Select Tool Functionality                                                             */
     /* =========================================================================================================================================== */
     
     // Function to draw the selection box, snapping to the grid
@@ -947,7 +750,7 @@ window.onload = function() {
     }
         
     /* =========================================================================================================================================== */
-    /*                                            Section 9.1: PixelLab - Tooltips                                                                */
+    /*                                            Section 10.1: PixelLab - Tooltips                                                                */
     /* =========================================================================================================================================== */
     
         toolbarButtons.forEach(button => {
@@ -979,7 +782,7 @@ window.onload = function() {
         });
         
     /* =========================================================================================================================================== */
-    /*                                            Section 9.2: PixelLab - Dropdown/up Functions                                                   */
+    /*                                            Section 10.2: PixelLab - Dropdown/up Functions                                                   */
     /* =========================================================================================================================================== */
 
         let timeoutId = null;
@@ -1098,7 +901,7 @@ window.onload = function() {
         };
     
     /* =========================================================================================================================================== */
-    /*                                            Section 10.1: File Dropdown - New Button                                                         */
+    /*                                            Section 11.1: File Dropdown - New Button                                                         */
     /* =========================================================================================================================================== */
     
     // Event listener for the new button
@@ -1120,7 +923,7 @@ window.onload = function() {
     }
 
     /* =========================================================================================================================================== */
-    /*                                            Section 10.2: File Dropdown - Clear Button                                                       */
+    /*                                            Section 11.2: File Dropdown - Clear Button                                                       */
     /* =========================================================================================================================================== */
 
     document.getElementById('clearButton').addEventListener('click', function(e) {
@@ -1137,9 +940,124 @@ window.onload = function() {
         drawContext.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
     }
     
+    /* =========================================================================================================================================== */
+    /*                                            Section 11.3: File Dropdown - Resizing Button                                                    */
+    /* =========================================================================================================================================== */
+
+    function resizeCanvas() {
+        // Save the current drawing to the offscreen canvas before resizing
+        saveDrawing();
+    
+        // Update number of cells based on selected size
+        numCells = selectedSize;
+    
+        // Calculate initial cell size based on canvas width
+        const baseWidth = selectedOrientation === 'portrait' ? defaultPortraitWidth : defaultLandscapeWidth;
+        const baseHeight = selectedOrientation === 'portrait' ? defaultPortraitHeight : defaultLandscapeHeight;
+    
+        // Round the cell size down to ensure whole cells
+        cellSize = Math.floor(baseWidth / numCells);
+    
+        // Adjust canvas width and height to fit whole cells
+        width = cellSize * numCells;
+        height = Math.floor(baseHeight / cellSize) * cellSize; // Ensure the height also fits whole cells
+    
+        // Adjust scale factor based on fullscreen status and orientation
+        if (document.fullscreenElement) {
+            scaleFactor = selectedOrientation === 'portrait' ? 1.20 : 1.00; // Fullscreen scaling
+        } else {
+            scaleFactor = selectedOrientation === 'landscape' ? 0.80 : 1.00; // Normal scaling
+        }
+    
+        // Apply scaled dimensions to canvas element (display size, not actual resolution)
+        checkerboardCanvas.style.width = `${width * scaleFactor}px`;
+        checkerboardCanvas.style.height = `${height * scaleFactor}px`;
+    
+        drawCanvas.style.width = `${width * scaleFactor}px`;
+        drawCanvas.style.height = `${height * scaleFactor}px`;
+    
+        hoverCanvas.style.width = `${width * scaleFactor}px`;
+        hoverCanvas.style.height = `${height * scaleFactor}px`;
+    
+        // Center the canvases
+        const translateX = selectedOrientation === 'portrait' ? 0 : -150; // Adjust based on orientation
+        const translateY = selectedOrientation === 'portrait' ? 0 : 20; // Adjust based on orientation
+    
+        // Apply translations for centering
+        checkerboardCanvas.style.transform = `translate(${translateX}px, ${translateY}px)`;
+        drawCanvas.style.transform = `translate(${translateX}px, ${translateY}px)`;
+        hoverCanvas.style.transform = `translate(${translateX}px, ${translateY}px)`;
+    
+        // Call adjustCanvasScale to ensure scaling and positioning remain effective
+        adjustCanvasScale();
+    
+        // Redraw the checkerboard with updated cell size
+        drawCheckerboard();
+    
+        // Restore the drawing after resizing
+        restoreDrawing();
+    }       
+
+    function saveDrawing() {
+        // Set offscreen canvas size to match the original canvas
+        offscreenCanvas.width = drawCanvas.width;
+        offscreenCanvas.height = drawCanvas.height;
+
+        // Copy the current drawing to the offscreen canvas
+        offscreenCtx.drawImage(drawCanvas, 0, 0);
+    }
+
+    function restoreDrawing() {
+        // Restore the drawing from the offscreen canvas to the main canvas
+        const ctx = drawCanvas.getContext('2d');
+        ctx.clearRect(0, 0, drawCanvas.width, drawCanvas.height); // Clear the canvas
+        ctx.drawImage(offscreenCanvas, 0, 0); // Draw the saved content back
+    }
+
+    // Event listener for size buttons in the resizePopup
+    document.querySelectorAll('.size-options button').forEach(button => {
+        button.addEventListener('click', function() {
+            selectedSize = parseInt(this.textContent);
+            document.querySelectorAll('.size-options button').forEach(btn => btn.classList.remove('active-button'));
+            this.classList.add('active-button');
+        });
+    });
+
+    // Event listener for orientation radio buttons
+    document.querySelectorAll('input[name="orientation"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            selectedOrientation = this.value; // Update selected orientation
+        });
+    });
+
+    // Apply button event listener to resize the canvas
+    document.querySelector('.apply-btn').addEventListener('click', function() {
+        // Clear the drawCanvas before resizing
+        const ctx = drawCanvas.getContext('2d');
+        ctx.clearRect(0, 0, drawCanvas.width, drawCanvas.height); // Clear the canvas
+
+        resizeCanvas(); // Resize canvas when apply is clicked
+        closeResizePopup(); // Close the resize popup after applying changes
+    });
+
+    // Function to close the resize popup
+    function closeResizePopup() {
+        document.getElementById('resizePopup').classList.add('hidden');
+    }
+
+    window.addEventListener('load', function() {
+        document.querySelector('input[name="orientation"][value="portrait"]').checked = true;
+        selectedOrientation = 'portrait'; // Ensure initial state is correctly set
+    });
+
+    // Call adjustCanvasScale during window resize and on initial load
+    window.addEventListener('resize', adjustCanvasScale);
+    window.addEventListener('load', function() {
+        adjustCanvasScale(); // Call this here to set initial scale
+    }); 
     
     /* =========================================================================================================================================== */
-    /*                                            Section 10.4: File Dropdown - Open Button                                                        */
+    /*                                            Section 11.4: File Dropdown - Open Button                                                        */
     /* =========================================================================================================================================== */
 
     document.getElementById('openButton').addEventListener('click', function() {
@@ -1219,7 +1137,7 @@ window.onload = function() {
     }
 
     /* =========================================================================================================================================== */
-    /*                                            Section 10.5: File Dropdown - Save Button                                                        */
+    /*                                            Section 11.5: File Dropdown - Save Button                                                        */
     /* =========================================================================================================================================== */
     document.getElementById('saveButton').addEventListener('click', function() {
         if ('showSaveFilePicker' in window) {
@@ -1287,7 +1205,7 @@ window.onload = function() {
     }
     
     /* =========================================================================================================================================== */
-    /*                                            Section 11: Palettes Dropdown - Palette Selection                                                */
+    /*                                            Section 12: Palettes Dropdown - Palette Selection                                                */
     /* =========================================================================================================================================== */
 
     const palettes = {
@@ -1568,64 +1486,63 @@ window.onload = function() {
     };
 
     // Function to apply a selected palette (works for both desktop and mobile)
-function applyPalette(paletteName) {
-    const selectedPalette = palettes[paletteName];
-    const desktopColorPalette = document.querySelector('.color-palette-container .color-palette');
+    function applyPalette(paletteName) {
+        const selectedPalette = palettes[paletteName];
+        const desktopColorPalette = document.querySelector('.color-palette-container .color-palette');
 
-    // Helper function to render colors in a given palette
-    function renderPalette(colorPalette) {
-        // Clear existing cells
-        colorPalette.innerHTML = '';
+        // Helper function to render colors in a given palette
+        function renderPalette(colorPalette) {
+            // Clear existing cells
+            colorPalette.innerHTML = '';
 
-        // Add color cells
-        selectedPalette.forEach((color, index) => {
-            const colorCell = document.createElement('div');
-            colorCell.className = 'color-cell';
-            colorCell.style.backgroundColor = color;
-            colorCell.dataset.colorIndex = index;
-            colorPalette.appendChild(colorCell);
+            // Add color cells
+            selectedPalette.forEach((color, index) => {
+                const colorCell = document.createElement('div');
+                colorCell.className = 'color-cell';
+                colorCell.style.backgroundColor = color;
+                colorCell.dataset.colorIndex = index;
+                colorPalette.appendChild(colorCell);
 
-            // Add event listener to update the color indicator
-            colorCell.addEventListener('click', function () {
-                updateColorIndicator(color);
+                // Add event listener to update the color indicator
+                colorCell.addEventListener('click', function () {
+                    updateColorIndicator(color);
+                });
             });
+
+            // Adjust the number of rows in the grid to fit all cells
+            const totalCells = selectedPalette.length;
+            const rowsNeeded = Math.ceil(totalCells / 5);
+            colorPalette.style.gridTemplateRows = `repeat(${rowsNeeded}, 22px)`;
+        }
+
+        // Apply the palette to both desktop and mobile views
+        if (desktopColorPalette) renderPalette(desktopColorPalette);
+        if (mobileColorPalette) renderPalette(mobileColorPalette);
+    }
+
+    // Function to update the color indicator (works for both views)
+    function updateColorIndicator(color) {
+        const colorIndicator = document.querySelector('.color-indicator');
+        const colorText = colorIndicator.querySelector('.color-text');
+
+        colorIndicator.style.backgroundColor = color; // Update the background color
+        colorIndicator.dataset.color = color; // Save color in a dataset attribute
+
+        if (colorText) {
+            colorText.textContent = color; // Update the text content of the .color-text span
+        }
+    }
+
+    // Event listener for dropdown selection (same functionality)
+    document.querySelectorAll('.dropdown-palettes').forEach(item => {
+        item.addEventListener('click', function () {
+            const selectedPalette = this.getAttribute('data-palette');
+            applyPalette(selectedPalette);
         });
-
-        // Adjust the number of rows in the grid to fit all cells
-        const totalCells = selectedPalette.length;
-        const rowsNeeded = Math.ceil(totalCells / 5);
-        colorPalette.style.gridTemplateRows = `repeat(${rowsNeeded}, 22px)`;
-    }
-
-    // Apply the palette to both desktop and mobile views
-    if (desktopColorPalette) renderPalette(desktopColorPalette);
-    if (mobileColorPalette) renderPalette(mobileColorPalette);
-}
-
-// Function to update the color indicator (works for both views)
-function updateColorIndicator(color) {
-    const colorIndicator = document.querySelector('.color-indicator');
-    const colorText = colorIndicator.querySelector('.color-text');
-
-    colorIndicator.style.backgroundColor = color; // Update the background color
-    colorIndicator.dataset.color = color; // Save color in a dataset attribute
-
-    if (colorText) {
-        colorText.textContent = color; // Update the text content of the .color-text span
-    }
-}
-
-// Event listener for dropdown selection (same functionality)
-document.querySelectorAll('.dropdown-palettes').forEach(item => {
-    item.addEventListener('click', function () {
-        const selectedPalette = this.getAttribute('data-palette');
-        applyPalette(selectedPalette);
     });
-});
-
 
     /* =========================================================================================================================================== */
-    /*                                            Section 12.1: Select Tool - Copy/Paste                                                            */
+    /*                                            Section 13.1: Select Tool - Copy/Paste                                                            */
     /* =========================================================================================================================================== */
 
     let clipboard = null;  // Holds the copied selectionBox and its cells
@@ -1680,7 +1597,7 @@ document.querySelectorAll('.dropdown-palettes').forEach(item => {
     });
 
     /* =========================================================================================================================================== */
-    /*                                            Section 12.2: Select Tool - Rotate Left/Right                                                     */
+    /*                                            Section 13.2: Select Tool - Rotate Left/Right                                                     */
     /* =========================================================================================================================================== */
 
     // Function to rotate the selection
@@ -1841,7 +1758,7 @@ document.querySelectorAll('.dropdown-palettes').forEach(item => {
     });
 
     /* =========================================================================================================================================== */
-    /*                                            Section 12.3: Select Tool - Flip Horizontal/Vertical                                              */
+    /*                                            Section 13.3: Select Tool - Flip Horizontal/Vertical                                              */
     /* =========================================================================================================================================== */
 
     // Function to flip the selection
@@ -1993,7 +1910,75 @@ document.querySelectorAll('.dropdown-palettes').forEach(item => {
     });
 
     /* =========================================================================================================================================== */
-    /*                                            Section 13.2: Settings Dropdown - Background Button                                              */
+    /*                                            Section 14.1: Settings Dropdown - Fullscreen Button                                              */
+    /* =========================================================================================================================================== */
+
+    // Add event listener for fullscreen change
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    document.addEventListener('mozfullscreenchange', handleFullscreenChange); // Firefox
+    document.addEventListener('webkitfullscreenchange', handleFullscreenChange); // Chrome, Safari, Opera
+    document.addEventListener('msfullscreenchange', handleFullscreenChange); // IE/Edge
+
+    function handleFullscreenChange() {
+        if (!document.fullscreenElement) {
+            // Call resetScaling when exiting fullscreen
+            resetScaling();
+        } else {
+            // Optionally, you can call applyFullscreenScaling if needed
+            applyFullscreenScaling();
+        }
+    }
+
+    document.getElementById('fullscreen-toggle').addEventListener('click', toggleFullscreen);
+
+    function toggleFullscreen() {
+        if (!document.fullscreenElement) {
+            // Request fullscreen mode
+            if (document.documentElement.requestFullscreen) {
+                document.documentElement.requestFullscreen().then(applyFullscreenScaling);
+            } else if (document.documentElement.mozRequestFullScreen) { // Firefox
+                document.documentElement.mozRequestFullScreen().then(applyFullscreenScaling);
+            } else if (document.documentElement.webkitRequestFullscreen) { // Chrome, Safari, Opera
+                document.documentElement.webkitRequestFullscreen().then(applyFullscreenScaling);
+            } else if (document.documentElement.msRequestFullscreen) { // IE/Edge
+                document.documentElement.msRequestFullscreen().then(applyFullscreenScaling);
+            }
+        } else {
+            // Exit fullscreen mode
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.mozCancelFullScreen) { // Firefox
+                document.mozCancelFullScreen();
+            } else if (document.webkitExitFullscreen) { // Chrome, Safari, Opera
+                document.webkitExitFullscreen();
+            } else if (document.msExitFullscreen) { // IE/Edge
+                document.msExitFullscreen();
+            }
+        }
+    }
+
+    // Function to apply scaling for fullscreen mode
+    function applyFullscreenScaling() {
+        if (selectedOrientation === 'portrait') {
+            scaleFactor = 1.20; // Scale portrait to 1.20 in fullscreen
+        } else {
+            scaleFactor = 1.00; // Scale landscape to 1.00 in fullscreen
+        }
+        resizeCanvas(); // Apply scaling when entering fullscreen
+    }
+
+    // Function to reset scaling when exiting fullscreen mode
+    function resetScaling() {
+        if (selectedOrientation === 'portrait') {
+            scaleFactor = 1.00; // Reset portrait to 1.00 when exiting fullscreen
+        } else {
+            scaleFactor = 0.80; // Reset landscape to 0.80 when exiting fullscreen
+        }
+        resizeCanvas(); // Reset scaling after exiting fullscreen
+    }
+
+    /* =========================================================================================================================================== */
+    /*                                            Section 14.2: Settings Dropdown - Background Button                                              */
     /* =========================================================================================================================================== */
 
         const backgroundColors = {
@@ -2046,7 +2031,7 @@ document.querySelectorAll('.dropdown-palettes').forEach(item => {
         });
 
     /* =========================================================================================================================================== */
-    /*                                            Section 14: Undo - Redo Buttons                                                                  */
+    /*                                            Section 15: Undo - Redo Buttons                                                                  */
     /* =========================================================================================================================================== */
 
     function saveState() {
@@ -2097,7 +2082,7 @@ document.querySelectorAll('.dropdown-palettes').forEach(item => {
     });
 
     /* =========================================================================================================================================== */
-    /*                                            Section 15: RGB Color Picker                                                                     */
+    /*                                            Section 16: RGB Color Picker                                                                     */
     /* =========================================================================================================================================== */
         const colorBox = document.querySelector('.color-box');
         const colorCircle = document.querySelector('.color-circle');
