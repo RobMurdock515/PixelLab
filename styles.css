@@ -73,9 +73,22 @@ html, body {
 /*                                            Section 0.2: PixelLab -  (Dropdown/Dropup/etc.)                                                  */
 /* =========================================================================================================================================== */
 
+.dropdown-file { 
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.199);
+    display: block;
+    position: absolute;
+    min-width: 150px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1000;
+    top: 68%; 
+    left: 21%;
+}
 
 /* Dropdown for file, select, settings Button */
-.dropdown-file, .dropdown-select, .dropdown-settings { 
+.dropdown-select, .dropdown-settings { 
     background: rgba(0, 0, 0, 0.75);
     backdrop-filter: blur(16px) saturate(180%);
     -webkit-backdrop-filter: blur(16px) saturate(180%);
@@ -358,17 +371,17 @@ html, body {
 }
 
 :fullscreen .rgb-button {
-    top: 570px;
+    top: 670px;
     position: fixed;
 }
 
 :fullscreen .color-indicator .color-text {
-    top: 570px;
+    top: 670px;
     position: fixed;
 }
 
 :fullscreen .color-indicator {
-    top: 450px;
+    top: 550px;
     position: fixed;
 }
 
@@ -526,9 +539,9 @@ html, body {
 }
 
 .toolbar-button img {
-    width: 32px; 
-    height: 32px;
-    margin: 17px; 
+    width: 38px; 
+    height: 38px;
+    margin: 14px; 
 }
 
 .toolbar-button {
@@ -543,6 +556,21 @@ html, body {
 .toolbar-button.selected {
     background-color: rgba(26, 25, 25, 0.5);
     border-radius: 4px; 
+}
+
+/* Left section (RGB color picker and color palette) */
+.toolbar-left {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px; /* Space between elements */
+}
+
+/* Right section: Two columns for tools */
+.toolbar-right {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px; /* Space between the two columns */
 }
 
 /* =========================================================================================================================================== */
@@ -711,6 +739,7 @@ html, body {
     background-color: transparent; /* Default color appearance (transparent) */
     margin-left: 102px; 
     margin-top: 120px;
+    border-radius: 50%;
   }
 
   .color-indicator .color-text {
@@ -930,9 +959,9 @@ html, body {
         transform-origin: top left; 
     }
 
-    /* -------------------- */
-    /* Menu-bar adjustments */
-    /* -------------------- */
+    /* ------------------------------------ */
+    /* Menu-bar adjustments---------------- */
+    /* ------------------------------------ */
     .menu-bar {
         width: 130%;
     }
@@ -993,16 +1022,114 @@ html, body {
         left: 120px;
     }
 
-    /* -------------------- */
-    /* Tool-bar adjustments */
-    /* -------------------- */
+    /* ------------------------------------ */
+    /* ------- Tool-bar adjustments ------- */
+    /* ------------------------------------ */
+    
     .tool-bar {
-        height: 700px;
+        background-color: transparent;
+        backdrop-filter: blur(16px) saturate(180%);
+        -webkit-backdrop-filter: blur(16px) saturate(180%);
+        box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.2);
+        width: 450px; /* Full width of the screen */
+        height: 310px; /* Adjust height as needed */
+        position: fixed;
+        top: 394px;
+        bottom: 0;
+        left: 0;
+        z-index: 3;
+        display: flex;
+        justify-content: space-between; /* Separate left and right sections */
+        padding: 10px; /* Add padding for a neater look */
+        align-items: center; /* Center vertically */
+    }
+    
+    /* Left section (RGB color picker and color palette) */
+    .toolbar-left {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 20px; /* Space between elements */
+    }
+    
+    /* Right section: Two columns for tools */
+    .toolbar-right {
+        display: flex;
+        justify-content: space-between;
+        gap: 20px; /* Space between the two columns */
+    }
+    
+    /* Tool column layout */
+    .tool-column {
+        display: flex;
+        flex-direction: column; /* Stack the tool buttons vertically */
+        gap: 10px; /* Space between tool buttons */
+    }
+    
+    /* Toolbar button */
+    .toolbar-button {
+        right: 30px;
+    }
+    
+    .toolbar-button img {
+        width: 56px;
+        height: 56px;
+        margin: 10px; /* Adjusted margin */
+    }
+    
+    /* RGB color picker button */
+    .rgb-button {
+        background: none;
+        border: none;
+        padding: 0;
+        margin: 0;
+        cursor: pointer;
+    }
+    
+    .rgb-button img {
+        width: 32px;
+        height: 32px;
+    }
+    
+    /* Color palette container */
+    .color-palette-container {
+        left: 20px;
+        height: 240px;
+        width: 150px;
+        overflow-y: auto;
+    }
+    
+    /* Scrollbar customization */
+    .color-palette-container::-webkit-scrollbar {
+        width: 20px;
+    }
+    .color-palette-container::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.255);
+        border-radius: 6px;
     }   
     
-    /* ----------------------------- */
-    /* Tool-settings-bar adjustments */
-    /* ----------------------------- */
+    .color-display-container {
+        bottom: 255px;
+    }
+
+    /*:fullscreen .rgb-button {
+        top: 570px;
+        position: fixed;
+    }
+    
+    :fullscreen .color-indicator .color-text {
+        top: 570px;
+        position: fixed;
+    }
+    
+    :fullscreen .color-indicator {
+        top: 450px;
+        position: fixed;
+    }
+
+    /* ------------------------------------ */
+    /* --- Tool-settings-bar adjustments --- */
+    /* ------------------------------------ */
     .tool-settings-bar {
         left: 0px;
         width: 130%;
@@ -1042,5 +1169,11 @@ html, body {
         width: 100%; /* Adjust width if necessary */
         margin-top: 2px; /* Space above the slider */
     }
-    
+}
+
+@media (min-width: 768px) and (max-width: 1024px) and (min-height: 600px) and (max-height: 800px) {
+    /* CSS rules for devices within this width and height range */
+    body {
+        background-color: yellow;
+    }
 }

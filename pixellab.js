@@ -1489,6 +1489,7 @@ window.onload = function() {
     function applyPalette(paletteName) {
         const selectedPalette = palettes[paletteName];
         const desktopColorPalette = document.querySelector('.color-palette-container .color-palette');
+        const mobileColorPalette = document.querySelector('.mobile-bar .color-palette');
 
         // Helper function to render colors in a given palette
         function renderPalette(colorPalette) {
