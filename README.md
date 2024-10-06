@@ -2,6 +2,8 @@
 
 Welcome to **PixelLab**! This is a pixel art maker designed to provide a fun and creative way to create pixel art directly in your web browser. Built using HTML, CSS, and JavaScript, PixelLab offers a user-friendly interface and a variety of tools to help you create your artistic projects.
 
+![PixelLab Screenshot](https://github.com/RobMurdock515/PixelLab/blob/main/img/Icons/PixelLab.png)
+
 ## Features
 
 - **Tools**: Choose from six different tools to create your art:
