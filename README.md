@@ -32,3 +32,5 @@ Welcome to **PixelLab**! This is a pixel art maker designed to provide a fun and
 ## Getting Started
 
 To use PixelLab, simply open the HTML file in your preferred web browser. Once loaded, explore the various tools and settings to start creating your pixel art!
+
+Application Link - [PixelLab](https://robmurdock515.github.io/PixelLab/).
